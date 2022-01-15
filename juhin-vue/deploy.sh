@@ -22,6 +22,5 @@ git show-ref
 # if you are deploying to https://<USERNAME>.github.io/<REPO>
 git push -f git@github.com:LK-Herman/Juhin.git master:gh-pages
 
-# cd -
+cd -
 
-# https://lk-herman.github.io/Juhin/
