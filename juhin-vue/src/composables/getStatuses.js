@@ -29,7 +29,7 @@ const getStatuses = (url, token) =>{
         error.value = er.message
         
         }
-        console.log(statuses.value)
+        // console.log(statuses.value)
 
       }
 

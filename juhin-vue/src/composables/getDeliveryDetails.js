@@ -22,13 +22,14 @@ const getDeliveryDetails = (url, token) =>{
             delivery.value = resp.data
             delivery.value['etaT'] = moment(delivery.value.etaDate).locale('pl').format('LT')
             delivery.value['etaD'] = moment(delivery.value.etaDate).format('DD-MM-YYYY')
-            delivery.value['createdAt'] = moment(delivery.value.createdAt).format('DD-MM-YYYY hh:mm')
-            delivery.value['deliveryDate'] = moment(delivery.value.deliveryDate).format('DD-MM-YYYY hh:mm')
+            delivery.value['createdAtshort'] = delivery.value.createdAt
+            delivery.value['createdAt'] = moment(delivery.value.createdAt).format('DD-MM-YYYY HH:mm')
+            delivery.value['deliveryDate'] = moment(delivery.value.deliveryDate).format('DD-MM-YYYY HH:mm')
             if(delivery.value.etaDate < moment().toISOString() && delivery.value.statusId !== 3) {delivery.value['isDelayed'] = true}
             else{
                 delivery.value['isDelayed'] = false
             }
-            // console.log(delivery.value.etaDate)
+            console.log(delivery.value.createdAtshort)
             
             
         } catch (er) {
@@ -113,7 +114,7 @@ const getDeliveryDetails = (url, token) =>{
             }
 
        
-        console.log(delivery.value)
+        // console.log(delivery.value)
     }
     
     return {loadDetails, error, delivery}

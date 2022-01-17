@@ -23,9 +23,9 @@
 
             <div v-if="!isEditing" class="item-po">
                 <h4>UTWORZONA</h4> 
-                <div v-for="order in delivery.purchaseOrders" :key="order.orderId">
+                <!-- <div v-for="order in delivery.purchaseOrders" :key="order.orderId"> -->
                     <p>{{delivery.createdAt}}</p>
-                </div>
+                <!-- </div> -->
             </div>
             
             <div v-if="!isEditing" class="item-e">
@@ -162,7 +162,7 @@
 
         </div>
     </div>
-    
+    <div v-else>{{error}}</div>
 </template>
 
 
@@ -190,7 +190,7 @@ export default {
         
         const formPrio = ref('')
         const formRating = ref(100)
-        const formDate = ref('')
+        const formDate = ref(null)
         const formStatusId = ref('')
         const formForwarderId = ref('')
         const formComment = ref('')
@@ -207,6 +207,7 @@ export default {
                     delivery.value.packedItems.forEach(item =>{
                         item['counter'] = counter++
                     })
+                    console.log(delivery.value)
                 })
             loadForwarders(1,50)
             loadStatuses(1,50)
@@ -227,17 +228,19 @@ export default {
             router.back()
         }
         const handleSubmitChanges = async ()=>{
-            let newEtaDate = formDate.value
-            let newDeliveryDate = delivery.value.etaDate
+            let newEtaDate = new Date(formDate.value)
+            let newDeliveryDate = new Date(delivery.value.etaDate)
+            
             if(formStatusId.value == 3){
-                newDeliveryDate = formDate.value
+                newDeliveryDate = new Date()
                 newEtaDate = delivery.value.etaDate
             }else{
                 newEtaDate = formDate.value
-                newDeliveryDate = moment().toISOString()
+                newDeliveryDate = formDate.value
             }
+                       
             let deliveryData = {
-            createdAt: delivery.value.createdAt,
+            createdAt: delivery.value.createdAtshort,
             etaDate: newEtaDate,
             deliveryDate: newDeliveryDate,
             rating: formRating.value,
@@ -257,11 +260,7 @@ export default {
                             })
                         })
                     })
-            
-
-            
-
-            console.log(deliveryData)
+            //console.log(deliveryData)
         }
         const handleDelete = ()=>{
             // deleteFlag.value = true

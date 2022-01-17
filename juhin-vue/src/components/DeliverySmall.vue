@@ -1,32 +1,37 @@
 <template>
-<router-link :to="{name:'DeliveryDetails', params:{id:id}}">
-    <div v-if="!error" class="small-container" :class="{delayed:delivery.isDelayed==true, delivered:delivery.statusId==3 }">
-        <div class="item-order">
-            <p id="header-small">NR ZAMÓWIENIA</p>
-            <div v-for="order in delivery.purchaseOrders" :key="order.orderId">
-                <p>{{order.orderNumber}}</p>    
+<div v-if="!error">
+    <router-link :to="{name:'DeliveryDetails', params:{id:id}}">
+        <div v-if="!error" class="small-container" :class="{delayed:delivery.isDelayed==true, delivered:delivery.statusId==3 }">
+            <div class="item-order">
+                <p id="header-small">NR ZAMÓWIENIA</p>
+                <div v-for="order in delivery.purchaseOrders" :key="order.orderId">
+                    <p>{{order.orderNumber}}</p>    
+                </div>
+            </div>        
+            <div class="item-eta">
+                <p id="header-small">ESTYMOWANY TERMIN DOSTAWY</p>
+                <p>{{delivery.etaD}} / {{delivery.etaT}}</p>
             </div>
-        </div>        
-        <div class="item-eta">
-            <p id="header-small">ESTYMOWANY TERMIN DOSTAWY</p>
-            <p>{{delivery.etaD}} / {{delivery.etaT}}</p>
-        </div>
-        <div class="item-sped">
-            <p id="header-small">PRZEWOŹNIK</p>
-            <p>{{delivery.forwarderName}}</p>
-        </div>
-        <div class="item-vendor">
-            <p id="header-small">DOSTAWCA</p>
-            <div v-for="order in delivery.purchaseOrders" :key="order.orderId">
-                <p>{{order.vendorName}}</p>       
+            <div class="item-sped">
+                <p id="header-small">PRZEWOŹNIK</p>
+                <p>{{delivery.forwarderName}}</p>
+            </div>
+            <div class="item-vendor">
+                <p id="header-small">DOSTAWCA</p>
+                <div v-for="order in delivery.purchaseOrders" :key="order.orderId">
+                    <p>{{order.vendorName}}</p>       
+                </div>
+            </div>
+            <div class="item-pallets" :class="{prio : delivery.isPriority}">
+                <p>{{delivery.oripal}}</p>
+                <p>{{delivery.eurpal}}</p>
             </div>
         </div>
-        <div class="item-pallets" :class="{prio : delivery.isPriority}">
-            <p>{{delivery.oripal}}</p>
-            <p>{{delivery.eurpal}}</p>
-        </div>
-    </div>
-</router-link>
+    </router-link>
+</div>
+<div v-else>
+    {{error}}
+</div>
 </template>
 
 <script>

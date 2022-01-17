@@ -9,14 +9,8 @@ namespace JuhinAPI.DTOs
 {
     public class DeliveryCreationDTO
     {
-        [JsonIgnore]
-        private DateTime date;
         [Required]
-        public DateTime CreatedAt
-        {
-            set { date = DateTime.Now; }
-            get { return date; }    
-        }
+        public DateTime CreatedAt { get; set; }
         
         public DateTime ETADate { get; set; }
         
