@@ -34,14 +34,18 @@ import addPackedItem from '../composables/addPackedItem.js'
 
 export default {
     emits:['item-added-event'],
-    props:['userToken', 'vId' ,'id' ],
+    props:['vId' ,'id' ],
     setup(props,context){
         const mainUrl = urlHolder
-        const {loadItems, error, items} = getItemsByVendor(mainUrl, props.userToken)
+
+        // const user = JSON.parse( localStorage.user )
+        const userToken = localStorage.token
+
+        const {loadItems, error, items} = getItemsByVendor(mainUrl, userToken)
         const isVisible = ref(true)
         const quantity = ref(0)
         const itemIdNo = ref('')
-        const {addItem, error:addItemError} = addPackedItem(mainUrl, props.userToken)
+        const {addItem, error:addItemError} = addPackedItem(mainUrl, userToken)
 
         onMounted(()=>{
             loadItems(props.vId)

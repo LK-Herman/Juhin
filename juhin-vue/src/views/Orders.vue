@@ -91,11 +91,15 @@ import mainUrl from '../composables/urlHolder.js'
 
 export default {
   components: {  },
-  props:['userToken', 'user'],
+  props:[],
   setup(props) {
     const router = useRouter()
     const url = urlHolder
-    const {orders, error, loadOrders, totalRecords} = getOrders(url, props.userToken)
+    
+    const user = JSON.parse( localStorage.user )
+    const userToken = localStorage.token
+
+    const {orders, error, loadOrders, totalRecords} = getOrders(url, userToken)
     const pageNo = ref(1)
     const recordsPerPage = ref(10)
     const lastPage = ref(1)
@@ -173,7 +177,7 @@ export default {
 
     }
 
-    return {handleBack, deliveries, handleLoadDeliveries, orders, error, pageNo, recordsPerPage, handleNextPage, handlePreviousPage, handlePages, handleGoToPage, lastPage }
+    return {handleBack, user, userToken, deliveries, handleLoadDeliveries, orders, error, pageNo, recordsPerPage, handleNextPage, handlePreviousPage, handlePages, handleGoToPage, lastPage }
   }
 }
 </script>

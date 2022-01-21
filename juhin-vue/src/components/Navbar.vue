@@ -14,7 +14,7 @@
                 
                 <p v-if="userRolePL" class="links-item" id="email-address">{{userRolePL}} </p>
                 <p v-if="isLogged" class="links-item" ><span class="material-icons md-48">manage_accounts</span></p>
-                <p v-if="isLogged" class="links-item" id="email-address">{{user.emailAddress}}</p>
+                <p v-if="isLogged" class="links-item" id="email-address">{{email}}</p>
                 <p v-if="!isLogged" class="links-item">Zarejestruj się</p>
                 <a v-if="isLogged" class="links-item" @click="handleNavLogout">Wyloguj</a>
                 <router-link v-else :to="{name:'Login'}" class="links-item">Zaloguj się</router-link>
@@ -29,14 +29,18 @@
 import logoutUser from '../composables/logoutUser.js'
 import { useRouter } from 'vue-router'
 import { ref } from '@vue/reactivity'
-import { watchEffect } from '@vue/runtime-core'
+import { onMounted, watchEffect } from '@vue/runtime-core'
 export default {
-    props:['isLogged', 'user', 'userToken'],
+    props:['isLogged'],
     emits:["logout-event","login-event","user"],
     setup(props, context){
         const router = useRouter()
         
+        const user = JSON.parse( localStorage.user )
+        const userToken = localStorage.token
+
         const userRolePL = ref('')
+        const email = ref('')
         const {logout, error, logoutData} = logoutUser()
         
         const handleNavLogout = async () =>{
@@ -44,11 +48,17 @@ export default {
             context.emit('logout-event')
             router.push({name:'Main'})
         }
-         
+    onMounted(()=>{
+        if(props.isLogged){
+            email.value = localStorage.email
+            userRolePL.value = user.role
+        }
+    })         
     watchEffect(()=>{
-        if(props.user){
-            userRolePL.value = props.user.userRole
-            console.log(userRolePL.value)
+        
+        if(userRolePL.value){
+            userRolePL.value = localStorage.userRole
+            // console.log(userRolePL.value)
             switch (userRolePL.value) {
             case 'Admin':
                 userRolePL.value = 'Administrator'
@@ -70,7 +80,7 @@ export default {
         
     })
 
-        return {  handleNavLogout, userRolePL}
+        return {  handleNavLogout, userRolePL, email, user}
     }
 
 }
@@ -101,10 +111,9 @@ export default {
     z-index: 11;
 }
 .navbar .logobar-out{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    display: grid;
+    align-self: center;
+    height: 60px;
     background-color: #2463b4;
     background-color: #536BAA ;
 }
@@ -112,16 +121,12 @@ export default {
 .navbar .logobar-in{
     display: flex;
     align-items: center;
-    margin: 0px auto;
-    width: 100%;
+    justify-content: space-between;
     padding: 10px 0px;
     background-color: #2463b4;
     background-color: #536BAA ;
-    margin: auto;
-    
 }
 .navbar .logobar-in .logobar-links{
-    margin-left: auto;
     display: flex;
     align-items: center;
     padding-right: 36px;

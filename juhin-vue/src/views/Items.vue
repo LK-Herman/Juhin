@@ -88,10 +88,12 @@ import { onMounted, onUpdated, ref, watch, watchEffect } from '@vue/runtime-core
 
 export default {
   components: {  },
-  props:['userToken', 'user'],
-  setup(props) {
+  
+  setup() {
     const url = urlHolder
-    const {loadItems, error, items, totalRecords} = getItems(url, props.userToken)
+    
+    const userToken = localStorage.token
+    const {loadItems, error, items, totalRecords} = getItems(url, userToken)
     
     const pageNo = ref(1)
     const recordsPerPage = ref(10)

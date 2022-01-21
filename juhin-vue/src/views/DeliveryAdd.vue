@@ -83,18 +83,22 @@ import PackedItemsAdd from "../components/PackedItemsAdd.vue";
 import getDeliveryDetails from '../composables/getDeliveryDetails.js';
 
 export default {
-  props: ["userToken", "vId", "vendorName", "user", "orderNo", "orderId"],
+  props: ["vId", "vendorName", "orderNo", "orderId"],
   components: { PackedItemsAdd },
   setup(props) {
     const mainUrl = urlHolder;
+    
+    const user = JSON.parse( localStorage.user )
+    const userToken = localStorage.token
+
     const eta = ref(moment().format("YYYY-MM-DDThh:mm"));
     const comment = ref("");
     const selectedForwarderId = ref("");
     const packedItemsFlag = ref(false);
     let counter = 1
-    const { loadForwarders, error, forwarders } = getForwarders( mainUrl, props.userToken);
-    const { addNewDelivery, error: deliveryError, createdId } = addDelivery(mainUrl, props.userToken );
-    const { loadDetails, error:loadedDeliveryError, delivery } = getDeliveryDetails ( mainUrl, props.userToken )
+    const { loadForwarders, error, forwarders } = getForwarders( mainUrl, userToken);
+    const { addNewDelivery, error: deliveryError, createdId } = addDelivery(mainUrl, userToken );
+    const { loadDetails, error:loadedDeliveryError, delivery } = getDeliveryDetails ( mainUrl, userToken )
 
     onMounted(() => {
       loadForwarders(1, 100);
@@ -134,18 +138,19 @@ export default {
     }
 
     return {
-      handleNewDeliverySubmit,
-      eta,
-      comment,
-      forwarders,
-      error,
-      deliveryError,
-      selectedForwarderId,
-      packedItemsFlag,
-      createdId,
-      loadedDeliveryError,
-      delivery,
-      handleRefreshTable
+        user,
+        handleNewDeliverySubmit,
+        eta,
+        comment,
+        forwarders,
+        error,
+        deliveryError,
+        selectedForwarderId,
+        packedItemsFlag,
+        createdId,
+        loadedDeliveryError,
+        delivery,
+        handleRefreshTable
     };
   },
 };

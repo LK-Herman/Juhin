@@ -54,11 +54,14 @@ import urlHolder from '../composables/urlHolder.js'
 import { useRouter } from 'vue-router'
 import { onUpdated, watch } from '@vue/runtime-core'
 export default {
-    props:['userToken', 'user'],
-    setup(props){
+    
+    setup(){
         
         const router = useRouter()
         const mainUrl = urlHolder
+
+        const user = JSON.parse( localStorage.user )
+        const userToken = localStorage.token
 
         const formVendorCode = ref('')
         const formShortName = ref('')
@@ -69,7 +72,7 @@ export default {
         const formPhoneNumber = ref('')
         
 
-        const {addNewVendor, error, responseErrors} = addVendor(mainUrl, props.userToken)
+        const {addNewVendor, error, responseErrors} = addVendor(mainUrl, userToken)
 
         const handleSubmit = async () =>{
                 responseErrors.value = null

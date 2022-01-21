@@ -1,19 +1,19 @@
 <template>
 <div class="main-container">
     <div class="nav-container">
-        <Navbar :isLogged="isLogged" :user='user' :userToken="userToken" @logout-event="handleLogout"/>
+        <Navbar :isLogged="isLogged" @logout-event="handleLogout"/>
     </div>
     
     <div :class="{'sub-container':isLogged}">
         <div v-if="isLogged">
-            <MenuBar :userToken='userToken' :user='user' />
+            <MenuBar />
         </div>
         <div class="body-container">
             <div v-if="!isLogged">
-                <Login :userToken="userToken" @login-event="handleLogin" />
+                <Login  @login-event="handleLogin" />
             </div>
             <div v-else>
-                <router-view  :userToken="userToken" :user="user" />
+                <router-view />
             </div>
         </div>
     </div>
@@ -32,12 +32,14 @@ import { ref } from '@vue/reactivity'
 import urlHolder from './composables/urlHolder.js'
 import { useRouter } from 'vue-router'
 import Login from './views/Login.vue'
-import { onMounted } from '@vue/runtime-core'
+import { onBeforeMount, onMounted, watch } from '@vue/runtime-core'
+import { locales } from 'moment'
 
 export default {
     components: { MenuBar, Navbar, Endbar, Login},
     emits:["login-event", "logout-event", "user"],
     props: [],
+
     setup(props,context) {
         const isLogged = ref(false)
         const mainUrl = urlHolder
@@ -48,21 +50,31 @@ export default {
         
         const handleLogin = (userCred) =>{
             isLogged.value = true
-            userEmail.value = userCred.email
-            userToken.value = userCred.token
-            user.value = userCred.user
-            router.push({name:"Main", params:{ user:'user'}})
+            localStorage.user = JSON.stringify(userCred.user)
+            userToken.value = localStorage.token
+            user.value = localStorage.user
+            router.push({name:"Main"})
         }
         const handleLogout = () =>{
             isLogged.value = false
             router.push({name:'Main'})
         }
-
+      
         onMounted(()=>{
-            if (userToken.value !== ''){
+            let actualDate = new Date()
+            let storageDate = new Date(localStorage.expiration)
+                
+            if (localStorage.token !== '' && storageDate > actualDate ){
                 isLogged.value= true
-                console.log(userToken.value)
-                console.log(isLogged.value)
+                userToken.value = localStorage.token
+            }
+        }) 
+        watch(router, ()=>{
+            let actualDate = new Date()
+            let storageDate = new Date(localStorage.expiration)
+                
+            if (localStorage.token == '' && storageDate < actualDate ){
+                isLogged.value= false
             }
         })
        

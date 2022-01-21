@@ -16,7 +16,7 @@
                 
             </div>
             <div class="war01">
-                <img id="war01-img" src="@/assets/images/warehouse01.jpg"/>
+                <img id="war01-img" src="@/assets/images/warehouse11.jpg"/>
             </div>                
         </div>
         <div class="main-page second-page">
@@ -62,10 +62,7 @@
 <script>
 
 export default {
-  props: ['userToken', 'user'],
-  
-  setup(props) {
-      
+  setup() {
 
     return {  }
   }
@@ -75,12 +72,9 @@ export default {
 
 .main-page{
     display: grid;
-    grid-template-columns: 480px 662px;
+    grid-template-columns: 3fr 2fr;
     background-color: var(--back-grey2);
-    
-    margin: auto;
     margin-bottom: 40px;
-    /* box-shadow: 3px 3px 5px rgba(20,20,20,0.5); */
     /* background-image: url("../assets/images/warehouse02.jpg"); */
     background-image: linear-gradient(to right bottom, #333333,#666);
     
@@ -89,31 +83,33 @@ export default {
     margin: 12px 0;
 }
 .main-page .desc01{
-    padding: 0px 60px;
+    padding: 30px 60px;
     /* max-height: 420px; */
-    text-align: justify;
+    /* text-align: justify; */
 }
 .main-page .desc02{
-    padding: 0px 60px;
+    padding: 30px 60px;
     /* max-height: 420px; */
-    text-align: justify;
+    /* text-align: justify; */
 }
 .main-page .desc02 h3{
     margin-top: 40px;
 }
 
 .main-page .war01{
-    max-height: 440px;
-    justify-self: end;
-    
+    display: flex;
+    padding: 0;
+    margin: 0;
+    justify-content: end;
 }
 .second-page{
-        grid-template-columns: 568px 573px;
+        grid-template-columns: 2fr 3fr;
     }
 .main-page .war02{
+    display: flex;
     justify-self: start;
     /* grid-column: 1 / 3; */
-    max-height: 380px;
+    max-height: 400px;
     
 }
 .main-page #war02-img{
@@ -121,10 +117,9 @@ export default {
     height: 100%;
 }
 .main-page .war01 #war01-img{
-    /* max-height: 420px; */
-    display: inline-block;
-    height: 100%;
-    overflow: hidden;
+    max-width: 600px;
+    padding: 0px;
+    margin:0;
 }
 #image1{
     max-width: 440px;

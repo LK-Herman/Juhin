@@ -41,13 +41,14 @@ import { onMounted, onUpdated, ref, watch, watchEffect } from '@vue/runtime-core
 
 export default {
     emits:['pallet-event'],
-    props: ['userToken', 'id'],
+    props: ['id'],
     setup(props, context){
         const mainUrl = urlHolder
+        const userToken = localStorage.token
         const isLoaded = ref(false)
         const ori = ref(0)
         const eur = ref(0)
-        const {delivery, loadDetails, error} = getDeliveryDetails(mainUrl, props.userToken)
+        const {delivery, loadDetails, error} = getDeliveryDetails(mainUrl, userToken)
 
         onMounted (()=>{
             

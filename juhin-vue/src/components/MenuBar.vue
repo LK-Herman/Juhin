@@ -9,7 +9,7 @@
         </div>
     </div>
     <router-link :to="{name:'Upcoming'}" class="deliveries-btn btn">Najbliższe dostawy</router-link>
-    <router-link :to="{name:'Deliveries', params: {userToken: userToken}}" class="deliveries-btn btn">Przeglądaj</router-link>
+    <router-link :to="{name:'Deliveries'}" class="deliveries-btn btn">Przeglądaj</router-link>
     <router-link :to="{name:'DeliverySchedule'}" class="deliveries-btn btn">Grafik dostaw</router-link>
     <router-link :to="{name:'DeliverySearch'}" class="deliveries-btn btn">Wyszukaj</router-link>
     <!-- <router-link  class="deliveries-btn btn">Dodaj</router-link> -->
@@ -23,7 +23,7 @@
             <h4>ZAMÓWIENIA</h4>
         </div>
     </div>
-    <router-link :to="{name:'Orders', params: {userToken: userToken}}" class="orders-btn btn">Przeglądaj</router-link>
+    <router-link :to="{name:'Orders'}" class="orders-btn btn">Przeglądaj</router-link>
     
 
      <div class="title-bar">
@@ -45,8 +45,8 @@
             <h4>DOSTAWCY</h4>
         </div>
     </div>
-    <router-link class="vendors-btn btn" :to="{name:'Vendors', params: {userToken: userToken}}">Przeglądaj</router-link>
-    <router-link class="vendors-btn btn" :to="{name:'VendorAdd', params: {userToken: userToken}}">Dodaj</router-link>
+    <router-link class="vendors-btn btn" :to="{name:'Vendors'}">Przeglądaj</router-link>
+    <router-link class="vendors-btn btn" :to="{name:'VendorAdd'}">Dodaj</router-link>
 
     <div class="title-bar">
         <div id="forwarders" class="menu-icon">
@@ -56,7 +56,7 @@
             <h4>PRZEWOŹNICY</h4>
         </div>
     </div>
-    <router-link class="forwarders-btn btn" :to="{name:'Forwarders', params: {userToken: userToken}}">Przeglądaj</router-link>
+    <router-link class="forwarders-btn btn" :to="{name:'Forwarders'}">Przeglądaj</router-link>
     <router-link class="forwarders-btn btn" :to="{name:'ForwarderAdd'}">Dodaj</router-link>
     <router-link class="forwarders-btn btn" :to="{name:'ForwarderRanking'}">Ranking</router-link>
 </div>
@@ -64,13 +64,14 @@
 
 <script>
 
-export default {
-    props: ['userToken', 'user'],
-setup(props){
-   
-    return{ }
-}
-}
+// export default {
+// setup(){
+
+//     const user = JSON.parse( localStorage.user )
+    
+//     return{ }
+// }
+// }
 </script>
 
 <style>
@@ -78,20 +79,21 @@ setup(props){
     display: flex;
     flex-flow: column;
     background-color:var(--back-dark);
-    padding: 3px 0 0 0;
+    padding: 40px 0 0 0;
     margin: 0;
     height: 100%;
     box-shadow: 4px 0px 4px rgba(30,30,30,0.2);
 }
 .menubar h4 {
     font-weight: 300;
+    margin-left:14px;
 }
 .menubar .menu-icon{
-    display: inline-block;
+    /* display: inline-block; */
     padding: 8px 0;    
     text-align: center;
     width: 60px;
-    margin: 3px auto;
+    margin: 3px 10px 3px 5px;
 }
 .menubar #deliveries {
     background-color: var(--deliveries);
@@ -134,7 +136,8 @@ setup(props){
 }
 .menubar button, .menubar .btn{
     margin: 3px 0;
-    box-shadow: 6px 4px 8px rgba(30,30,30,0.5);
+    box-shadow: 3px 4px 4px rgba(30,30,30,0.7);
+    transform: translateX(5px);
 }
 
 </style>

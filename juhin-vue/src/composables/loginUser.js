@@ -5,7 +5,7 @@ const loginUser = (url) =>{
     
     const loginData = ref([])
     const error = ref('')
-    const token = ref('')
+    // const token = ref('')
     
     const login = async (userEmail, password) => {
         const userData = {emailAddress:userEmail, password:password}
@@ -30,7 +30,10 @@ const loginUser = (url) =>{
                 throw Error('Dane niedostępne')
             }
             loginData.value = await data.json()
-            token.value = loginData.value.token
+            localStorage.expiration = loginData.value.expiration
+            // token.value = loginData.value.token
+            localStorage.token = loginData.value.token
+            // console.log(loginData.value)
             error.value = ''
         } catch (er) {
             error.value = er.message
@@ -38,6 +41,6 @@ const loginUser = (url) =>{
         }
     }
     
-    return {login, error, loginData, token}
+    return {login, error, loginData}
 }
 export default loginUser

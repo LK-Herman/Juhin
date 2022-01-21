@@ -56,10 +56,13 @@ import urlHolder from '../composables/urlHolder.js'
 import { onMounted } from '@vue/runtime-core'
 
 export default {
-  props:['userToken', 'user'],
-  setup(props) {
+  
+  setup() {
     const url = urlHolder
-    const {loadForwarders, error, forwarders, totalRecords} = getForwarders(url, props.userToken)
+    
+    const userToken = localStorage.token
+
+    const {loadForwarders, error, forwarders, totalRecords} = getForwarders(url, userToken)
     let counter = 1
 
     onMounted(async () => {
@@ -118,8 +121,10 @@ export default {
     color: #ececec;
     font-size: 18px;
 }
-.table-container .center-item {
-    justify-self: center;
+.table-list .table-container .center-item {
+    display: flex;
+    justify-content: center;
+    justify-self: auto;
 }
 
 </style>

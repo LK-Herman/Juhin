@@ -39,16 +39,18 @@ export default {
         const password =ref('')
         const {getUser, user, error:getError} = getCurrentUser()
         
-        const {login, error, token} = loginUser(mainUrl)
+        const {login, error} = loginUser(mainUrl)
         
         const handleSubmit = async () =>{
             await login(email.value, password.value)
             
             if(!error.value){
-                await getUser(mainUrl, token.value)
+                await getUser(mainUrl, localStorage.token)
+                   
                 if(!getError.value){
                   
-                    context.emit('login-event', {email: email.value, token:token.value, user:user.value })
+                    context.emit('login-event', {email: email.value, token:localStorage.token, user:user.value })
+
                 }
             }
         } 

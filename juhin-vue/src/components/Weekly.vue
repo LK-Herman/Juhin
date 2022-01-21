@@ -5,7 +5,7 @@
     </div>
     <div v-for="delivery in upcomingDeliveries" :key="delivery.deliveryId">
         <div class="weekly">
-            <DeliverySmall :userToken="userToken" :id="delivery.deliveryId" @pallet-event="handlePalletEvent"/>
+            <DeliverySmall :id="delivery.deliveryId" @pallet-event="handlePalletEvent"/>
         </div>
         <!-- <p v-if="totalOri !== 0">{{totalOri}} / {{totalEur}}</p> -->
     </div>
@@ -19,13 +19,16 @@ import getUpcoming from '../composables/getUpcoming.js'
 import urlHolder from '../composables/urlHolder.js'
 
 export default {
-    props: ['userToken', 'user', 'date'],
+    props: ['date'],
     components: { DeliverySmall },
     setup(props){
         const mainUrl = urlHolder
+        
+        const userToken = localStorage.token
+
         const totalOri = ref(0)
         const totalEur = ref(0)
-        const {loadUpcoming, error, upcomingDeliveries} = getUpcoming(mainUrl, props.userToken)
+        const {loadUpcoming, error, upcomingDeliveries} = getUpcoming(mainUrl, userToken)
         
     onMounted(()=>{
         loadUpcoming(props.date)

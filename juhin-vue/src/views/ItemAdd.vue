@@ -124,7 +124,7 @@ import urlHolder from '../composables/urlHolder.js'
 import {useRouter} from 'vue-router'
 
 export default {
-    props:['userToken', 'user', 'vend'],
+    props:['vend'],
     setup(props){
         const router = useRouter()
         const vendor = ref(null)
@@ -144,15 +144,17 @@ export default {
         const maxOri = ref(null)
         const maxEur = ref(null)
         const price = ref(null)
+        const user = JSON.parse( localStorage.user )
+        const userToken = localStorage.token
 
-        const {loadWarehouses, warehouses, error:wherror} = getWarehouses(mainUrl, props.userToken)
-        const {loadCurrency, currencyList, error:curerror} = getCurrency(mainUrl, props.userToken)
-        const {loadUnits, units, error:unierror} = getUnits(mainUrl, props.userToken)
-        const {loadPallets, pallets, error:palerror} = getPallets(mainUrl, props.userToken)
-        const {addNewItem, error:addError, response} = addItem(mainUrl, props.userToken)
+        const {loadWarehouses, warehouses, error:wherror} = getWarehouses(mainUrl, userToken)
+        const {loadCurrency, currencyList, error:curerror} = getCurrency(mainUrl, userToken)
+        const {loadUnits, units, error:unierror} = getUnits(mainUrl, userToken)
+        const {loadPallets, pallets, error:palerror} = getPallets(mainUrl, userToken)
+        const {addNewItem, error:addError, response} = addItem(mainUrl, userToken)
 
         onMounted(()=>{
-            if(props.userToken === '' || props.vend === undefined ){
+            if(userToken === '' || props.vend === undefined ){
                 router.push({name:'Main'})
             }else{
                 vendor.value = JSON.parse(props.vend)

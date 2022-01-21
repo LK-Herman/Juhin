@@ -93,7 +93,7 @@
         </div>         
         <!--end of delivery-details-container -->
         <div>
-            <DeliveryDelete :userToken="userToken" :id="id" :orders="delivery.purchaseOrders"/>
+            <DeliveryDelete :id="id" :orders="delivery.purchaseOrders"/>
         </div>
 
         <div v-if="isEditing" >
@@ -175,18 +175,21 @@ import DeliveryDelete from '../components/DeliveryDelete.vue'
 import getForwarders from '../composables/getForwarders.js'
 import getStatuses from '../composables/getStatuses.js'
 import editDeliveryById from '../composables/editDeliveryById.js'
-import moment from 'moment'
 
 export default {
-    props: ['userToken','user', 'id'],
+    props: ['id'],
     components: {DeliveryDelete},
     setup(props){
         let counter = 1
         const isEditing = ref(false)
         const rating = ref (100)
         const mainUrl = urlHolder
+        
+        const user = JSON.parse( localStorage.user )
+        const userToken = localStorage.token
+
         const router = useRouter()
-        const {delivery, loadDetails, error} = getDeliveryDetails(mainUrl, props.userToken)
+        const {delivery, loadDetails, error} = getDeliveryDetails(mainUrl, userToken)
         
         const formPrio = ref('')
         const formRating = ref(100)
@@ -195,9 +198,9 @@ export default {
         const formForwarderId = ref('')
         const formComment = ref('')
 
-        const {loadForwarders, error:forError, forwarders} = getForwarders(mainUrl, props.userToken)
-        const {loadStatuses, error:staError, statuses} = getStatuses(mainUrl, props.userToken)
-        const {editDelivery,error:ediError} = editDeliveryById(mainUrl, props.userToken)
+        const {loadForwarders, error:forError, forwarders} = getForwarders(mainUrl, userToken)
+        const {loadStatuses, error:staError, statuses} = getStatuses(mainUrl, userToken)
+        const {editDelivery,error:ediError} = editDeliveryById(mainUrl, userToken)
 
         // const deleteFlag = ref(false)
         onMounted (()=>{

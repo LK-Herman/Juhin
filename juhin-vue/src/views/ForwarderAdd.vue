@@ -39,17 +39,19 @@ import urlHolder from '../composables/urlHolder.js'
 import { useRouter } from 'vue-router'
 import { onUpdated, watch } from '@vue/runtime-core'
 export default {
-    props:['userToken', 'user'],
-    setup(props){
+    setup(){
         
         const router = useRouter()
         const mainUrl = urlHolder
+        
+        const userToken = localStorage.token
+
         const formName = ref('')
         const formEmail = ref('')
         const formPhoneNumber = ref('')
         const formError = ref([])
 
-        const {addNewForwarder, error, createdId} = addForwarder(mainUrl, props.userToken)
+        const {addNewForwarder, error, createdId} = addForwarder(mainUrl, userToken)
 
         const handleSubmit = async () =>{
                 error.value = null

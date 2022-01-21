@@ -12,7 +12,7 @@
         </div>
         <div class="item-week1">
                 <div>
-                    <Weekly :userToken="userToken" :date="firstDayOfWeek1" />
+                    <Weekly :date="firstDayOfWeek1" />
                 </div>
         </div>
         <div class="item-head2">
@@ -23,7 +23,7 @@
         </div>   
         <div class="item-week2">
                 <div>
-                    <Weekly :userToken="userToken" :date="firstDayOfWeek2" />
+                    <Weekly :date="firstDayOfWeek2" />
                 </div>
         </div> 
         <div class="item-head3">
@@ -34,7 +34,7 @@
         </div>   
         <div class="item-week3">
                 <div>
-                    <Weekly :userToken="userToken" :date="firstDayOfWeek3" />
+                    <Weekly :date="firstDayOfWeek3" />
                 </div>
         </div>
     </div>
@@ -49,6 +49,9 @@ export default {
     props: ['userToken', 'user'],
     components: {Weekly, DeliveryLegend},
     setup(props){
+
+        const user = JSON.parse( localStorage.user )
+        const userToken = localStorage.token
 
         let dayOfWeek = moment().format("E") - 1
         let firstDayOfWeek1 = moment().subtract(dayOfWeek, 'days').format("YYYY-MM-DD")

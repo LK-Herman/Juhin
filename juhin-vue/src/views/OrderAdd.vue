@@ -57,19 +57,23 @@ import urlHolder from '../composables/urlHolder.js'
 import { useRouter } from 'vue-router'
 import { onMounted, onUpdated, watch } from '@vue/runtime-core'
 export default {
-    props:['userToken', 'user', 'vend'],
+    props:['vend'],
     setup(props){
         
         const router = useRouter()
         const mainUrl = urlHolder
+
+        const user = JSON.parse( localStorage.user )
+        const userToken = localStorage.token
+
         const orderNumber = ref('')
         const vendor = ref(null)
         const isOK = ref(false)
         const tempOrderNumber = ref('')
-        const {addNewOrder, error:addError, response} = addOrder(mainUrl, props.userToken)
+        const {addNewOrder, error:addError, response} = addOrder(mainUrl, userToken)
         
          onMounted(()=>{
-            if(props.userToken === '' || props.vend === undefined ){
+            if(userToken === '' || props.vend === undefined ){
                 router.push({name:'Main'})
             }else{
                 vendor.value = JSON.parse(props.vend)
@@ -80,7 +84,7 @@ export default {
             let orderData = {
                 orderNumber: orderNumber.value,
                 vendorId: vendor.value.vendorId,
-                userId: props.user.userId
+                userId: user.userId
             }
             
             await addNewOrder(orderData)
@@ -90,7 +94,7 @@ export default {
 
              router.push({name:'DeliveryAdd', params:{
                                         vId: vendor.value.vendorId, 
-                                        user: props.user, 
+                                        user: user, 
                                         vendorName: vendor.value.name, 
                                         orderNo:tempOrderNumber.value,
                                         orderId:response.value.data.orderId}}

@@ -95,10 +95,14 @@ import {useRouter} from 'vue-router'
 
 export default {
   components: {  },
-  props:['userToken', 'user'],
-  setup(props) {
+  
+  setup() {
     const url = urlHolder
-    const {vendors, error, loadVendors, totalRecords} = getVendors(url, props.userToken)
+
+    const user = JSON.parse( localStorage.user )
+    const userToken = localStorage.token
+
+    const {vendors, error, loadVendors, totalRecords} = getVendors(url, userToken)
     const pageNo = ref(1)
     const recordsPerPage = ref(10)
     const lastPage = ref(1)

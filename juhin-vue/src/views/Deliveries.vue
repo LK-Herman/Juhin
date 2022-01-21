@@ -105,10 +105,14 @@ import urlHolder from '../composables/urlHolder.js'
 
 export default {
   components: {  },
-  props:['userToken', 'user'],
+  props:[],
   setup(props) {
     const url = urlHolder
-    const {deliveries, error, loadDeliveries, totalRecords} = getDeliveriesList(url, props.userToken)
+
+    
+    const userToken = localStorage.token
+
+    const {deliveries, error, loadDeliveries, totalRecords} = getDeliveriesList(url, userToken)
     const pageNo = ref(1)
     const recordsPerPage = ref(10)
     const lastPage = ref(1)

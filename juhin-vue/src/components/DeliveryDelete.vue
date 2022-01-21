@@ -22,11 +22,15 @@ import {useRouter} from 'vue-router'
 import deleteDelivery from '../composables/deleteDelivery.js'
 
 export default {
-    props:['userToken','id','orders'],
+    props:['id','orders'],
     setup(props){
         const mainUrl = urlHolder
+        
+        const user = JSON.parse( localStorage.user )
+        const userToken = localStorage.token
+
         const router = useRouter()
-        const {delDel, error} = deleteDelivery(mainUrl, props.userToken)
+        const {delDel, error} = deleteDelivery(mainUrl, userToken)
 
         const handleYes = async () =>{
             await delDel(props.id,props.orders)

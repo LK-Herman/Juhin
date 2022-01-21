@@ -26,6 +26,9 @@ const getCurrentUser = () =>{
               }
               user.value = await data.json()
               
+              
+            //   console.log(user.value)
+            //   localStorage.token = user.value.role
       } catch (er) {
         error.value = er.message
         console.log(error.value)

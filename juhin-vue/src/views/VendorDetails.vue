@@ -149,11 +149,15 @@ import deleteVendorById from '../composables/deleteVendorById'
 
 export default {
   components: {  },
-  props:['userToken', 'user', 'vId'],
+  props:['vId'],
   setup(props) {
     const mainUrl = urlHolder
-    const {loadVendor, error, vendor} = getVendorById(mainUrl, props.userToken)
-    const {deleteVendor, error:delError} = deleteVendorById(mainUrl, props.userToken)
+    
+    const user = JSON.parse( localStorage.user )
+    const userToken = localStorage.token
+    
+    const {loadVendor, error, vendor} = getVendorById(mainUrl, userToken)
+    const {deleteVendor, error:delError} = deleteVendorById(mainUrl, userToken)
     const router = useRouter()
     const editFlag = ref(false)
     const isDeleted = ref(false)
@@ -184,8 +188,8 @@ export default {
         
         router.push({name:'ItemAdd', params:{
             
-                userToken:props.userToken, 
-                user:props.user, 
+                userToken:userToken, 
+                user:user, 
                 vend:JSON.stringify(vendor.value)
                 }})
     }
@@ -193,8 +197,8 @@ export default {
         
         router.push({name:'OrderAdd', params:{
             
-                userToken:props.userToken, 
-                user:props.user, 
+                userToken:userToken, 
+                user:user, 
                 vend:JSON.stringify(vendor.value)
                 }})
     }
@@ -216,7 +220,7 @@ export default {
             putError.value = ''
         }
 
-        const {putVendor, error:putError, responseErrors} = editVendor(mainUrl, props.userToken)
+        const {putVendor, error:putError, responseErrors} = editVendor(mainUrl, userToken)
 
         const handleSubmit = async () =>{
                 responseErrors.value = null

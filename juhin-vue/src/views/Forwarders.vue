@@ -72,10 +72,11 @@ import { onMounted, onUpdated, ref, watch, watchEffect } from '@vue/runtime-core
 
 export default {
   components: {  },
-  props:['userToken', 'user'],
-  setup(props) {
+  
+  setup() {
     const url = urlHolder
-    const {loadForwarders, error, forwarders, totalRecords} = getForwarders(url, props.userToken)
+    const userToken = localStorage.token
+    const {loadForwarders, error, forwarders, totalRecords} = getForwarders(url, userToken)
     const pageNo = ref(1)
     const recordsPerPage = ref(10)
     const lastPage = ref(1)
