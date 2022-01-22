@@ -15,7 +15,8 @@ export default {
     setup(props){
         const mainUrl = urlHolder
         
-        const userToken = localStorage.token
+        const user = localStorage.getItem('user')
+        const userToken = localStorage.getItem('token')
         
         const {getOrder, error, order} = getOrderById(mainUrl, userToken)
         

@@ -99,8 +99,8 @@ export default {
   setup() {
     const url = urlHolder
 
-    const user = JSON.parse( localStorage.user )
-    const userToken = localStorage.token
+        const user = localStorage.getItem('user')
+        const userToken = localStorage.getItem('token')
 
     const {vendors, error, loadVendors, totalRecords} = getVendors(url, userToken)
     const pageNo = ref(1)

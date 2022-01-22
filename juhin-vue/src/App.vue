@@ -1,7 +1,7 @@
 <template>
 <div class="main-container">
     <div class="nav-container">
-        <Navbar :isLogged="isLogged" @logout-event="handleLogout"/>
+        <Navbar @logout-event="handleLogout"/>
     </div>
     
     <div :class="{'sub-container':isLogged}">
@@ -9,12 +9,7 @@
             <MenuBar />
         </div>
         <div class="body-container">
-            <div v-if="!isLogged">
-                <Login  @login-event="handleLogin" />
-            </div>
-            <div v-else>
-                <router-view />
-            </div>
+            <router-view />
         </div>
     </div>
 </div>
@@ -28,12 +23,12 @@
 import MenuBar from './components/MenuBar.vue'
 import Navbar from './components/Navbar.vue'
 import Endbar from './components/Endbar.vue'
-import { ref } from '@vue/reactivity'
+import { computed, ref } from '@vue/reactivity'
 import urlHolder from './composables/urlHolder.js'
 import { useRouter } from 'vue-router'
 import Login from './views/Login.vue'
 import { onBeforeMount, onMounted, watch } from '@vue/runtime-core'
-import { locales } from 'moment'
+import {useStore} from 'vuex'
 
 export default {
     components: { MenuBar, Navbar, Endbar, Login},
@@ -45,40 +40,39 @@ export default {
         const mainUrl = urlHolder
         const userEmail = ref('')
         const router = useRouter()
-        const userToken = ref('')
-        const user = ref(null)
+        const store = useStore()
         
         const handleLogin = (userCred) =>{
             isLogged.value = true
-            localStorage.user = JSON.stringify(userCred.user)
-            userToken.value = localStorage.token
-            user.value = localStorage.user
             router.push({name:"Main"})
         }
         const handleLogout = () =>{
             isLogged.value = false
-            router.push({name:'Main'})
+            router.push({name:'Login'})
         }
-      
-        onMounted(()=>{
-            let actualDate = new Date()
-            let storageDate = new Date(localStorage.expiration)
+        
+        onBeforeMount(()=>{
+            
+            if (localStorage['token']){
+                isLogged.value = true
+                store.commit('setIsLogged',true)
+                store.commit('setUserToken', localStorage['token'])
+                store.commit('setExpiration', new Date(localStorage['expiration']))
+            }else{
+                store.commit('setIsLogged',false)
+                store.commit('clearUserToken')
+                isLogged.value = false
                 
-            if (localStorage.token !== '' && storageDate > actualDate ){
-                isLogged.value= true
-                userToken.value = localStorage.token
             }
         }) 
-        watch(router, ()=>{
-            let actualDate = new Date()
-            let storageDate = new Date(localStorage.expiration)
-                
-            if (localStorage.token == '' && storageDate < actualDate ){
-                isLogged.value= false
-            }
+         watch(store.state,()=>{
+            
+            let loginCheck  = computed(()=> store.getters.getIsLogged)
+            isLogged.value = loginCheck.value
+
         })
        
-    return { isLogged, handleLogin, handleLogout, user, userEmail, userToken}
+    return { isLogged, handleLogin, handleLogout }
   }
 }
 </script>

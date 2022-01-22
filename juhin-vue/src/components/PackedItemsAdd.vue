@@ -38,8 +38,8 @@ export default {
     setup(props,context){
         const mainUrl = urlHolder
 
-        // const user = JSON.parse( localStorage.user )
-        const userToken = localStorage.token
+        const user = localStorage.getItem('user')
+        const userToken = localStorage.getItem('token')
 
         const {loadItems, error, items} = getItemsByVendor(mainUrl, userToken)
         const isVisible = ref(true)

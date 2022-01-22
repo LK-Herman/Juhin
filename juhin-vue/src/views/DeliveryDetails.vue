@@ -169,12 +169,13 @@
 <script>
 import getDeliveryDetails from '../composables/getDeliveryDetails.js'
 import urlHolder from '../composables/urlHolder.js'
-import { onMounted, ref } from '@vue/runtime-core'
+import { computed, onMounted, ref } from '@vue/runtime-core'
 import {useRouter} from 'vue-router'
 import DeliveryDelete from '../components/DeliveryDelete.vue'
 import getForwarders from '../composables/getForwarders.js'
 import getStatuses from '../composables/getStatuses.js'
 import editDeliveryById from '../composables/editDeliveryById.js'
+import {useStore} from 'vuex'
 
 export default {
     props: ['id'],
@@ -184,12 +185,12 @@ export default {
         const isEditing = ref(false)
         const rating = ref (100)
         const mainUrl = urlHolder
-        
-        const user = JSON.parse( localStorage.user )
-        const userToken = localStorage.token
+        const store = useStore()
+        const user = computed(()=> store.getters.getUser)
+        const userToken = computed(()=> store.getters.getUserToken)
 
         const router = useRouter()
-        const {delivery, loadDetails, error} = getDeliveryDetails(mainUrl, userToken)
+        const {delivery, loadDetails, error} = getDeliveryDetails(mainUrl, userToken.value)
         
         const formPrio = ref('')
         const formRating = ref(100)
@@ -198,11 +199,10 @@ export default {
         const formForwarderId = ref('')
         const formComment = ref('')
 
-        const {loadForwarders, error:forError, forwarders} = getForwarders(mainUrl, userToken)
-        const {loadStatuses, error:staError, statuses} = getStatuses(mainUrl, userToken)
-        const {editDelivery,error:ediError} = editDeliveryById(mainUrl, userToken)
+        const {loadForwarders, error:forError, forwarders} = getForwarders(mainUrl, userToken.value)
+        const {loadStatuses, error:staError, statuses} = getStatuses(mainUrl, userToken.value)
+        const {editDelivery,error:ediError} = editDeliveryById(mainUrl, userToken.value)
 
-        // const deleteFlag = ref(false)
         onMounted (()=>{
             counter = 1
             loadDetails(props.id)
@@ -210,7 +210,7 @@ export default {
                     delivery.value.packedItems.forEach(item =>{
                         item['counter'] = counter++
                     })
-                    console.log(delivery.value)
+                    // console.log(delivery.value)
                 })
             loadForwarders(1,50)
             loadStatuses(1,50)

@@ -28,59 +28,78 @@
 <script>
 import logoutUser from '../composables/logoutUser.js'
 import { useRouter } from 'vue-router'
-import { ref } from '@vue/reactivity'
-import { onMounted, watchEffect } from '@vue/runtime-core'
+import { computed, ref } from '@vue/reactivity'
+import { onMounted, watch, watchEffect } from '@vue/runtime-core'
+import urlHolder from '../composables/urlHolder'
+import {useStore} from 'vuex'
+import getCurrentUser from '../composables/getCurrentUser.js'
 export default {
-    props:['isLogged'],
+    
     emits:["logout-event","login-event","user"],
     setup(props, context){
         const router = useRouter()
-        
-        const user = JSON.parse( localStorage.user )
-        const userToken = localStorage.token
-
+        const mainUrl = urlHolder
+        const store = useStore()
+        const user = ref(null)
         const userRolePL = ref('')
         const email = ref('')
-        const {logout, error, logoutData} = logoutUser()
-        
-        const handleNavLogout = async () =>{
-            await logout()
-            context.emit('logout-event')
-            router.push({name:'Main'})
-        }
-    onMounted(()=>{
-        if(props.isLogged){
-            email.value = localStorage.email
-            userRolePL.value = user.role
-        }
-    })         
-    watchEffect(()=>{
-        
-        if(userRolePL.value){
-            userRolePL.value = localStorage.userRole
-            // console.log(userRolePL.value)
-            switch (userRolePL.value) {
-            case 'Admin':
-                userRolePL.value = 'Administrator'
-                break;
-            case 'Specialist':
-                userRolePL.value = 'Specjalista'
-                break;
-            case 'Warehouseman':
-                userRolePL.value = 'Magazynier'
-                break;
-            case 'Guest':
-                userRolePL.value = 'Gość'
-                break;
-            }
-        }
-        if (!props.isLogged){
-            userRolePL.value = ''
-        }
-        
-    })
+        const isLogged = ref(false)
+        const {logout, error, logoutData} = logoutUser(mainUrl)
+        const {getUser, error:getError} = getCurrentUser(mainUrl)
 
-        return {  handleNavLogout, userRolePL, email, user}
+        
+        const handleNavLogout = async () =>
+        {
+            await logout()
+            .then(()=>
+            {
+                context.emit('logout-event')
+                isLogged.value = false
+                router.push({name:'Login'})
+                email.value = ''
+                userRolePL.value = ''
+            })
+        }
+        onMounted(async ()=>
+        {
+            const isLogged = computed(()=> store.getters.getIsLogged)
+            if(isLogged.value)
+            {
+                const us = computed(()=> store.getters.getUser)
+                user.value = us.value
+                if(user.value['userId'])
+                {
+                    email.value = user.value.emailAddress
+                    userRolePL.value = user.value.userRole
+                }
+                else
+                {
+                    const userToken = computed(()=> store.getters.getUserToken)
+                    
+                    await getUser(userToken.value)
+                    if(!getError)
+                    {
+                        email.value = user.value.emailAddress
+                        userRolePL.value = user.value.userRole
+                    }
+                }
+            }else
+            {
+                router.push({name:'Login'})   
+            }
+        })
+        watch(store.state,()=>{
+            
+            let loginCheck = computed(()=> store.getters.getIsLogged)
+            isLogged.value = loginCheck.value
+            const us = computed(()=> store.getters.getUser)
+            user.value = us.value
+            if(user.value){
+                email.value = user.value.emailAddress
+                userRolePL.value = user.value.userRole
+            }
+        })
+        return {  handleNavLogout, userRolePL, email,isLogged, user}
     }
 
 }

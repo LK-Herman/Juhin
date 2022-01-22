@@ -74,31 +74,32 @@
 
 <script>
 import moment from "moment";
-import { ref } from "@vue/reactivity";
+import { computed, ref } from "@vue/reactivity";
 import getForwarders from "../composables/getForwarders.js";
 import addDelivery from "../composables/addDelivery.js";
 import { onMounted, watch, watchEffect } from "@vue/runtime-core";
 import urlHolder from "../composables/urlHolder.js";
 import PackedItemsAdd from "../components/PackedItemsAdd.vue";
 import getDeliveryDetails from '../composables/getDeliveryDetails.js';
+import { useStore } from 'vuex'
 
 export default {
   props: ["vId", "vendorName", "orderNo", "orderId"],
   components: { PackedItemsAdd },
   setup(props) {
     const mainUrl = urlHolder;
-    
-    const user = JSON.parse( localStorage.user )
-    const userToken = localStorage.token
+    const store = useStore()
+    const user = computed(()=> store.getters.getUser)
+    const userToken = computed(()=> store.getters.getUserToken)
 
     const eta = ref(moment().format("YYYY-MM-DDThh:mm"));
     const comment = ref("");
     const selectedForwarderId = ref("");
     const packedItemsFlag = ref(false);
     let counter = 1
-    const { loadForwarders, error, forwarders } = getForwarders( mainUrl, userToken);
-    const { addNewDelivery, error: deliveryError, createdId } = addDelivery(mainUrl, userToken );
-    const { loadDetails, error:loadedDeliveryError, delivery } = getDeliveryDetails ( mainUrl, userToken )
+    const { loadForwarders, error, forwarders } = getForwarders( mainUrl, userToken.value);
+    const { addNewDelivery, error: deliveryError, createdId } = addDelivery(mainUrl, userToken.value );
+    const { loadDetails, error:loadedDeliveryError, delivery } = getDeliveryDetails ( mainUrl, userToken.value )
 
     onMounted(() => {
       loadForwarders(1, 100);

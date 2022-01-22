@@ -21,7 +21,7 @@ const getOrders = (url, token) =>{
                 })
             .catch(err => error.value = err)
        
-              console.log(orders.value)
+            //   console.log(orders.value)
 
       }
     //   console.log('TOTAL RECORDS:'+totalRecords.value)

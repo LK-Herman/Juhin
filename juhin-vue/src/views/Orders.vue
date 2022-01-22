@@ -82,12 +82,13 @@
 </template>
 
 <script>
-import { onMounted, ref, watch, watchEffect } from '@vue/runtime-core'
+import { computed, onMounted, ref, watch, watchEffect } from '@vue/runtime-core'
 import getOrders from '../composables/getOrders.js'
 import urlHolder from '../composables/urlHolder.js'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import mainUrl from '../composables/urlHolder.js'
+import {useStore} from 'vuex'
 
 export default {
   components: {  },
@@ -95,11 +96,11 @@ export default {
   setup(props) {
     const router = useRouter()
     const url = urlHolder
-    
-    const user = JSON.parse( localStorage.user )
-    const userToken = localStorage.token
+    const store = useStore()
+    const user = computed(()=> store.getters.getUser)
+    const userToken = computed(()=> store.getters.getUserToken)
 
-    const {orders, error, loadOrders, totalRecords} = getOrders(url, userToken)
+    const {orders, error, loadOrders, totalRecords} = getOrders(url, userToken.value)
     const pageNo = ref(1)
     const recordsPerPage = ref(10)
     const lastPage = ref(1)
@@ -111,6 +112,8 @@ export default {
     }
 
     onMounted(async () => {
+        
+        
         counter = 1
       await loadOrders(pageNo.value,recordsPerPage.value)
             .then(function(){
@@ -172,12 +175,12 @@ export default {
     const handleLoadDeliveries = async (orderId) =>{
         await axios.get(mainUrl + "deliveries/byorder/"+ orderId,{
             'Accept':'*/*',
-            'Authorization':'Bearer ' + props.userToken
+            'Authorization':'Bearer ' + userToken.value
         }).then(resp => deliveries.value = resp.data)
 
     }
 
-    return {handleBack, user, userToken, deliveries, handleLoadDeliveries, orders, error, pageNo, recordsPerPage, handleNextPage, handlePreviousPage, handlePages, handleGoToPage, lastPage }
+    return {handleBack, user, deliveries, handleLoadDeliveries, orders, error, pageNo, recordsPerPage, handleNextPage, handlePreviousPage, handlePages, handleGoToPage, lastPage }
   }
 }
 </script>

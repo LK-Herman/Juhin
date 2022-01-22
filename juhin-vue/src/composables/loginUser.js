@@ -1,46 +1,60 @@
 import { ref } from '@vue/reactivity'
-import VueCookies from 'vue-cookies'
+import axios from 'axios'
+import {useStore} from 'vuex'
 
 const loginUser = (url) =>{
     
-    const loginData = ref([])
+    let loginData = null
     const error = ref('')
+    const store = useStore()
     // const token = ref('')
     
-    const login = async (userEmail, password) => {
-        const userData = {emailAddress:userEmail, password:password}
-        var requestOptions = {
+    const login = async (userEmail, password) => 
+    {
+        let userData = {emailAddress:userEmail, password:password}
+        var requestOptions = 
+        {
             body:'raw',
             method: 'POST',
             mode: 'cors',               
-            headers: {'Accept':'*/*',
-            'Content-Type':'application/json',
-            'Accept':'*/*',
-            'Accept-Encoding':'gzip, deflate, br',
-            'Connection':'keep-alive'
-        },
-        body: JSON.stringify(userData)
-    }
+            headers: 
+            {
+                'Accept':'*/*',
+                'Content-Type':'application/json',
+                'Accept':'*/*'
+            },  
+            // body: JSON.stringify(userData)
+        }
     
-    try {
-        let data = await fetch(url + 'accounts/Login/', requestOptions)
-        if (!data.ok){
-            if(data.status === 400){
-                throw Error('Niepoprawne dane logowania (400)')}
+        try 
+        {
+            let resp = await axios.post(url + 'accounts/Login/',userData, requestOptions)
+            if (resp.status !== 200)
+            {
+                if(resp.status == 400)
+                {
+                    throw Error('Niepoprawne dane logowania (400)')
+                }
                 throw Error('Dane niedostępne')
             }
-            loginData.value = await data.json()
-            localStorage.expiration = loginData.value.expiration
+            loginData = resp.data
+            
+            store.commit('setExpiration', new Date (loginData.expiration))
+            store.commit('setUserToken',loginData.token)
+            store.commit('setIsLogged',true)
+            localStorage.expiration = loginData.expiration
+            localStorage.token = loginData.token
             // token.value = loginData.value.token
-            localStorage.token = loginData.value.token
             // console.log(loginData.value)
             error.value = ''
-        } catch (er) {
-            error.value = er.message
-            //console.log(error.value)
+        } 
+        catch (er) 
+        {
+                error.value = er.message
+                //console.log(error.value)
         }
     }
     
-    return {login, error, loginData}
+    return {login, error}
 }
 export default loginUser

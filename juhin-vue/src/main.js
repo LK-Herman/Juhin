@@ -3,7 +3,10 @@ import App from './App.vue'
 import router from './router'
 import './assets/main.css'
 import './assets/tables.css'
-import axios from 'axios'
 import urlHolder from'./composables/urlHolder.js'
+import store from './store/index'
 
-createApp(App).use(router).mount('#app')
+createApp(App)
+    .use(router)
+    .use(store)
+    .mount('#app')
