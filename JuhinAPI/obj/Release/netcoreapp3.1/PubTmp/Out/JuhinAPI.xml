@@ -126,6 +126,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:JuhinAPI.Controllers.DeliveryController.GetDeliveriesByDates(System.DateTime,System.DateTime)">
+            <summary>
+            Shows deliveries between two dates 
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:JuhinAPI.Controllers.DeliveryController.GetFiltered(JuhinAPI.DTOs.FilterDeliveriesDTO)">
             <summary>
             Shows the deliveries after filtering by ETAdate, 

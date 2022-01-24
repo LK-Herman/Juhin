@@ -83,6 +83,7 @@
     margin: 0;
     height: 100%;
     box-shadow: 4px 0px 4px rgba(30,30,30,0.2);
+    margin-bottom: 100px;
 }
 .menubar h4 {
     font-weight: 300;
