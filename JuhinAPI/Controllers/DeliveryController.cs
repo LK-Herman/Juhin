@@ -123,6 +123,33 @@ namespace JuhinAPI.Controllers
             return mapper.Map<List<DeliveryDetailsDTO>>(upcomingDeliveries);
         }
         /// <summary>
+        /// Shows deliveries between two dates 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("dates/", Name = "GetDeliveriesByDates")]
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Specialist,Warehouseman,Guest")]
+        public async Task<ActionResult<List<DeliveryDetailsDTO>>> GetDeliveriesByDates([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            var deliveries = await context.Deliveries
+                .Include(d => d.Forwarder)
+                .Include(d => d.PackedItems)
+                .ThenInclude(i => i.Item)
+                .ThenInclude(u => u.Unit)
+                .Include(d => d.Status)
+                .Include(d => d.PurchaseOrderDeliveries)
+                .ThenInclude(p => p.PurchaseOrder)
+                .ThenInclude(p => p.Vendor)
+                .Where(d => d.ETADate <= endDate && d.ETADate >= startDate)
+                .OrderBy(d => d.ETADate)
+                .ToListAsync();
+            if (deliveries.Count == 0)
+            {
+                return NotFound("No deliveries found");
+            }
+            return mapper.Map<List<DeliveryDetailsDTO>>(deliveries);
+        }
+        /// <summary>
         /// Shows the deliveries after filtering by ETAdate, 
         /// OrderNumber or PartNumber. Displayed in ascending order by ETADate.
         /// </summary>
