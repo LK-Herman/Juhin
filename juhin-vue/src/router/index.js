@@ -33,9 +33,9 @@ import store from '../store/index.js';
 const requiredAuth = (to, from, next) => {
     let expireTime = new Date(localStorage.expiration)
     let actualTime = new Date()
-    console.log(store)
-    console.log(expireTime)
-    console.log(actualTime)
+    // console.log(store)
+    // console.log(expireTime)
+    // console.log(actualTime)
     if (!expireTime || expireTime < actualTime){
         store.commit('setIsLogged', false)
         next({name: 'Login'})

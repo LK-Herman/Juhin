@@ -5,11 +5,11 @@
         <form class="dates-form" @submit.prevent="handleSubmit">
             <div>
                 <label>Data początkowa</label>
-                <input type="datetime-local">
+                <input type="date" v-model="startDate">
             </div>
             <div>
                 <label>Data końcowa</label>
-                <input type="datetime-local">
+                <input type="date" v-model="endDate">
             </div>
             <button>OK</button>
         </form>
@@ -19,11 +19,14 @@
             <div class="hours">
                 <div class="header"><p>godzina</p></div>
                 <div><p>0:00 - 1:00</p></div>
+                <div><p>1:00 - 2:00</p></div>
                 <div><p>2:00 - 3:00</p></div>
                 <div><p>3:00 - 4:00</p></div>
+                <div><p>4:00 - 5:00</p></div>
                 <div><p>5:00 - 6:00</p></div>
                 <div><p>6:00 - 7:00</p></div>
                 <div><p>7:00 - 8:00</p></div>
+                <div><p>8:00 - 9:00</p></div>
                 <div><p>9:00 - 10:00</p></div>
                 <div><p>10:00 - 11:00</p></div>
                 <div><p>11:00 - 12:00</p></div>
@@ -32,620 +35,200 @@
                 <div><p>14:00 - 15:00</p></div>
                 <div><p>15:00 - 16:00</p></div>
                 <div><p>16:00 - 17:00</p></div>
-                <div><p>17:00 - 17:00</p></div>
-                <div><p>18:00 - 17:00</p></div>
-                <div><p>19:00 - 17:00</p></div>
-                <div><p>20:00 - 17:00</p></div>
-                <div><p>21:00 - 17:00</p></div>
-                <div><p>22:00 - 17:00</p></div>
+                <div><p>17:00 - 18:00</p></div>
+                <div><p>18:00 - 19:00</p></div>
+                <div><p>19:00 - 20:00</p></div>
+                <div><p>20:00 - 21:00</p></div>
+                <div><p>21:00 - 22:00</p></div>
+                <div><p>22:00 - 23:00</p></div>
                 <div><p>23:00 - 00:00</p></div>
             </div>
-        <div class="days-container hours-window">
+        <div v-if="datesWithDeliveries" class="days-container hours-window">
             
-                <div class="hours hour">
-                    <div class="header day-header">
-                        <h3>PON</h3> 
-                        <p>12 STY</p>
+                <div class="hours hour" v-for="day in datesWithDeliveries" :key="day.dateShort">
+                    <div v-if="day" class="header day-header">
+                        <h3>{{day.dayOfWeek}}</h3> 
+                        <p>{{day.dateShort}}</p>
                     </div>
-                    <div class="deliveries">
-                        <div><p>NKC</p></div>
-                        <div><p>NKC</p></div>
-                    </div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries">
-                        <div><p>NKC</p></div>
 
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 0 && delivs.etaHour <1">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
                     </div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries">
-                        <div>
-                            <p>BFOREST</p>
-                        </div>
-                        <div>
-                            <p>LSD</p>
-                        </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 1 && delivs.etaHour <2">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
                     </div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
-                    <div class="deliveries"></div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 2 && delivs.etaHour <3">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 3 && delivs.etaHour <4">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 4 && delivs.etaHour <5">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 5 && delivs.etaHour <6">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 6 && delivs.etaHour <7">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 7 && delivs.etaHour <8">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 8 && delivs.etaHour <9">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 9 && delivs.etaHour <10">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 10 && delivs.etaHour <11">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 11 && delivs.etaHour <12">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 12 && delivs.etaHour <13">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 13 && delivs.etaHour <14">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 14 && delivs.etaHour <15">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 15 && delivs.etaHour <16">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 16 && delivs.etaHour <17">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 17 && delivs.etaHour <18">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 18 && delivs.etaHour <19">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 19 && delivs.etaHour <20">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 20 && delivs.etaHour <21">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 21 && delivs.etaHour <22">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 22 && delivs.etaHour <23">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+                    <div  class="deliveries">
+                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                                <span v-if="delivs.etaHour >= 23">
+                                    <p>{{delivs.etaHour}}</p>
+                                </span>
+                            </div>
+                    </div>
+
                     
                 </div>
-            
-
-
-
-
-
-
-
-
-
-
-
-
-            <div class="hours hour">
-                <div class="header day-header">
-                    <h3>WTO</h3> 
-                    <p>13 STY</p>
-                </div>
-                <div class="deliveries">
-                </div>
-                <div class="deliveries">
-                    <div><p>NKC</p></div>
-                    
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                    <div><p>CPPD</p></div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                   
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                
-            </div> <div class="hours hour">
-                <div class="header day-header">
-                    <h3>ŚRO</h3> 
-                    <p>14 STY</p>
-                </div>
-                <div class="deliveries">
-                    <div><p>NKC</p></div>
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries">
-
-                    <div><p>NKC</p></div>
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries">
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-
-                </div>
-                <div class="deliveries">
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                
-            </div>
-            <div class="hours hour">
-                <div class="header day-header">
-                    <h3>WTO</h3> 
-                    <p>13 STY</p>
-                </div>
-                <div class="deliveries">
-                </div>
-                <div class="deliveries">
-                    <div><p>NKC</p></div>
-                    
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                
-            </div> <div class="hours hour">
-                <div class="header day-header">
-                    <h3>ŚRO</h3> 
-                    <p>14 STY</p>
-                </div>
-                <div class="deliveries">
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries">
-
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries">
-                    <div>
-                        <p>JVK</p>
-                    </div>
-
-                </div>
-                <div class="deliveries">
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                
-            </div>
-            <div class="hours hour">
-                <div class="header day-header">
-                    <h3>WTO</h3> 
-                    <p>13 STY</p>
-                </div>
-                <div class="deliveries">
-                </div>
-                <div class="deliveries">
-                    <div><p>LOOK</p></div>
-                    
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                    <div><p>VMI</p></div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                   
-                    <div>
-                        <p>STX</p>
-                    </div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                
-            </div> <div class="hours hour">
-                <div class="header day-header">
-                    <h3>ŚRO</h3> 
-                    <p>14 STY</p>
-                </div>
-                <div class="deliveries">
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries">
-
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries">
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-
-                </div>
-                <div class="deliveries">
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                
-            </div>
-            <div class="hours hour">
-                <div class="header day-header">
-                    <h3>WTO</h3> 
-                    <p>13 STY</p>
-                </div>
-                <div class="deliveries">
-                </div>
-                <div class="deliveries">
-                    <div><p>NKC</p></div>
-                    
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-                
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                
-            </div> <div class="hours hour">
-                <div class="header day-header">
-                    <h3>ŚRO</h3> 
-                    <p>14 STY</p>
-                </div>
-                <div class="deliveries">
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries">
-
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries">
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-
-                </div>
-                <div class="deliveries">
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                
-            </div>
-            <div class="hours hour">
-                <div class="header day-header">
-                    <h3>WTO</h3> 
-                    <p>13 STY</p>
-                </div>
-                <div class="deliveries">
-                </div>
-                <div class="deliveries">
-                    <div><p>NKC</p></div>
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                
-            </div> <div class="hours hour">
-                <div class="header day-header">
-                    <h3>ŚRO</h3> 
-                    <p>14 STY</p>
-                </div>
-                <div class="deliveries">
-                    <div><p>NKC</p></div>
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries">
-
-                    <div><p>NKC</p></div>
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries">
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-
-                </div>
-                <div class="deliveries">
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                
-            </div>
-            <div class="hours hour">
-                <div class="header day-header">
-                    <h3>WTO</h3> 
-                    <p>13 STY</p>
-                </div>
-                <div class="deliveries">
-                </div>
-                <div class="deliveries">
-                    <div><p>NKC</p></div>
-                    <div><p>NKC</p></div>
-                    
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                    <div><p>NKC</p></div>
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                
-            </div> <div class="hours hour">
-                <div class="header day-header">
-                    <h3>ŚRO</h3> 
-                    <p>14 STY</p>
-                </div>
-                <div class="deliveries">
-                    <div><p>NKC</p></div>
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries">
-
-                    <div><p>NKC</p></div>
-                    <div><p>NKC</p></div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries">
-
-                </div>
-                <div class="deliveries">
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-
-                </div>
-                <div class="deliveries">
-                    <div>
-                        <p>BFOREST</p>
-                    </div>
-                </div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                <div class="deliveries"></div>
-                
-            </div>
+    
     </div>
    </div>
+
+   <!-- <div v-if="!error">
+       {{deliveries}}
+   </div> -->
 </template>
 
 <script>
@@ -653,17 +236,39 @@ import getDeliveriesByDates from '../composables/getDeliveriesByDates.js'
 import urlHolder from '../composables/urlHolder.js'
 import { useStore } from 'vuex'
 import { computed, ref } from '@vue/reactivity'
+import moment from 'moment'
 export default {
     setup(){
         const mainUrl = urlHolder
         const store = useStore()
         const userToken = computed(()=> store.getters.getUserToken)
-        const startDate = ref(Date())
-        const endDate = ref(Date())
+        const startDate = ref(moment().format("YYYY-MM-DD"))
+        const endDate = ref(moment().add(20,'days').format("YYYY-MM-DD"))
 
-        const { deliveries, error, loadDeliveriesByDates } = getDeliveriesByDates(mainUrl, userToken.value)
+        const { datesWithDeliveries, error, loadDeliveriesByDates } = getDeliveriesByDates(mainUrl, userToken.value)
+        let datesRange = ref([{}])
 
-        return { deliveries, error, startDate, endDate}
+        const handleSubmit = () =>{
+            // datesRange.value = []
+            let startD = moment(startDate.value)
+            let endD = moment(endDate.value)
+            // let daysInRange =  endD.diff(startD,'days')
+            
+            
+            // for (let index = 0; index <= daysInRange; index++) 
+            // {
+            //     datesRange.value[index] = 
+            //     {
+            //         date: moment(startD).add(index,'days').locale("PL").format("DD-MMM").toUpperCase(),
+            //         day: moment(startD).add(index,'days').locale("PL").format("ddd").toUpperCase()
+            //     }
+            //     // console.log(index)
+            // }
+                loadDeliveriesByDates(moment(startD).format("YYYY-MM-DD"),moment(endD).format("YYYY-MM-DD"))
+                    
+        }
+
+        return { handleSubmit, datesWithDeliveries, error, startDate, endDate}
     }
 
 }
@@ -702,8 +307,8 @@ form.dates-form button{
     
 }
 .days-container .hours{
-    /* display:flex;
-    flex-direction: column; */
+    display:flex;
+    flex-direction: column;
     
 }
 .days-container .hours-window{
@@ -740,25 +345,62 @@ form.dates-form button{
     justify-content: center;
     
 }
-.days-container .hours div.deliveries{
+.days-container .hours .deliveries{
     display: flex;
     flex-flow:row;
     flex-wrap: nowrap;
     padding: 0px 4px;
 }
+.days-container .hours .deliveries .single-del{
+    display: grid;
+    grid-template-columns: auto;
+    flex-flow:row;
+    flex-wrap: nowrap;
+    
+    /* background-color: rgb(98, 133, 33); */
+    padding: 0;
+    margin: 0;
+    min-height: 0px;
+    min-width: 0px;
+    
+    border: none;
+    /* width: 100%; */
+}
 .days-container .hours.hour div{
         background-color: rgb(56, 56, 56);
     }
-.days-container .hours div.deliveries div{
+/* .days-container .hours div.deliveries div{
     background-color: rgb(98, 133, 33);
     padding: 2px 3px;
     margin: auto;
     min-height: auto;
     min-width: auto;
     width: 100%;
+} */
+.days-container .hours div.deliveries div{
+    background-color: transparent;
+    padding: 2px 3px;
+    margin: auto;
+    min-height: auto;
+    /* min-width: auto; */
+    /* width: 100%; */
+    border: none;
+}
+.days-container .hours div.deliveries div span{
+    display: flex;
+    background-color: rgb(98, 133, 33);
+    padding: 2px 4px;
+    margin: 0 2px;
+    max-height: 20px;
+    /* min-height: auto; */
+    /* min-width: auto;  */
+    text-align: center;
+    /* width: auto; */
+    /* border: solid 1px #333; */
+     /* inline-size: auto; */
 }
 .days-container .hours div.deliveries div p{
-    padding: 0;
+    padding: 2px;
     margin: 0;
 }
 
