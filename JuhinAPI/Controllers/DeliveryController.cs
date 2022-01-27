@@ -95,9 +95,6 @@ namespace JuhinAPI.Controllers
         {
             var weekAhead = startDate.AddDays(7);
             
-            
-                
-
             var upcomingDeliveries = await context.Deliveries
                 .Include(d => d.Forwarder)
                 .Include(d => d.PackedItems)
@@ -110,15 +107,6 @@ namespace JuhinAPI.Controllers
                 .Where(d => d.ETADate <= weekAhead && d.ETADate >= startDate)
                 .OrderBy(d => d.ETADate)
                 .ToListAsync();
-
-                //.Include(x => x.PackedItems)
-                //.ThenInclude(i => i.Item)
-                //.ThenInclude(u => u.Unit)
-                //.Include(x => x.PurchaseOrderDeliveries)
-                //.ThenInclude(pod => pod.PurchaseOrder)
-                //.ThenInclude(p => p.Vendor)
-                //.Include(x => x.Forwarder)
-                //.Where(s => s.StatusId == 1 )
 
             return mapper.Map<List<DeliveryDetailsDTO>>(upcomingDeliveries);
         }

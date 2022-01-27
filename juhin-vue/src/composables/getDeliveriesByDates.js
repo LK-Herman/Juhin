@@ -46,9 +46,7 @@ const getDeliveriesByDates = (url, token) =>{
                         deliveries: deliveries.value.filter(del => moment(del.etaDate).format("YYYY-MM-DD") == moment(actualIndexDate).format("YYYY-MM-DD") )
                     }
                 }
-                console.log(datesWithDeliveries.value)
-
-
+                // console.log(datesWithDeliveries.value)
 
         } catch (er) {
             error.value = er.message

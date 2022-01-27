@@ -58,8 +58,8 @@ h1, h2, h3, h4  {
     background-color: var(--back-grey);
     background-image: linear-gradient(to left, var(--back-dark), var(--back-grey));
     margin: 0px auto;
-    width: 95%;
-    max-width: 1600px;
+    width: 90%;
+    /* max-width: 1600px; */
     min-height: 800px;
     
 }

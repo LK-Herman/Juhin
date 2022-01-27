@@ -1,7 +1,7 @@
 <template>
-  <h2>Grafik dostaw</h2>
-
-    <div>
+    <div class="form-and-header">
+        <img src="@/assets/images/deliveryIcon.png"/>
+        <h2>GRAFIK DOSTAW</h2>
         <form class="dates-form" @submit.prevent="handleSubmit">
             <div>
                 <label>Data początkowa</label>
@@ -14,221 +14,36 @@
             <button>OK</button>
         </form>
     </div>
-    <div class="days-container">
-  
-            <div class="hours">
-                <div class="header"><p>godzina</p></div>
-                <div><p>0:00 - 1:00</p></div>
-                <div><p>1:00 - 2:00</p></div>
-                <div><p>2:00 - 3:00</p></div>
-                <div><p>3:00 - 4:00</p></div>
-                <div><p>4:00 - 5:00</p></div>
-                <div><p>5:00 - 6:00</p></div>
-                <div><p>6:00 - 7:00</p></div>
-                <div><p>7:00 - 8:00</p></div>
-                <div><p>8:00 - 9:00</p></div>
-                <div><p>9:00 - 10:00</p></div>
-                <div><p>10:00 - 11:00</p></div>
-                <div><p>11:00 - 12:00</p></div>
-                <div><p>12:00 - 13:00</p></div>
-                <div><p>13:00 - 14:00</p></div>
-                <div><p>14:00 - 15:00</p></div>
-                <div><p>15:00 - 16:00</p></div>
-                <div><p>16:00 - 17:00</p></div>
-                <div><p>17:00 - 18:00</p></div>
-                <div><p>18:00 - 19:00</p></div>
-                <div><p>19:00 - 20:00</p></div>
-                <div><p>20:00 - 21:00</p></div>
-                <div><p>21:00 - 22:00</p></div>
-                <div><p>22:00 - 23:00</p></div>
-                <div><p>23:00 - 00:00</p></div>
-            </div>
-        <div v-if="datesWithDeliveries" class="days-container hours-window">
-            
-                <div class="hours hour" v-for="day in datesWithDeliveries" :key="day.dateShort">
-                    <div v-if="day" class="header day-header">
-                        <h3>{{day.dayOfWeek}}</h3> 
-                        <p>{{day.dateShort}}</p>
-                    </div>
-
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 0 && delivs.etaHour <1">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 1 && delivs.etaHour <2">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 2 && delivs.etaHour <3">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 3 && delivs.etaHour <4">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 4 && delivs.etaHour <5">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 5 && delivs.etaHour <6">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 6 && delivs.etaHour <7">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 7 && delivs.etaHour <8">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 8 && delivs.etaHour <9">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 9 && delivs.etaHour <10">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 10 && delivs.etaHour <11">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 11 && delivs.etaHour <12">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 12 && delivs.etaHour <13">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 13 && delivs.etaHour <14">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 14 && delivs.etaHour <15">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 15 && delivs.etaHour <16">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 16 && delivs.etaHour <17">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 17 && delivs.etaHour <18">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 18 && delivs.etaHour <19">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 19 && delivs.etaHour <20">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 20 && delivs.etaHour <21">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 21 && delivs.etaHour <22">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 22 && delivs.etaHour <23">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-                    <div  class="deliveries">
-                            <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
-                                <span v-if="delivs.etaHour >= 23">
-                                    <p>{{delivs.etaHour}}</p>
-                                </span>
-                            </div>
-                    </div>
-
-                    
-                </div>
     
-    </div>
-   </div>
+    <div v-if="datesWithDeliveries" class="days-container">
+        
+        <div class="hours">
+            <div class="header"><p>godzina</p></div>
+            <div v-for="hour in hours" :key="hour"><p>{{hour}}:00 - {{hour + 1}}:00</p></div>
+        </div>
+        <div v-if="datesWithDeliveries" class="days-container hours-window">
+            <div class="hours hour" v-for="day in datesWithDeliveries" :key="day.dateShort">
+                <div v-if="day" class="header day-header">
+                    <h3>{{day.dayOfWeek}}</h3> 
+                    <p>{{day.dateShort}}</p>
+                </div>
 
-   <!-- <div v-if="!error">
-       {{deliveries}}
-   </div> -->
+                <div class="deliveries" v-for="hour in hours" :key="hour">
+                    <div class="single-del" v-for="delivs in day.deliveries" :key="delivs">
+                        <span v-if="delivs.etaHour >= hour && delivs.etaHour < hour + 1">
+                                <router-link :to="{name:'DeliveryDetails', params:{id:delivs.deliveryId}}">
+                                <span v-for="order in delivs.purchaseOrders" :key="order.orderId">
+                                    <p :class="{ora:delivs.isPriority}">{{order.vendorShortName}}</p>
+                                </span>
+                                </router-link>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+   </div>
+  
 </template>
 
 <script>
@@ -237,6 +52,7 @@ import urlHolder from '../composables/urlHolder.js'
 import { useStore } from 'vuex'
 import { computed, ref } from '@vue/reactivity'
 import moment from 'moment'
+import { onMounted } from '@vue/runtime-core'
 export default {
     setup(){
         const mainUrl = urlHolder
@@ -246,47 +62,50 @@ export default {
         const endDate = ref(moment().add(20,'days').format("YYYY-MM-DD"))
 
         const { datesWithDeliveries, error, loadDeliveriesByDates } = getDeliveriesByDates(mainUrl, userToken.value)
-        let datesRange = ref([{}])
-
+        let hours = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
         const handleSubmit = () =>{
-            // datesRange.value = []
             let startD = moment(startDate.value)
             let endD = moment(endDate.value)
-            // let daysInRange =  endD.diff(startD,'days')
-            
-            
-            // for (let index = 0; index <= daysInRange; index++) 
-            // {
-            //     datesRange.value[index] = 
-            //     {
-            //         date: moment(startD).add(index,'days').locale("PL").format("DD-MMM").toUpperCase(),
-            //         day: moment(startD).add(index,'days').locale("PL").format("ddd").toUpperCase()
-            //     }
-            //     // console.log(index)
-            // }
                 loadDeliveriesByDates(moment(startD).format("YYYY-MM-DD"),moment(endD).format("YYYY-MM-DD"))
-                    
         }
+            onMounted(()=>
+            {
+                handleSubmit()
+            })
 
-        return { handleSubmit, datesWithDeliveries, error, startDate, endDate}
+        return { handleSubmit, datesWithDeliveries, error, startDate, endDate, hours}
     }
 
 }
 </script>
 
 <style>
+.form-and-header{
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    min-width: 1200px;
+}
+
 form.dates-form{
     display: grid;
-    grid-template-columns: 240px 240px 200px;
-
+    grid-template-columns: 200px 200px 120px;
+    grid-template-rows: 60px auto ;
     background-color:transparent;
     border: none;
     box-shadow: none;
     margin: 0;
     padding: 10px 0;
     align-items: end;
-    justify-items: start;
+    justify-items: end;
+    margin-left: auto;
 }
+.form-and-header h2, img{
+    /* margin-right: auto; */
+    padding: 0 12px 15px 6px;
+}
+
 form.dates-form input{
     margin: 5px 0px;
     padding: 10px;
@@ -304,7 +123,7 @@ form.dates-form button{
     flex-wrap: nowrap;
     overflow:auto;
     max-width: 1200px;
-    
+    margin-bottom: 40px;
 }
 .days-container .hours{
     display:flex;
@@ -366,8 +185,9 @@ form.dates-form button{
     border: none;
     /* width: 100%; */
 }
+
 .days-container .hours.hour div{
-        background-color: rgb(56, 56, 56);
+    background-color: rgb(56, 56, 56);
     }
 /* .days-container .hours div.deliveries div{
     background-color: rgb(98, 133, 33);
@@ -379,7 +199,7 @@ form.dates-form button{
 } */
 .days-container .hours div.deliveries div{
     background-color: transparent;
-    padding: 2px 3px;
+    /* padding: 2px 3px; */
     margin: auto;
     min-height: auto;
     /* min-width: auto; */
@@ -388,10 +208,10 @@ form.dates-form button{
 }
 .days-container .hours div.deliveries div span{
     display: flex;
-    background-color: rgb(98, 133, 33);
-    padding: 2px 4px;
-    margin: 0 2px;
-    max-height: 20px;
+    padding: 0px 0px;
+    margin: 0 ;
+    max-height: 22px;
+    align-items: center;
     /* min-height: auto; */
     /* min-width: auto;  */
     text-align: center;
@@ -400,9 +220,25 @@ form.dates-form button{
      /* inline-size: auto; */
 }
 .days-container .hours div.deliveries div p{
-    padding: 2px;
-    margin: 0;
+    /* background-color: var(--dark-blue); */
+    background-color: rgb(98, 133, 33);
+    padding: 6px 8px;
+    /* border: solid 1px #222; */
+    font-weight: 500;
+    cursor: pointer;
+    margin: 0 2px;
+    transition:  160ms ease-in-out;
 }
+
+.days-container .hours div.deliveries div p:hover{
+    transform: scale(1.5,1.5) ;
+    transition:  160ms ease-in-out;
+    box-shadow: 5px 5px 6px #222;
+}
+.days-container .hours .deliveries .single-del .ora{
+    background-color: var(--orange);
+}
+
 
 
 
