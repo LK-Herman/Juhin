@@ -65,9 +65,9 @@ namespace JuhinAPI.Controllers
         /// </summary>
         /// <param userId="userId">The Id of the user</param>
         /// <returns></returns>
-        [HttpGet("user/{userId}", Name = "getUserSubscriptions")]
+        [HttpGet("user/{userId}", Name = "GetUserSubscriptions")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Specialist,Warehouseman,Guest")]
-        public async Task<ActionResult<List<SubscriptionDTO>>> getUserSubscriptions(string userId)
+        public async Task<ActionResult<List<SubscriptionDTO>>> GetUserSubscriptions(string userId)
         {
             var subscriptions = await context.Subscriptions
                 .Where(s => s.UserId == userId)
@@ -77,6 +77,30 @@ namespace JuhinAPI.Controllers
                 return NotFound();
             }
             return mapper.Map<List<SubscriptionDTO>>(subscriptions);
+        }
+        /// <summary>
+        /// Checks if delivery is subscribed by user
+        /// </summary>
+        /// <param userId="userId">The Id of the user</param>
+        /// <param deliveryId="deliveryId">The Id of the delivery</param>
+        /// <returns></returns>
+        [HttpGet("isActive/", Name = "CheckSubscription")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Specialist,Warehouseman,Guest")]
+        public async Task<ActionResult<bool>> CheckSubscription([FromQuery] string userId, [FromQuery] Guid deliveryId)
+        {
+            
+                var isActive = await context.Subscriptions
+                    .Where(s => s.UserId == userId && s.DeliveryId == deliveryId)
+                    .AnyAsync();
+                if (isActive == false)
+                {
+                    return Ok(false);
+                }
+                else 
+                {
+                    return Ok(true);
+                }
+
         }
         /// <summary>
         /// Adds new subscription
@@ -127,5 +151,44 @@ namespace JuhinAPI.Controllers
             await context.SaveChangesAsync();
             return NoContent();
         }
+        /// <summary>
+        /// Removes user subscriptions by userId and deliveryId
+        /// </summary>
+        /// <param userId="userId">User Id string/Guid</param>
+        /// <param deliveryId="deliveryId">Delivery Id Guid</param>
+        /// <returns></returns>
+
+        [HttpPost("current/")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Specialist,Warehouseman,Guest")]
+        public async Task<ActionResult> DeleteCurrentSubscription([FromBody] SubscriptionCreationDTO subscription)
+        {
+            var subscriptionsList = await context.Subscriptions
+                .Where(s => s.DeliveryId == subscription.DeliveryId && s.UserId == subscription.UserId)
+                .ToListAsync();
+            if (subscriptionsList.Count==0)
+            {
+                return NotFound();
+            }
+            var subscriptionsToDelete = mapper.Map<List<Subscription>>(subscriptionsList);
+            context.RemoveRange(subscriptionsToDelete);
+            //(new Subscription() { UserId = subscription.UserId, DeliveryId = subscription.DeliveryId });
+            await context.SaveChangesAsync();
+            return NoContent();
+
+        }
+
+        //[HttpDelete("current/")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Specialist,Warehouseman,Guest")]
+        //public async Task<ActionResult> DeleteCurrentSubscription([FromQuery]string userId, [FromQuery]Guid deliveryId)
+        //{
+        //    var exist = await context.Subscriptions.AnyAsync(s => s.DeliveryId == deliveryId && s.UserId == userId);
+        //    if (!exist)
+        //    {
+        //        return NotFound();
+        //    }
+        //    context.Remove(new Subscription() { UserId = userId,  DeliveryId = deliveryId });
+        //    await context.SaveChangesAsync();
+        //    return NoContent();
+        //}
     }
 }

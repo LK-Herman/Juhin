@@ -23,7 +23,8 @@ import VendorDetails from '../views/VendorDetails.vue'
 import OrderDetails from '../views/OrderDetails.vue' 
 import Created from '../views/Created.vue'
 import store from '../store/index.js';
-
+import getCurrentUser from '../composables/getCurrentUser.js'
+import urlHolder from '../composables/urlHolder.js'
 // import getCurrentUser from '../composables/getCurrentUser.js'
 
 // const requireAuth = (to, from, next)=>{
@@ -33,6 +34,8 @@ import store from '../store/index.js';
 const requiredAuth = (to, from, next) => {
     let expireTime = new Date(localStorage.expiration)
     let actualTime = new Date()
+    // const mainUrl = urlHolder
+    // const {getUser} = getCurrentUser(mainUrl)
     // console.log(store)
     // console.log(expireTime)
     // console.log(actualTime)
@@ -52,12 +55,16 @@ const routes = [
     props: true,
     beforeEnter: requiredAuth
   },
-  {
-    path: '/*',
-    name: 'Error404',
-    component: Error404,
-    beforeEnter: requiredAuth
-  },
+//   {
+//     path: '/*',
+//     name: 'Error404',
+//     component: Error404,
+//     beforeEnter: requiredAuth
+//   },
+//   {
+//     path: '/hangfire',
+//     beforeEnter: requiredAuth
+//   },
   {
     path: '/login',
     name: 'Login',

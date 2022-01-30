@@ -457,11 +457,19 @@
             <param name="id">The Id of subscription</param>
             <returns></returns>
         </member>
-        <member name="M:JuhinAPI.Controllers.SubscriptionController.getUserSubscriptions(System.String)">
+        <member name="M:JuhinAPI.Controllers.SubscriptionController.GetUserSubscriptions(System.String)">
             <summary>
             Gets the list of user subscriptions by user Id
             </summary>
             <param userId="userId">The Id of the user</param>
+            <returns></returns>
+        </member>
+        <member name="M:JuhinAPI.Controllers.SubscriptionController.CheckSubscription(System.String,System.Guid)">
+            <summary>
+            Checks if delivery is subscribed by user
+            </summary>
+            <param userId="userId">The Id of the user</param>
+            <param deliveryId="deliveryId">The Id of the delivery</param>
             <returns></returns>
         </member>
         <member name="M:JuhinAPI.Controllers.SubscriptionController.Post(JuhinAPI.DTOs.SubscriptionCreationDTO)">
@@ -484,6 +492,14 @@
             Removes the subscription by Id
             </summary>
             <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:JuhinAPI.Controllers.SubscriptionController.DeleteCurrentSubscription(JuhinAPI.DTOs.SubscriptionCreationDTO)">
+            <summary>
+            Removes user subscriptions by userId and deliveryId
+            </summary>
+            <param userId="userId">User Id string/Guid</param>
+            <param deliveryId="deliveryId">Delivery Id Guid</param>
             <returns></returns>
         </member>
         <member name="M:JuhinAPI.Controllers.UnitController.Get(JuhinAPI.DTOs.PaginationDTO)">

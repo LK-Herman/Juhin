@@ -29,6 +29,7 @@ import { useRouter } from 'vue-router'
 import Login from './views/Login.vue'
 import { onBeforeMount, onMounted, watch } from '@vue/runtime-core'
 import {useStore} from 'vuex'
+import getCurrentUser from './composables/getCurrentUser.js'
 
 export default {
     components: { MenuBar, Navbar, Endbar, Login},
@@ -41,6 +42,7 @@ export default {
         const userEmail = ref('')
         const router = useRouter()
         const store = useStore()
+        const {getUser, error} = getCurrentUser(mainUrl)
         
         const handleLogin = (userCred) =>{
             isLogged.value = true
@@ -54,6 +56,7 @@ export default {
         onBeforeMount(()=>{
             
             if (localStorage['token']){
+                getUser(localStorage['token'])
                 isLogged.value = true
                 store.commit('setIsLogged',true)
                 store.commit('setUserToken', localStorage['token'])
@@ -62,8 +65,8 @@ export default {
                 store.commit('setIsLogged',false)
                 store.commit('clearUserToken')
                 isLogged.value = false
-                
             }
+            
         }) 
          watch(store.state,()=>{
             
