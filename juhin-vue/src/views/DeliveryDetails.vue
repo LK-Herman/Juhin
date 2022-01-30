@@ -90,9 +90,7 @@
 
 
         </div>         
-        <div v-if="!subError">
-            <p>isSubscribed: {{isSubscribed}}</p>
-        </div>
+       
         <!--end of delivery-details-container -->
         <div>
             <DeliveryDelete :id="id" :orders="delivery.purchaseOrders"/>
