@@ -101,7 +101,7 @@ form.dates-form{
     justify-items: end;
     margin-left: auto;
 }
-.form-and-header h2, img{
+.form-and-header h2, .form-and-header img{
     /* margin-right: auto; */
     padding: 0 12px 15px 6px;
 }

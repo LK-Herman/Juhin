@@ -18,6 +18,7 @@ namespace JuhinAPI.DTOs
         public Guid DeliveryId { get; set; }
         public int StatusId { get; set; }
         public Guid OrderId { get; set; }
+        public string VendorName { get; set; }
         public string OrderNumber { get; set; }
         public string PartNumber { get; set; }
         public string OrderingField { get; set; }

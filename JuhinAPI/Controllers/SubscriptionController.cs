@@ -171,24 +171,10 @@ namespace JuhinAPI.Controllers
             }
             var subscriptionsToDelete = mapper.Map<List<Subscription>>(subscriptionsList);
             context.RemoveRange(subscriptionsToDelete);
-            //(new Subscription() { UserId = subscription.UserId, DeliveryId = subscription.DeliveryId });
             await context.SaveChangesAsync();
             return NoContent();
 
         }
 
-        //[HttpDelete("current/")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Specialist,Warehouseman,Guest")]
-        //public async Task<ActionResult> DeleteCurrentSubscription([FromQuery]string userId, [FromQuery]Guid deliveryId)
-        //{
-        //    var exist = await context.Subscriptions.AnyAsync(s => s.DeliveryId == deliveryId && s.UserId == userId);
-        //    if (!exist)
-        //    {
-        //        return NotFound();
-        //    }
-        //    context.Remove(new Subscription() { UserId = userId,  DeliveryId = deliveryId });
-        //    await context.SaveChangesAsync();
-        //    return NoContent();
-        //}
     }
 }

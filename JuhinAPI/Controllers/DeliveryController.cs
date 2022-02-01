@@ -145,13 +145,14 @@ namespace JuhinAPI.Controllers
         /// <returns></returns>
         [HttpGet("filter")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Specialist,Warehouseman,Guest")]
-        public async Task<ActionResult<List<DeliveryDetailsDTO>>> GetFiltered([FromQuery] FilterDeliveriesDTO filterDeliveriesDTO)
+        public async Task<ActionResult<List<DeliveryDetailsDTO>>> GetFiltered([FromBody] FilterDeliveriesDTO filterDeliveriesDTO)
         {
             var nullDate = new DateTime();
             var nullGuid = new Guid();
             var deliveriesQueryable = context.Deliveries
                 .Include(x => x.PackedItems)
                 .ThenInclude(i => i.Item)
+                .ThenInclude(u=>u.Unit)
                 .Include(x => x.PurchaseOrderDeliveries)
                 .ThenInclude(pod => pod.PurchaseOrder)
                 .ThenInclude(p => p.Vendor)
@@ -175,6 +176,15 @@ namespace JuhinAPI.Controllers
                 deliveriesQueryable = deliveriesQueryable
                     .Where(x => x.PurchaseOrderDeliveries.Select(y => y.PurchaseOrderId)
                     .Contains(filterDeliveriesDTO.OrderId));
+            }
+            if (!string.IsNullOrWhiteSpace(filterDeliveriesDTO.VendorName))
+            {
+                deliveriesQueryable = deliveriesQueryable
+                    .Where(x => x.PurchaseOrderDeliveries
+                        .Select(y => y.PurchaseOrder.Vendor)
+                            .Select(v => v.Name)
+                            .Contains(filterDeliveriesDTO.VendorName));
+
             }
 
             if (!string.IsNullOrWhiteSpace(filterDeliveriesDTO.OrderNumber))
