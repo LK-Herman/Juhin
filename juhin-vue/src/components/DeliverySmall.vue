@@ -44,7 +44,8 @@ export default {
     props: ['id'],
     setup(props, context){
         const mainUrl = urlHolder
-        const userToken = localStorage.token
+        const user = localStorage.getItem('user')
+        const userToken = localStorage.getItem('token')
         const isLoaded = ref(false)
         const ori = ref(0)
         const eur = ref(0)

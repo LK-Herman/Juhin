@@ -43,7 +43,7 @@ const getVendors = (url, token) =>{
                 totalRecords.value = resp.headers["all-records"]
                 lastPage.value = resp.headers["totalamountpages"]
                 vendors.value = resp.data
-                vendors.value.sort(function(a, b){return ('' + a.name).localeCompare(b.name)})
+                // vendors.value.sort(function(a, b){return ('' + a.name).localeCompare(b.name)})
                 
             } catch (er) {
                 error.value = er.message

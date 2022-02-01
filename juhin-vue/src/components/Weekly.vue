@@ -24,7 +24,8 @@ export default {
     setup(props){
         const mainUrl = urlHolder
         
-        const userToken = localStorage.token
+        const user = localStorage.getItem('user')
+        const userToken = localStorage.getItem('token')
 
         const totalOri = ref(0)
         const totalEur = ref(0)

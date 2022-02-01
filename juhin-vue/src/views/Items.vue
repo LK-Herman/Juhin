@@ -30,31 +30,33 @@
                     
                 </div>
                 <div v-for="item in items" :key="item.itemId" >
-                    <div id="items-container" class="table-container" :class="{inactive:!item.isActive}">    
-                        <div class="sub-table-list center-text" >
-                            <p>{{item.counter}}</p>
-                        </div>
-                        <div>
-                            <p>{{item.name}}</p>
-                        </div>
-                        <div>
-                            <p>{{item.revisionNumber}}</p>
-                        </div>
-                        <div>
-                            <p>{{item.description}}</p>
-                        </div>
-                        <div>
-                            <p>{{item.vendorName}} </p>
-                        </div>
-                        <div>
-                            <p>{{item.countryOfOrigin}} </p>
-                        </div>
-                        <div>
-                            <p>{{item.palletQty}} / {{item.maxEuroPalQty}} </p>
-                        </div>
-                      
+                    <router-link :to="{name:'ItemDetails', params:{id:item.itemId}}">
+                        <div id="items-container" class="table-container" :class="{inactive:!item.isActive}">    
+                            <div class="sub-table-list center-text" >
+                                <p>{{item.counter}}</p>
+                            </div>
+                            <div>
+                                <p>{{item.name}}</p>
+                            </div>
+                            <div>
+                                <p>{{item.revisionNumber}}</p>
+                            </div>
+                            <div>
+                                <p>{{item.description}}</p>
+                            </div>
+                            <div>
+                                <p>{{item.vendorName}} </p>
+                            </div>
+                            <div>
+                                <p>{{item.countryOfOrigin}} </p>
+                            </div>
+                            <div>
+                                <p>{{item.palletQty}} / {{item.maxEuroPalQty}} </p>
+                            </div>
                         
-                    </div>
+                            
+                        </div>
+                    </router-link>
                 </div>
           </div>
           <div class="table-buttons">
@@ -92,7 +94,8 @@ export default {
   setup() {
     const url = urlHolder
     
-    const userToken = localStorage.token
+    const user = localStorage.getItem('user')
+    const userToken = localStorage.getItem('token')
     const {loadItems, error, items, totalRecords} = getItems(url, userToken)
     
     const pageNo = ref(1)

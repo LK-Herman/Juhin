@@ -75,7 +75,8 @@ export default {
   
   setup() {
     const url = urlHolder
-    const userToken = localStorage.token
+    const user = localStorage.getItem('user')
+    const userToken = localStorage.getItem('token')
     const {loadForwarders, error, forwarders, totalRecords} = getForwarders(url, userToken)
     const pageNo = ref(1)
     const recordsPerPage = ref(10)

@@ -144,8 +144,8 @@ export default {
         const maxOri = ref(null)
         const maxEur = ref(null)
         const price = ref(null)
-        const user = JSON.parse( localStorage.user )
-        const userToken = localStorage.token
+        const user = localStorage.getItem('user')
+        const userToken = localStorage.getItem('token')
 
         const {loadWarehouses, warehouses, error:wherror} = getWarehouses(mainUrl, userToken)
         const {loadCurrency, currencyList, error:curerror} = getCurrency(mainUrl, userToken)

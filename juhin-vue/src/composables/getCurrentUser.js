@@ -1,31 +1,31 @@
 import { ref } from '@vue/reactivity'
+import axios from 'axios'
+import { useStore } from 'vuex'
 
-const getCurrentUser = () =>{
+const getCurrentUser = (url) =>{
 
-    const user = ref(null)
+
     const error = ref(null)
+    const store = useStore()
 
-    const getUser = async (url, token) => {
-        var myHeaders = new Headers();
-        myHeaders.append("Accept", "*/*")
-        myHeaders.append("Access-Control-Allow-Origin", "*")
-        myHeaders.append("Accept-Encoding", "gzip, deflate, br")
-        myHeaders.append("Connection", "keep-alive")
-        myHeaders.append("Authorization", "Bearer " + token)
-
-        var requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        mode:'cors'
-        };
+    const getUser = async (token) => {
 
         try {
-            let data = await fetch(url + "accounts/userInfo/", requestOptions)
-             if (!data.ok){
+            let data = await axios.get(url + "accounts/userInfo/", {
+                method: 'GET',
+                headers: {
+                    "Authorization":"Bearer " + token,
+                    "Accept": "*/*",
+                    "Access-Control-Allow-Origin":"*",
+                    },
+                mode:'cors'
+            })
+             if (data.status !== 200){
               throw Error('No data available')
               }
-              user.value = await data.json()
-              
+              else{
+                  store.commit('setUser', data.data)
+              }
               
             //   console.log(user.value)
             //   localStorage.token = user.value.role
@@ -35,7 +35,7 @@ const getCurrentUser = () =>{
       }
     }
 
-      return {getUser, error, user}
+      return {getUser, error}
 }
 
 export default getCurrentUser

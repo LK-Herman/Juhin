@@ -10,10 +10,13 @@ import urlHolder from '../composables/urlHolder.js'
 import getVendorById from '../composables/getVendorById.js'
 import { onMounted } from '@vue/runtime-core'
 export default {
-props:['userToken', 'vendorId'],
+props:['vendorId'],
 setup(props){
+
+    const user = localStorage.getItem('user')
+    const userToken = localStorage.getItem('token')
     const mainUrl = urlHolder
-    const {vendor, error:errorVendor, loadVendor} = getVendorById(mainUrl,props.userToken)
+    const {vendor, error:errorVendor, loadVendor} = getVendorById(mainUrl, userToken)
     
     onMounted (()=>{
             loadVendor(props.vendorId)

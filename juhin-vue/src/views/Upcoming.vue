@@ -50,8 +50,8 @@ export default {
     components: {Weekly, DeliveryLegend},
     setup(props){
 
-        const user = JSON.parse( localStorage.user )
-        const userToken = localStorage.token
+        const user = localStorage.getItem('user')
+        const userToken = localStorage.getItem('token')
 
         let dayOfWeek = moment().format("E") - 1
         let firstDayOfWeek1 = moment().subtract(dayOfWeek, 'days').format("YYYY-MM-DD")

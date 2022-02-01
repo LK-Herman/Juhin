@@ -22,12 +22,12 @@
 </template>
 
 <script>
-import { ref } from '@vue/reactivity'
+import { computed, ref } from '@vue/reactivity'
 import { useRouter } from 'vue-router'
 import urlHolder from '../composables/urlHolder.js'
 import loginUser from '../composables/loginUser.js'
 import getCurrentUser from '../composables/getCurrentUser.js'
-
+import { useStore } from 'vuex'
 
 export default {
     props: [],
@@ -37,25 +37,36 @@ export default {
         const router = useRouter()
         const email = ref('')
         const password =ref('')
-        const {getUser, user, error:getError} = getCurrentUser()
-        
+        const {getUser, user, error:getError} = getCurrentUser(mainUrl)
+        const store = useStore()
         const {login, error} = loginUser(mainUrl)
         
-        const handleSubmit = async () =>{
+        
+        const handleSubmit = async () =>
+        {
             await login(email.value, password.value)
-            
-            if(!error.value){
-                await getUser(mainUrl, localStorage.token)
-                   
-                if(!getError.value){
-                  
-                    context.emit('login-event', {email: email.value, token:localStorage.token, user:user.value })
+                .then(()=>
+                {
+                    if(!error.value)
+                    {
+                        
+                        const userToken = computed(() => store.getters.getUserToken)
+                        getUser(userToken.value)
+                        if(!getError.value)
+                        {   
+                            router.push({name:"Main"})
+                            console.log('pushed to main')
+                        }
+                        // {
+                        //     context.emit('login-event', {email: email.value, token:userToken.value, user:user.value })
+                        // }
+                    }
 
-                }
-            }
+                })
+            
         } 
         
-        return { handleSubmit, error, email, password, user}
+        return { handleSubmit, error, email, password}
     }
 }
 </script>

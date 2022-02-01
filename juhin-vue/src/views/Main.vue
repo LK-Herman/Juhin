@@ -1,8 +1,5 @@
 <template>
     <div>
-
-        
-        
         <div class="main-page">
             <div class="desc01">
                 <div class="header-text">

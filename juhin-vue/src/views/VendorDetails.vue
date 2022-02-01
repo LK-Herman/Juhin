@@ -153,8 +153,8 @@ export default {
   setup(props) {
     const mainUrl = urlHolder
     
-    const user = JSON.parse( localStorage.user )
-    const userToken = localStorage.token
+    const user = localStorage.getItem('user')
+    const userToken = localStorage.getItem('token')
     
     const {loadVendor, error, vendor} = getVendorById(mainUrl, userToken)
     const {deleteVendor, error:delError} = deleteVendorById(mainUrl, userToken)
@@ -293,7 +293,7 @@ export default {
 <style >
 .vendor-details-container{
     display: grid;
-    grid-template-columns: 150px 340px 240px 200px;
+    grid-template-columns: 150px 342px 242px 202px;
     row-gap: 0px;
     
     grid-template-areas: 

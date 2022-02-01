@@ -84,13 +84,13 @@
             <div v-if="!isEditing" class="item-btn">
                 <button @click="handleBack"> <span class="material-icons">keyboard_backspace</span> Powrót</button>
                 <button @click="handleEditOrder" class="edit-btn">Edytuj</button>
-                <button class="sub-btn">Subskrybuj</button>
+                <button id="subscription" class="sub-btn" :class="{suboff:isSubscribed}" @click="handleSubscription">Subskrybuj</button>
                 <button v-if="delivery.statusId == 1" class="delete-btn" @click="handleDelete">Usuń</button>
             </div>
 
-        
 
         </div>         
+       
         <!--end of delivery-details-container -->
         <div>
             <DeliveryDelete :id="id" :orders="delivery.purchaseOrders"/>
@@ -168,13 +168,18 @@
 
 <script>
 import getDeliveryDetails from '../composables/getDeliveryDetails.js'
+import checkSubscription from '../composables/checkSubscription.js'
+import addSubscription from '../composables/addSubscription.js'
+import delSubscription from '../composables/delSubscription.js'
 import urlHolder from '../composables/urlHolder.js'
-import { onMounted, ref } from '@vue/runtime-core'
+import { computed, onMounted, onUpdated, ref, watch, watchEffect } from '@vue/runtime-core'
 import {useRouter} from 'vue-router'
 import DeliveryDelete from '../components/DeliveryDelete.vue'
 import getForwarders from '../composables/getForwarders.js'
 import getStatuses from '../composables/getStatuses.js'
 import editDeliveryById from '../composables/editDeliveryById.js'
+import {useStore} from 'vuex'
+import getCurrentUser from '../composables/getCurrentUser.js'
 
 export default {
     props: ['id'],
@@ -184,13 +189,17 @@ export default {
         const isEditing = ref(false)
         const rating = ref (100)
         const mainUrl = urlHolder
-        
-        const user = JSON.parse( localStorage.user )
-        const userToken = localStorage.token
+        const store = useStore()
+        let user = computed(()=> store.getters.getUser)
+        const { getUser, error:getUserError } = getCurrentUser(mainUrl)
+        const userToken = computed(()=> store.getters.getUserToken)
 
         const router = useRouter()
-        const {delivery, loadDetails, error} = getDeliveryDetails(mainUrl, userToken)
-        
+        const {delivery, loadDetails, error} = getDeliveryDetails(mainUrl, userToken.value)
+        const { checkSubs, error:subError, isSubscribed } = checkSubscription(mainUrl, userToken.value)
+        const { addSubs, error:addSubError, response } = addSubscription(mainUrl, userToken.value)
+        const { delSubs, error:delSubError} = delSubscription(mainUrl, userToken.value)
+        const subscriptionData = ref()
         const formPrio = ref('')
         const formRating = ref(100)
         const formDate = ref(null)
@@ -198,22 +207,70 @@ export default {
         const formForwarderId = ref('')
         const formComment = ref('')
 
-        const {loadForwarders, error:forError, forwarders} = getForwarders(mainUrl, userToken)
-        const {loadStatuses, error:staError, statuses} = getStatuses(mainUrl, userToken)
-        const {editDelivery,error:ediError} = editDeliveryById(mainUrl, userToken)
+        const {loadForwarders, error:forError, forwarders} = getForwarders(mainUrl, userToken.value)
+        const {loadStatuses, error:staError, statuses} = getStatuses(mainUrl, userToken.value)
+        const {editDelivery,error:ediError} = editDeliveryById(mainUrl, userToken.value)
 
-        // const deleteFlag = ref(false)
         onMounted (()=>{
             counter = 1
+            
             loadDetails(props.id)
                 .then(function(){
                     delivery.value.packedItems.forEach(item =>{
                         item['counter'] = counter++
                     })
-                    console.log(delivery.value)
+                    // console.log(delivery.value)
                 })
             loadForwarders(1,50)
             loadStatuses(1,50)
+            // user = computed(()=> store.getters.getUser)
+            getUser(userToken.value)
+                .then(function()
+                {
+                    let currentUser = computed(()=> store.getters.getUser)
+                    console.log(currentUser.value)
+                    checkSubs(currentUser.value.userId, props.id)
+                    subscriptionData.value =
+                    {
+                        deliveryId: props.id,
+                        userId: currentUser.value.userId
+                    }
+                })
+            
+        })
+        onUpdated(()=>
+        {
+            getUser(userToken.value)
+        })
+        const handleSubscription = () =>
+        {   
+            if(isSubscribed.value == false)
+            {   
+                addSubs(subscriptionData.value)
+                    .then(function()
+                    {
+                        checkSubs(user.value.userId, props.id)
+                    })
+            }
+            else
+            {   
+                delSubs(subscriptionData.value)
+                    .then(function()
+                    {
+                        checkSubs(user.value.userId, props.id)
+                    })
+            }
+        }
+
+        watch(isSubscribed,()=>{
+            if(isSubscribed.value == false)
+            {
+                document.getElementById('subscription').innerHTML = "Subskrybuj"
+            }
+            else
+            {
+                document.getElementById('subscription').innerHTML = "Wyłącz subskrypcję"
+            }
         })
 
         const handleEditOrder = () =>{
@@ -296,7 +353,11 @@ export default {
                 formDate,
                 formStatusId,
                 formForwarderId,
-                formComment
+                formComment,
+                isSubscribed,
+                subError,
+                addSubError,
+                handleSubscription
                 }
     }
 
@@ -437,6 +498,13 @@ export default {
 .delivery-details-container .item-btn button {
     box-shadow: 2px 2px 3px rgba(20,20,20,0.5);
     width: 180px;
+
+}
+.delivery-details-container .item-btn .sub-btn.suboff{
+    background-color: rgb(93, 93, 93);
+}
+.delivery-details-container .item-btn .sub-btn.suboff:hover{
+    background-color: var(--orange)
 }
 
 .delivery-details-container #opis-tabeli{

@@ -29,7 +29,7 @@ const getDeliveryDetails = (url, token) =>{
             else{
                 delivery.value['isDelayed'] = false
             }
-            console.log(delivery.value.createdAtshort)
+            // console.log(delivery.value.createdAtshort)
             
             
         } catch (er) {

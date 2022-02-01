@@ -60,7 +60,8 @@ export default {
   setup() {
     const url = urlHolder
     
-    const userToken = localStorage.token
+    const user = localStorage.getItem('user')
+    const userToken = localStorage.getItem('token')
 
     const {loadForwarders, error, forwarders, totalRecords} = getForwarders(url, userToken)
     let counter = 1

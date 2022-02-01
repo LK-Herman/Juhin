@@ -60,8 +60,8 @@ export default {
         const router = useRouter()
         const mainUrl = urlHolder
 
-        const user = JSON.parse( localStorage.user )
-        const userToken = localStorage.token
+        const user = localStorage.getItem('user')
+        const userToken = localStorage.getItem('token')
 
         const formVendorCode = ref('')
         const formShortName = ref('')

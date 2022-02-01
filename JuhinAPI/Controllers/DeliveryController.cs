@@ -95,9 +95,6 @@ namespace JuhinAPI.Controllers
         {
             var weekAhead = startDate.AddDays(7);
             
-            
-                
-
             var upcomingDeliveries = await context.Deliveries
                 .Include(d => d.Forwarder)
                 .Include(d => d.PackedItems)
@@ -111,16 +108,34 @@ namespace JuhinAPI.Controllers
                 .OrderBy(d => d.ETADate)
                 .ToListAsync();
 
-                //.Include(x => x.PackedItems)
-                //.ThenInclude(i => i.Item)
-                //.ThenInclude(u => u.Unit)
-                //.Include(x => x.PurchaseOrderDeliveries)
-                //.ThenInclude(pod => pod.PurchaseOrder)
-                //.ThenInclude(p => p.Vendor)
-                //.Include(x => x.Forwarder)
-                //.Where(s => s.StatusId == 1 )
-
             return mapper.Map<List<DeliveryDetailsDTO>>(upcomingDeliveries);
+        }
+        /// <summary>
+        /// Shows deliveries between two dates 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("dates/", Name = "GetDeliveriesByDates")]
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Specialist,Warehouseman,Guest")]
+        public async Task<ActionResult<List<DeliveryDetailsDTO>>> GetDeliveriesByDates([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            var deliveries = await context.Deliveries
+                .Include(d => d.Forwarder)
+                .Include(d => d.PackedItems)
+                .ThenInclude(i => i.Item)
+                .ThenInclude(u => u.Unit)
+                .Include(d => d.Status)
+                .Include(d => d.PurchaseOrderDeliveries)
+                .ThenInclude(p => p.PurchaseOrder)
+                .ThenInclude(p => p.Vendor)
+                .Where(d => d.ETADate <= endDate && d.ETADate >= startDate)
+                .OrderBy(d => d.ETADate)
+                .ToListAsync();
+            if (deliveries.Count == 0)
+            {
+                return NotFound("No deliveries found");
+            }
+            return mapper.Map<List<DeliveryDetailsDTO>>(deliveries);
         }
         /// <summary>
         /// Shows the deliveries after filtering by ETAdate, 
@@ -130,13 +145,14 @@ namespace JuhinAPI.Controllers
         /// <returns></returns>
         [HttpGet("filter")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Specialist,Warehouseman,Guest")]
-        public async Task<ActionResult<List<DeliveryDetailsDTO>>> GetFiltered([FromQuery] FilterDeliveriesDTO filterDeliveriesDTO)
+        public async Task<ActionResult<List<DeliveryDetailsDTO>>> GetFiltered([FromBody] FilterDeliveriesDTO filterDeliveriesDTO)
         {
             var nullDate = new DateTime();
             var nullGuid = new Guid();
             var deliveriesQueryable = context.Deliveries
                 .Include(x => x.PackedItems)
                 .ThenInclude(i => i.Item)
+                .ThenInclude(u=>u.Unit)
                 .Include(x => x.PurchaseOrderDeliveries)
                 .ThenInclude(pod => pod.PurchaseOrder)
                 .ThenInclude(p => p.Vendor)
@@ -160,6 +176,15 @@ namespace JuhinAPI.Controllers
                 deliveriesQueryable = deliveriesQueryable
                     .Where(x => x.PurchaseOrderDeliveries.Select(y => y.PurchaseOrderId)
                     .Contains(filterDeliveriesDTO.OrderId));
+            }
+            if (!string.IsNullOrWhiteSpace(filterDeliveriesDTO.VendorName))
+            {
+                deliveriesQueryable = deliveriesQueryable
+                    .Where(x => x.PurchaseOrderDeliveries
+                        .Select(y => y.PurchaseOrder.Vendor)
+                            .Select(v => v.Name)
+                            .Contains(filterDeliveriesDTO.VendorName));
+
             }
 
             if (!string.IsNullOrWhiteSpace(filterDeliveriesDTO.OrderNumber))
