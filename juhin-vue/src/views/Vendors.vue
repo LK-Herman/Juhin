@@ -205,8 +205,10 @@ export default {
 }
 .search-container input{
     width: 300px;
+    height: 40px;
+    margin:15px 15px 15px 0px;
 }
-.search-container input, button{
+.search-container button{
     margin:15px 15px 15px 0px;
     height: 40px;
 }

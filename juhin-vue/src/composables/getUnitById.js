@@ -25,7 +25,7 @@ const getUnitById = (url, token) =>{
         error.value = er.message
         
         }
-        console.log(unit.value)
+        // console.log(unit.value)
 
       }
 

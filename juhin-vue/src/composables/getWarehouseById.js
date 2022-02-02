@@ -21,10 +21,10 @@ const getWarehousById = (url, token) =>{
                 warehouse.value = resp.data
                 
             } catch (er) {
-        error.value = er.message
+            error.value = er.message
         
         }
-         console.log(warehouse.value)
+        //  console.log(warehouse.value)
 
       }
 
