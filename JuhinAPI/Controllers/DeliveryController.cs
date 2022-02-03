@@ -253,12 +253,9 @@ namespace JuhinAPI.Controllers
         {
             var nullDate = new DateTime();
             var deliveriesQueryable = context.Deliveries
-                .Include(x => x.PackedItems)
-                .ThenInclude(i => i.Item)
-                .ThenInclude(u => u.Unit)
-                .Include(x => x.PurchaseOrderDeliveries)
-                .ThenInclude(pod => pod.PurchaseOrder)
-                .ThenInclude(p => p.Vendor)
+                .Include(pi => pi.PackedItems).ThenInclude(i => i.Item).ThenInclude(u => u.Unit)
+                .Include(pi => pi.PackedItems).ThenInclude(i => i.Item).ThenInclude(w => w.Warehouse)
+                .Include(pod => pod.PurchaseOrderDeliveries).ThenInclude(po => po.PurchaseOrder).ThenInclude(v => v.Vendor)
                 .AsQueryable();
 
 
@@ -266,6 +263,12 @@ namespace JuhinAPI.Controllers
             {
                 deliveriesQueryable = deliveriesQueryable
                     .Where(s => s.StatusId == searchDeliveriesDTO.StatusId);
+            }
+
+            if (searchDeliveriesDTO.WarehouseId != 0)
+            {
+                deliveriesQueryable = deliveriesQueryable
+                    .Where(s => s.PackedItems.Any(po => po.Item.Warehouse.WarehouseId == searchDeliveriesDTO.WarehouseId));
             }
 
             if (searchDeliveriesDTO.Date != nullDate)

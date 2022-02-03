@@ -140,6 +140,14 @@
             <param name="filterDeliveriesDTO"></param>
             <returns></returns>
         </member>
+        <member name="M:JuhinAPI.Controllers.DeliveryController.GetSearchedDeliveries(JuhinAPI.DTOs.SearchDeliveriesDTO)">
+            <summary>
+            Finds deliveries by given data: 
+            order number, part number or description, vendor name, ETA date, status (by id). Displayed in ascending order by ETADate.
+            </summary>
+            <param name="searchDeliveriesDTO"></param>
+            <returns></returns>
+        </member>
         <member name="M:JuhinAPI.Controllers.DeliveryController.GetDeliveryById(System.Guid)">
             <summary>
             Gets the delivery data requested by Id

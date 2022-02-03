@@ -228,7 +228,7 @@ export default {
                 .then(function()
                 {
                     let currentUser = computed(()=> store.getters.getUser)
-                    console.log(currentUser.value)
+                    // console.log(currentUser.value)
                     checkSubs(currentUser.value.userId, props.id)
                     subscriptionData.value =
                     {
@@ -623,78 +623,6 @@ export default {
     justify-self: start;
 }
 
-
-
-
-
-
-.flipswitch {
-    margin: 20px 0;
-    position: relative;
-    width: 98px;
-}
-.flipswitch input[type=checkbox] {
-  display: none;
-}
-.flipswitch-label {
-  display: block;
-  overflow: hidden;
-  cursor: pointer;
-  border: 0px solid #8C8C8C;
-  border-radius: 50px;
-}
-.flipswitch-inner {
-  width: 200%;
-  margin-left: -100%;
-  transition: margin 0.3s ease-in 0s;
-  
-}
-.flipswitch-inner:before, .flipswitch-inner:after {
-  float: left;
-  width: 50%;
-  height: 22px;
-  padding: 0;
-  line-height: 22px;
-  font-size: 12px;
-  color: white;
-  font-family: Trebuchet, Arial, sans-serif;
-  font-weight: bold;
-  box-sizing: border-box;
-  
-}
-.flipswitch-inner:before {
-  content: "PRIO";
-  padding-left: 11px;
-  background-color: #50990F;
-  color: #FFFFFF;
-  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.4);
-}
-.flipswitch-inner:after {
-    content: "NIE PRIO";
-    padding-right: 11px;
-    background-color: #636363;
-    color: #E8E8E8;
-    text-align: right;
-    box-shadow: inset 2px 2px 4px rgba(0,0,0,0.4);
-}
-.flipswitch-switch {
-  width: 29px;
-  margin: -3.5px;
-  background: #F5B727;
-  box-shadow: 1px 1px 3px rgba(4,4,4,0.4), -1px -1px 3px rgba(4,4,4,0.4);
-  border-radius: 50px;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 73px;
-  transition: all 0.3s ease-in 0s;
-}
-.flipswitch-cb:checked + .flipswitch-label .flipswitch-inner {
-  margin-left: 0;
-}
-.flipswitch-cb:checked + .flipswitch-label .flipswitch-switch {
-  right: 0;
-}
 
 
 /* INPUT RANGE */

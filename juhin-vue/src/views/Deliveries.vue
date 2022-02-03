@@ -98,22 +98,21 @@
 </template>
 
 <script>
-import { onMounted, ref, watch } from '@vue/runtime-core'
+import { computed, onMounted, ref, watch } from '@vue/runtime-core'
 import getDeliveriesList from '../composables/getDeliveriesList.js'
 import urlHolder from '../composables/urlHolder.js'
-
+import { useStore } from 'vuex'
 
 export default {
-  components: {  },
   props:[],
   setup(props) {
     const url = urlHolder
-
+    const store = useStore()
     
-    const user = localStorage.getItem('user')
-    const userToken = localStorage.getItem('token')
+    const user = computed(()=> store.getters.getUser)
+    const userToken = computed(()=> store.getters.getUserToken)
 
-    const {deliveries, error, loadDeliveries, totalRecords} = getDeliveriesList(url, userToken)
+    const {deliveries, error, loadDeliveries, totalRecords} = getDeliveriesList(url, userToken.value)
     const pageNo = ref(1)
     const recordsPerPage = ref(10)
     const lastPage = ref(1)
