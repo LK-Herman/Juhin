@@ -184,6 +184,10 @@ namespace JuhinAPI.Controllers
                         .Select(y => y.PurchaseOrder.Vendor)
                             .Select(v => v.Name)
                             .Contains(filterDeliveriesDTO.VendorName));
+                    
+                    
+                    
+                    //.Where(x => x.PurchaseOrderDeliveries.Any(p => p.PurchaseOrder.Vendor.Name.Contains(filterDeliveriesDTO.VendorName)));
 
             }
 
@@ -235,6 +239,81 @@ namespace JuhinAPI.Controllers
             return mapper.Map<List<DeliveryDetailsDTO>>(deliveries);
         }
 
+
+
+        /// <summary>
+        /// Finds deliveries by given data: 
+        /// order number, part number or description, vendor name, ETA date, status (by id). Displayed in ascending order by ETADate.
+        /// </summary>
+        /// <param name="searchDeliveriesDTO"></param>
+        /// <returns></returns>
+        [HttpGet("search")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Specialist,Warehouseman,Guest")]
+        public async Task<ActionResult<List<DeliveryDetailsDTO>>> GetSearchedDeliveries([FromBody] SearchDeliveriesDTO searchDeliveriesDTO)
+        {
+            var nullDate = new DateTime();
+            var deliveriesQueryable = context.Deliveries
+                .Include(x => x.PackedItems)
+                .ThenInclude(i => i.Item)
+                .ThenInclude(u => u.Unit)
+                .Include(x => x.PurchaseOrderDeliveries)
+                .ThenInclude(pod => pod.PurchaseOrder)
+                .ThenInclude(p => p.Vendor)
+                .AsQueryable();
+
+
+            if (searchDeliveriesDTO.StatusId != 0)
+            {
+                deliveriesQueryable = deliveriesQueryable
+                    .Where(s => s.StatusId == searchDeliveriesDTO.StatusId);
+            }
+
+            if (searchDeliveriesDTO.Date != nullDate)
+            {
+                deliveriesQueryable = deliveriesQueryable
+                    .Where(d => d.ETADate > searchDeliveriesDTO.Date.AddDays(-3))
+                    .Where(d => d.ETADate < searchDeliveriesDTO.Date.AddDays(3));
+            }
+                                  
+            if (!string.IsNullOrWhiteSpace(searchDeliveriesDTO.VendorName))
+            {
+                deliveriesQueryable = deliveriesQueryable
+                    .Where(x => x.PurchaseOrderDeliveries.Any(p => p.PurchaseOrder.Vendor.Name.Contains(searchDeliveriesDTO.VendorName))
+                    || x.PurchaseOrderDeliveries.Any(p => p.PurchaseOrder.Vendor.ShortName.Contains(searchDeliveriesDTO.VendorName)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchDeliveriesDTO.OrderNumber))
+            {
+                deliveriesQueryable = deliveriesQueryable
+                    .Where(x => x.PurchaseOrderDeliveries.Any(p => p.PurchaseOrder.OrderNumber.Contains(searchDeliveriesDTO.OrderNumber)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchDeliveriesDTO.PartDescription))
+            {
+                deliveriesQueryable = deliveriesQueryable
+                    .Where(x => x.PackedItems.Any(i => i.Item.Name.Contains(searchDeliveriesDTO.PartDescription))
+                    || x.PackedItems.Any(i => i.Item.Description.Contains(searchDeliveriesDTO.PartDescription)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchDeliveriesDTO.OrderingField))
+            {
+                try
+                {
+                    deliveriesQueryable = deliveriesQueryable
+                        .OrderBy($"{searchDeliveriesDTO.OrderingField} {(searchDeliveriesDTO.AscendingOrder ? "ascending" : "descending")}");
+                }
+                catch
+                {
+                    logger.LogWarning("Could not order by field " + searchDeliveriesDTO.OrderingField);
+                }
+            }
+            var count = deliveriesQueryable.Count();
+            HttpContext.Response.Headers.Add("All-Records", count.ToString());
+            await HttpContext.InsertPaginationParametersInResponse(deliveriesQueryable, searchDeliveriesDTO.RecordsPerPage);
+            var deliveries = await deliveriesQueryable.Paginate(searchDeliveriesDTO.Pagination).ToListAsync();
+
+            return mapper.Map<List<DeliveryDetailsDTO>>(deliveries);
+        }
 
         /// <summary>
         /// Gets the delivery data requested by Id
