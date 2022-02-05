@@ -247,17 +247,27 @@ namespace JuhinAPI.Controllers
         /// </summary>
         /// <param name="searchDeliveriesDTO"></param>
         /// <returns></returns>
-        [HttpGet("search")]
+        [HttpPost("search")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Specialist,Warehouseman,Guest")]
         public async Task<ActionResult<List<DeliveryDetailsDTO>>> GetSearchedDeliveries([FromBody] SearchDeliveriesDTO searchDeliveriesDTO)
         {
             var nullDate = new DateTime();
             var deliveriesQueryable = context.Deliveries
+                .Include(f=>f.Forwarder)
+                .Include(s=>s.Status)
                 .Include(pi => pi.PackedItems).ThenInclude(i => i.Item).ThenInclude(u => u.Unit)
                 .Include(pi => pi.PackedItems).ThenInclude(i => i.Item).ThenInclude(w => w.Warehouse)
                 .Include(pod => pod.PurchaseOrderDeliveries).ThenInclude(po => po.PurchaseOrder).ThenInclude(v => v.Vendor)
                 .AsQueryable();
 
+            if (searchDeliveriesDTO.isPrio)
+                deliveriesQueryable = deliveriesQueryable
+                    .Where(prio => prio.IsPriority == searchDeliveriesDTO.isPrio);
+            
+            if (searchDeliveriesDTO.isICP)
+                deliveriesQueryable = deliveriesQueryable
+                    .Where(x => x.PackedItems.Any(i => i.Item.IsICP == searchDeliveriesDTO.isICP));
+            
 
             if (searchDeliveriesDTO.StatusId != 0)
             {
@@ -296,6 +306,12 @@ namespace JuhinAPI.Controllers
                 deliveriesQueryable = deliveriesQueryable
                     .Where(x => x.PackedItems.Any(i => i.Item.Name.Contains(searchDeliveriesDTO.PartDescription))
                     || x.PackedItems.Any(i => i.Item.Description.Contains(searchDeliveriesDTO.PartDescription)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchDeliveriesDTO.Country))
+            {
+                deliveriesQueryable = deliveriesQueryable
+                    .Where(x => x.PackedItems.Any(i => i.Item.CountryOfOrigin.Contains(searchDeliveriesDTO.Country)));
             }
 
             if (!string.IsNullOrWhiteSpace(searchDeliveriesDTO.OrderingField))

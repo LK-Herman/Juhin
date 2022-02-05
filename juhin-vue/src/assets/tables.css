@@ -82,7 +82,18 @@
 .table-list .table-header{
     background-color: #196080;
     font-size: 0.8em;    
-    height: 20px;
+    /* height: 20px; */
+    padding:4px 15px;
+    
+}
+.table-list .table-header div{
+    margin: 0;
+    padding: 14px 0px;
+}
+.table-list .table-header div:hover p{
+    color: #fff;
+    font-weight: 500;
+    transition:  160ms ease-in-out;
 }
 .table-list .sub-table-list{
     justify-self: end;

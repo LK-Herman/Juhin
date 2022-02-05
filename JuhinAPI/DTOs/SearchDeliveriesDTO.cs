@@ -8,7 +8,7 @@ namespace JuhinAPI.DTOs
     public class SearchDeliveriesDTO
     {
         public int Page { get; set; } = 1;
-        public int RecordsPerPage { get; set; } = 10;
+        public int RecordsPerPage { get; set; } = 20;
         public PaginationDTO Pagination
         {
             get { return new PaginationDTO() { Page = Page, RecordsPerPage = RecordsPerPage }; }

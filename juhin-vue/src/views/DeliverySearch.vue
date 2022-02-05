@@ -4,44 +4,65 @@
         <form @submit.prevent="handleSearchSubmit">
             <div class="onerow">
                 <div>
-                    <label>DOSTAWCA</label>
-                    <input type="text">
+                    <label >DOSTAWCA</label>
+                     <div class="field-btn">
+                        <input type="text" v-model="formVendor">
+                        <div class="btn" @click="formVendor = ''"><span class="material-icons">backspace</span></div>
+                    </div>
                 </div>
                 <div>
                     <label>NR ZAMÓWIENIA</label>
-                    <input type="text">
+                     <div class="field-btn">
+                            <input type="text" v-model="formPurchaseOrder">
+                            <div class="btn" @click="formPurchaseOrder = ''"><span class="material-icons">backspace</span></div>
+                        </div>
                 </div>
                 <div>
                     <label>NR CZĘŚCI / OPIS</label>
-                    <input type="text">
+                     <div class="field-btn">
+                        <input type="text" v-model="formItem">
+                        <div class="btn" @click="formItem = ''"><span class="material-icons">backspace</span></div>
+                     </div>
                 </div>
                 <div>
                     <label>KRAJ POCHODZENIA</label>
-                    <input type="text">
+                    <div class="field-btn">
+                        <input type="text" v-model="formCountry">
+                        <div class="btn" @click="formCountry = ''"><span class="material-icons">backspace</span></div>
+                    </div>
                 </div>
                 <div>
                     <label>DATA (ETA)</label>
-                    <input type="date">
+                     <div class="field-btn">
+                        <input type="date" v-model="formDate">
+                        <div class="btn" @click="formDate = null"><span class="material-icons">backspace</span></div>
+                     </div>
                 </div>
             </div>
             <div class="onerow">
                 
                 <div>
                     <label>MAGAZYN DOCELOWY</label>
-                    <select >
-                        <option>RM</option>
-                    </select>
+                    <div class="field-btn">
+                        <select v-if="!warError" v-model="formWarehouseId">
+                            <option v-for="war in warehouses" :key="war.warehouseId" :value="war.warehouseId">{{war.shortName}} / {{war.description}}</option>
+                        </select>
+                        <div class="btn" @click="formWarehouseId = 0"><span class="material-icons">backspace</span></div>
+                    </div>
                 </div>
                 <div>
                     <label>STATUS</label>
-                    <select >
-                        <option>Delivered</option>
-                    </select>
+                    <div class="field-btn">
+                        <select v-if="!statusError" v-model="formStatusId">
+                            <option v-for="status in statuses" :key="status.statusId" :value="status.statusId">{{status.name}}</option>
+                        </select>
+                        <div class="btn" @click="formStatusId = 0"><span class="material-icons">backspace</span></div>
+                    </div>
                 </div>
                 <div class="switches">
                      <label>WSK</label>
                         <div class="icpSwich">
-                            <input type="checkbox" name="icpSwich" class="icpSwich-cb" id="fs" >
+                            <input type="checkbox" name="icpSwich" class="icpSwich-cb" id="fs" v-model="formIsICP">
                             <label class="icpSwich-label" for="fs">
                                 <div class="icpSwich-inner"></div>
                                 <div class="icpSwich-switch"></div>
@@ -51,7 +72,7 @@
                 <div class="switches">
                     <label>PRIORYTET</label>
                         <div class="flipswitch">
-                            <input type="checkbox" name="flipswitch" class="flipswitch-cb" id="prio" >
+                            <input type="checkbox" name="flipswitch" class="flipswitch-cb" id="prio" v-model="formIsPrio">
                             <label class="flipswitch-label" for="prio">
                                 <div class="flipswitch-inner"></div>
                                 <div class="flipswitch-switch"></div>
@@ -62,38 +83,39 @@
 
             </div>
         </form>
+        
     </div>
 
-
+  <div>{{searchError}}</div> 
   
-  <div v-if="!error"  class="table-list">
+  <div v-if="!searchError"  class="table-list">
             <div>
                 <div class="table-container table-header">
-                    <div>
+                    <div @click="filterDeliveries('orderNumber')">
                         <p>NR ZAMÓWIENIA</p>
                     </div>
-                    <div>
+                    <div @click="filterDeliveries('vendor')">
                         <p>DOSTAWCA</p>
                     </div>
-                    <div>
+                    <div @click="filterDeliveries('vendorNumber')">
                         <p>NR DOSTAWCY</p>
                     </div>
-                    <div>
+                    <div @click="filterDeliveries('created')">
                         <p>UTWORZONO</p>
                     </div>
-                    <div>
+                    <div @click="filterDeliveries('etaDate')">
                         <p>ETA</p>
                     </div>
-                    <div>
+                    <div @click="filterDeliveries('forwarder')">
                         <p>PRZEWOŹNIK</p>
                     </div>
-                    <div>
+                    <div @click="filterDeliveries('rating')">
                         <p>OCENA</p>
                     </div>
-                    <div>
+                    <div @click="filterDeliveries('status')" >
                         <p>STATUS</p>
                     </div>
-                    <div>
+                    <div @click="filterDeliveries('isPriority')" >
                         <p>PRIO</p>
                     </div>
                 </div>
@@ -163,40 +185,224 @@
 </template>
 
 <script>
-import { computed, onMounted, ref, watch } from '@vue/runtime-core'
-import getDeliveriesList from '../composables/getDeliveriesList.js'
+import { computed, onBeforeMount, onMounted, ref, watch } from '@vue/runtime-core'
+
+import getSearchedDeliveries from '../composables/getSearchedDeliveries.js'
+import getWarehouses from '../composables/getWarehouses.js'
 import urlHolder from '../composables/urlHolder.js'
 import { useStore } from 'vuex'
+import getStatusues from '../composables/getStatuses.js'
 
 export default {
-  props:[],
-  setup(props) {
+  setup() {
     const url = urlHolder
     const store = useStore()
     
     const user = computed(()=> store.getters.getUser)
     const userToken = computed(()=> store.getters.getUserToken)
+    const { deliveries, error:searchError, loadSearchedDeliveries, totalRecords } = getSearchedDeliveries(url, userToken.value)
+    const { warehouses, error:warError, loadWarehouses } = getWarehouses(url, userToken.value)
+    const { statuses, error:statusError, loadStatuses } = getStatusues(url, userToken.value)
 
-    const {deliveries, error, loadDeliveries, totalRecords} = getDeliveriesList(url, userToken.value)
     const pageNo = ref(1)
-    const recordsPerPage = ref(10)
+    const recordsPerPage = ref(100)
     const lastPage = ref(1)
     
-    const calculatePageCount = (pageSize, totalCount) => {
-        //console.log('RPP '+pageSize)
-        //console.log('TR '+totalCount)
-        return totalCount < pageSize ? 1 : Math.ceil(totalCount / pageSize)
+    const formVendor = ref('')
+    const formCountry = ref('')
+    const formDate = ref()
+    const formItem = ref('')
+    const formIsICP = ref(false)
+    const formIsPrio = ref(false)
+    const formWarehouseId = ref(0)
+    const formStatusId = ref(0)
+    const formPurchaseOrder = ref('')
+    const searchData = ref()
+    const actualSorted = ref()
+    const order = ref(true)
+
+    const updateSearchData = (()=>{
+        searchData.value =
+        {
+            isPrio : formIsPrio.value,
+            isICP : formIsICP.value,
+            page : pageNo.value,
+            recordsPerPage : recordsPerPage.value
+        }
+            if(formDate.value != null) searchData.value['date'] = formDate.value
+            if(formStatusId.value != 0) searchData.value['statusId'] = formStatusId.value
+            if(formWarehouseId.value != 0) searchData.value['warehouseId'] = formWarehouseId.value
+            if(formPurchaseOrder.value != '') searchData.value['orderNumber'] = formPurchaseOrder.value
+            if(formVendor.value != '') searchData.value['vendorName'] = formVendor.value
+            if(formItem.value != '') searchData.value['partDescription'] = formItem.value
+            if(formCountry.value != '') searchData.value['country'] = formCountry.value
+    })
+
+    const filterDeliveries = (sortedBy) => 
+    {
+        
+        order.value = actualSorted.value==sortedBy?!order.value:order.value 
+        console.log(sortedBy + " / " + order.value)
+        deliveries.value.sort( function(a, b) 
+        {
+            let compareResult = 0
+            if (sortedBy == "vendor" )
+            {
+                    a['purchaseOrders'].forEach(poa => 
+                    {
+                        b['purchaseOrders'].forEach(pob =>
+                        {   
+                            if(order.value == true)
+                            {
+                                compareResult = poa['vendorName'].localeCompare(pob['vendorName'])
+                                if (compareResult == 0) compareResult = a['etaDate'].localeCompare(b['etaDate'])    
+                            }
+                            else
+                            {
+                                compareResult = pob['vendorName'].localeCompare(poa['vendorName'])
+                                if (compareResult == 0) compareResult = a['etaDate'].localeCompare(b['etaDate'])
+                            }
+                        })
+                    });
+            }
+            if (sortedBy == "orderNumber" )
+            {
+                    a['purchaseOrders'].forEach(poa => 
+                    {
+                        b['purchaseOrders'].forEach(pob =>
+                        {   
+                            if(order.value == true)
+                            {
+                                compareResult = poa['orderNumber'].localeCompare(pob['orderNumber'])
+                                if (compareResult == 0) compareResult = a['etaDate'].localeCompare(b['etaDate'])    
+                            }
+                            else
+                            {
+                                compareResult = pob['orderNumber'].localeCompare(poa['orderNumber'])
+                                if (compareResult == 0) compareResult = a['etaDate'].localeCompare(b['etaDate'])
+                            }
+                        })
+                    });
+            }
+            if (sortedBy == "vendorNumber" )
+            {
+                    a['purchaseOrders'].forEach(poa => 
+                    {
+                        b['purchaseOrders'].forEach(pob =>
+                        {   
+                            if(order.value == true)
+                            {
+                                compareResult = poa.vendorData['vendorCode'].localeCompare(pob.vendorData['vendorCode'])
+                            }
+                            else
+                            {
+                                compareResult = pob.vendorData['vendorCode'].localeCompare(poa.vendorData['vendorCode'])
+                            }
+                        })
+                    });
+            }
+            if (sortedBy == "etaDate" )
+            {
+                if(order.value == true)
+                { 
+                    compareResult = a['etaDate'].localeCompare(b['etaDate'])
+                }
+                else
+                {
+                    compareResult = b['etaDate'].localeCompare(a['etaDate'])
+                }
+                
+            }
+            if (sortedBy == "created" )
+            {
+                if(order.value == true)
+                { 
+                    compareResult = a['createdAt'].localeCompare(b['createdAt'])
+                }
+                else
+                {
+                    compareResult = b['createdAt'].localeCompare(a['createdAt'])
+                }
+                
+            }
+            if (sortedBy == "rating" )
+            {
+                if(order.value == true)
+                { 
+                    compareResult = a['rating'] - b['rating']
+                }
+                else
+                {
+                    compareResult = b['rating']-a['rating']
+                }
+                
+            }
+            if (sortedBy == "status" )
+            {
+                if(order.value == true)
+                { 
+                    compareResult = a['statusId']-b['statusId']
+                }
+                else
+                {
+                    compareResult = b['statusId']-a['statusId']
+                }
+                
+            }
+            if (sortedBy == "isPriority" )
+            {
+                if(order.value == true)
+                { 
+                    compareResult = a['isPriority']-b['isPriority']
+                }
+                else
+                {
+                    compareResult = b['isPriority']-a['isPriority']
+                }
+                
+            }
+            if (sortedBy == "forwarder" )
+            {
+                if(order.value == true)
+                { 
+                    compareResult = a['forwarderName'].localeCompare(b['forwarderName'])
+                }
+                else
+                {
+                    compareResult = b['forwarderName'].localeCompare(a['forwarderName'])
+                }
+                
+            }
+         
+            actualSorted.value = sortedBy
+            return compareResult
+        })
     }
 
-    onMounted(async () => {
-      await loadDeliveries(pageNo.value,recordsPerPage.value)
+    const handleSearchSubmit = async ()=>{
+        pageNo.value = 1
+        updateSearchData()
+        await loadSearchedDeliveries(searchData.value)
+    }
+ 
+    const calculatePageCount = (pageSize, totalCount) => {
+        return totalCount < pageSize ? 1 : Math.ceil(totalCount / pageSize)
+    }
+    onBeforeMount( async () =>{
+        loadWarehouses(1,50)
+        loadStatuses(1,50)
+    //   await loadDeliveries(pageNo.value,recordsPerPage.value)
+        updateSearchData()
+        await loadSearchedDeliveries(searchData.value)
+
+    })
+    onMounted(() => {
+        filterDeliveries("vendor")
     })
     watch(pageNo, () => {
         lastPage.value = calculatePageCount(recordsPerPage.value, totalRecords.value)
-        // console.log(lastPage.value)
-        console.log(lastPage.value)
+        
     })
-  
 
     watch((deliveries), async () =>{
         
@@ -209,29 +415,38 @@ export default {
     const handleNextPage = async () => {
         if(pageNo.value < lastPage.value){
             pageNo.value++
-            await loadDeliveries(pageNo.value, recordsPerPage.value)
+            updateSearchData()
+            await loadSearchedDeliveries(searchData.value)
         }
     }
     const handlePreviousPage = async () => {
         if(pageNo.value > 1){
             pageNo.value--
-        await loadDeliveries(pageNo.value, recordsPerPage.value)
+            updateSearchData()
+            await loadSearchedDeliveries(searchData.value)
         }
     }
     const handlePages = async (pages) => {
         recordsPerPage.value = pages
         pageNo.value =1
         lastPage.value = calculatePageCount(recordsPerPage.value, totalRecords.value)
-        await loadDeliveries(pageNo.value, recordsPerPage.value)
+        updateSearchData()
+        await loadSearchedDeliveries(searchData.value)
     
         
     }
     const handleGoToPage = async (page) => {
         pageNo.value = page
-        await loadDeliveries(page, recordsPerPage.value)
+        updateSearchData()
+        await loadSearchedDeliveries(searchData.value)
     }
 
-    return { deliveries, error, pageNo, recordsPerPage, handleNextPage, handlePreviousPage, handlePages, handleGoToPage, lastPage }
+    return { handleSearchSubmit, deliveries, searchError, 
+             formVendor, formCountry, formDate, formItem, formIsICP, formIsPrio, formWarehouseId, formStatusId, formPurchaseOrder,
+             pageNo, recordsPerPage, handleNextPage, handlePreviousPage, handlePages, handleGoToPage, lastPage,
+             warehouses, warError, statuses, statusError,
+             filterDeliveries
+             }
   }
 }
 </script>
@@ -251,6 +466,28 @@ export default {
     /* border-radius: 30px; */
 
 }
+.search-delivery-form form .field-btn{
+    display: flex;
+    flex-direction: row;
+    margin:0;
+}
+.search-delivery-form form .field-btn .btn{
+    margin: 10px 0;
+    padding: 0 4px;
+    max-height: 36px;
+    min-width: 30px;
+}
+.search-delivery-form form .field-btn .btn span{
+    color: #777;
+}
+.search-delivery-form form .field-btn .btn:hover{
+    background-color: #444;
+    }
+.search-delivery-form form .field-btn .btn:hover span{
+    color: #d6d6d6;
+    
+}
+
 .search-delivery-form form .onerow{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -267,6 +504,9 @@ export default {
     font-size: 12px;
     max-height: 36px;
     background-color: #444;
+}
+.search-delivery-form form option{
+    color: #ddd;
 }
 .search-delivery-form form select{
     color: #ddd;
@@ -332,8 +572,12 @@ export default {
   color: #FFFFFF;
   box-shadow: inset 2px 2px 4px rgba(0,0,0,0.4);
 }
+.switches .flipswitch-inner:after {
+    content: "";
+
+}
 .icpSwich-inner:after {
-    content: "NIE WSK";
+    content: "";
     padding-right: 11px;
     background-color: #636363;
     color: #E8E8E8;

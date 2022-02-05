@@ -51,26 +51,26 @@
 </template>
 
 <script>
-import { ref } from '@vue/reactivity'
+import { computed, ref } from '@vue/reactivity'
 import addOrder from '../composables/addOrder.js'
 import urlHolder from '../composables/urlHolder.js'
 import { useRouter } from 'vue-router'
 import { onMounted, onUpdated, watch } from '@vue/runtime-core'
+import { useStore } from 'vuex'
 export default {
     props:['vend'],
     setup(props){
-        
         const router = useRouter()
         const mainUrl = urlHolder
-
-        const user = localStorage.getItem('user')
-        const userToken = localStorage.getItem('token')
+        const store = useStore()
+        const user = computed(()=> store.getters.getUser)
+        const userToken = computed(()=> store.getters.getUserToken)
 
         const orderNumber = ref('')
         const vendor = ref(null)
         const isOK = ref(false)
         const tempOrderNumber = ref('')
-        const {addNewOrder, error:addError, response} = addOrder(mainUrl, userToken)
+        const {addNewOrder, error:addError, response} = addOrder(mainUrl, userToken.value)
         
          onMounted(()=>{
             if(userToken === '' || props.vend === undefined ){
@@ -84,7 +84,7 @@ export default {
             let orderData = {
                 orderNumber: orderNumber.value,
                 vendorId: vendor.value.vendorId,
-                userId: user.userId
+                userId: user.value.userId
             }
             
             await addNewOrder(orderData)
