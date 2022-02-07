@@ -38,9 +38,16 @@
                 <p v-else>(brak)</p>
             </div>
             
-            
+
+
             <div  v-if="!isEditing" class="item-p">
-                <h4>LISTA TOWARÓW: </h4>    
+                <div class="item-p-head">
+                    <h4>LISTA TOWARÓW: </h4>    
+                    {{toggleEditList}}
+                    <div >
+                        <button id="editlist" @click="handleEditList">Edytuj listę</button>
+                    </div>
+                </div>
                 <div v-if="!error">
                     <div class="divTable blueTable">
                         <div class="divTableHeading">
@@ -50,6 +57,7 @@
                                 <div class="divTableHead thirdCol">OPIS TOWARU</div>
                                 <div class="divTableHead fourthCol">ILOŚĆ</div>
                                 <div class="divTableHead fifthCol center-text">JEDN.</div>
+                                <div v-if="toggleEditList" class="divTableHead fifthCol center-text">USUŃ</div>
                             </div>
                         </div>
                         <div class="divTableBody">
@@ -59,8 +67,16 @@
                                 <div class="divTableCell thirdCol">{{ item.description.toUpperCase() }}</div>
                                 <div class="divTableCell fourthCol">{{ item.quantity }}</div>
                                 <div class="divTableCell fifthCol center-text">{{ item.unitMeasure.toUpperCase() }}</div>
+                                <div v-if="toggleEditList" class="divTableCell fifthCol center-text"><a @click="deletePackedItem(item.packedItemId)"><span class="material-icons">clear</span></a></div>
                             </div>
                         </div>
+                    </div>
+
+                    <div v-if="toggleEditList">
+                        <div class="" v-for="vendor in delivery.purchaseOrders" :key="vendor.orderId" >
+                            <PackedItemsAdd :id="id" :vId="vendor.vendorId" @item-added-event="handleRefreshTable"/>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -180,10 +196,13 @@ import getStatuses from '../composables/getStatuses.js'
 import editDeliveryById from '../composables/editDeliveryById.js'
 import {useStore} from 'vuex'
 import getCurrentUser from '../composables/getCurrentUser.js'
+import PackedItemsEdit from '../components/PackedItemsEdit.vue'
+import PackedItemsAdd from '../components/PackedItemsAdd.vue'
+import axios from 'axios'
 
 export default {
     props: ['id'],
-    components: {DeliveryDelete},
+    components: {DeliveryDelete, PackedItemsEdit, PackedItemsAdd},
     setup(props){
         let counter = 1
         const isEditing = ref(false)
@@ -206,7 +225,8 @@ export default {
         const formStatusId = ref('')
         const formForwarderId = ref('')
         const formComment = ref('')
-
+        
+        const toggleEditList = ref(false)
         const {loadForwarders, error:forError, forwarders} = getForwarders(mainUrl, userToken.value)
         const {loadStatuses, error:staError, statuses} = getStatuses(mainUrl, userToken.value)
         const {editDelivery,error:ediError} = editDeliveryById(mainUrl, userToken.value)
@@ -219,7 +239,7 @@ export default {
                     delivery.value.packedItems.forEach(item =>{
                         item['counter'] = counter++
                     })
-                    // console.log(delivery.value)
+                    console.log(delivery.value)
                 })
             loadForwarders(1,50)
             loadStatuses(1,50)
@@ -322,20 +342,71 @@ export default {
                     })
             //console.log(deliveryData)
         }
-        const handleDelete = ()=>{
+        const handleDelete = ()=>
+        {
             // deleteFlag.value = true
             var modal = document.getElementById("myModal");
             modal.style.display = "block" 
             
-            window.onclick = function(event) {
-            if (event.target == modal) {
-            modal.style.display = "none";
-            // deleteFlag.value = false
+            window.onclick = function(event) 
+            {
+                if (event.target == modal) 
+                {
+                    modal.style.display = "none";
+                    // deleteFlag.value = false
+                }
             }
         }
+
+        const handleEditList = ()=>{
+            toggleEditList.value = !toggleEditList.value
         }
 
-        return{ delivery, 
+        watch(toggleEditList,()=>{
+            if(toggleEditList.value == false)
+            {
+                document.getElementById('editlist').innerHTML = "Edytuj listę"
+            }
+            else
+            {
+                document.getElementById('editlist').innerHTML = "Wyłącz edycję"
+            }
+        })
+        const handleRefreshTable = async ()=>{
+            counter = 1
+            
+            await loadDetails(props.id)
+                .then(function(){
+                    delivery.value.packedItems.forEach(item =>{
+                        item['counter'] = counter++
+                    })
+                })
+        }
+
+        const deletePackedItem = async (packedItemId)=>{
+            var requestOptions = 
+            {
+                method: 'DELETE',
+                headers: {
+                    "Accept":"*/*",
+                    'Content-Type':'application/json',
+                    "Access-Control-Allow-Origin": "*",
+                    "Authorization":"Bearer " + userToken.value
+                },
+                mode:'cors',
+            };
+           
+                await axios.delete(urlHolder + 'packed/' + packedItemId, requestOptions)
+                        .then(handleRefreshTable)
+                        .catch(err => console.log(err))
+        }
+
+        return{ 
+                deletePackedItem,
+                handleRefreshTable,
+                toggleEditList,
+                handleEditList,
+                delivery, 
                 error,
                 forError,
                 staError,
@@ -382,6 +453,21 @@ export default {
     "buttons buttons buttons buttons";
     padding: 0px 0px;
     
+}
+.delivery-details-container .divTable .divTableCell span{
+    color: #afafaf;
+    transition: 100ms ease-in-out;
+    padding: 2px 1px;
+    border-radius: 30px;
+    border:solid 2px #afafaf;
+    
+}
+.delivery-details-container .divTable .divTableCell span:hover{
+    cursor: pointer;
+    color: #ff3232;
+    background-color: #252525;
+    transform: scale(1.2);
+    transition: 100ms ease-in-out;
 }
 .delivery-details-container .vendor-header{
     display: flex;
@@ -434,6 +520,12 @@ export default {
     padding: 20px 0 ;
     grid-area: plist;
     margin: 25px 0 10px 30px;
+}
+.delivery-details-container .item-p-head {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+
 }
 .delivery-details-container .item-c {
     border-top: 3px solid var(--back-grey2);
