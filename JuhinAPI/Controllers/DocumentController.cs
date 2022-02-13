@@ -61,6 +61,23 @@ namespace JuhinAPI.Controllers
             return mapper.Map<DocumentDTO>(document);
         }
         /// <summary>
+        /// Gets the specific document by Guid Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("delivery/{id}", Name = "GetDeliveryDocuments")]
+        public async Task<ActionResult<List<DocumentDTO>>> GetDeliveryDocuments(Guid id)
+        {
+            var documents = await context.Documents
+                .Where(d => d.DeliveryId == id)
+                .ToListAsync();
+            if (documents == null)
+            {
+                return NotFound();
+            }
+            return mapper.Map<List<DocumentDTO>>(documents);
+        }
+        /// <summary>
         /// Posts the document file to file storage service
         /// </summary>
         /// <param name="newDocument"></param>
@@ -69,7 +86,10 @@ namespace JuhinAPI.Controllers
         public async Task<ActionResult> Post([FromForm] DocumentCreationDTO newDocument)
         {
             var document = mapper.Map<Document>(newDocument);
-
+            if (newDocument.DocumentFile == null)
+            {
+                return BadRequest("No file data.");
+            }
             if (newDocument.DocumentFile != null)
             {
                 using (var memoryStream = new MemoryStream())

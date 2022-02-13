@@ -101,6 +101,7 @@
                 <button @click="handleBack"> <span class="material-icons">keyboard_backspace</span> Powrót</button>
                 <button @click="handleEditOrder" class="edit-btn">Edytuj</button>
                 <button id="subscription" class="sub-btn" :class="{suboff:isSubscribed}" @click="handleSubscription">Subskrybuj</button>
+                <router-link id="docs" class="btn" :to="{name:'DeliveryDocs', params: {id:id}}">Dokumenty</router-link>
                 <button v-if="delivery.statusId == 1" class="delete-btn" @click="handleDelete">Usuń</button>
             </div>
 
@@ -581,8 +582,10 @@ export default {
   justify-content: space-between;
   /* background-color:rgb(74, 90, 63); */
   padding: 10px 0 ;
+  gap: 10px;
   margin-left: 30px;
   margin-bottom: 25px;
+  
 }
 .delivery-details-container .item-btn span{
     padding-right: 10px;
@@ -590,8 +593,18 @@ export default {
 .delivery-details-container .item-btn button {
     box-shadow: 2px 2px 3px rgba(20,20,20,0.5);
     width: 180px;
+    min-height: 40px;
 
 }
+.delivery-details-container .item-btn #docs{
+    background-color: #792dcf;
+     box-shadow: 2px 2px 3px rgba(20,20,20,0.5);
+    width: 140px;
+    min-height: 20px;
+}
+    .delivery-details-container .item-btn #docs:hover{
+background-color: var(--orange);
+    }
 .delivery-details-container .item-btn .sub-btn.suboff{
     background-color: rgb(93, 93, 93);
 }

@@ -15,8 +15,12 @@ namespace JuhinAPI.Validations
             "application/pdf",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.ms-excel",
+            "application/msword",
             "image/jpeg", 
-            "image/jpg"
+            "image/jpg",
+            "image/png",
+            "text/html"
         };
 
         public ContentTypeValidator(string[] ValidContentTypes)

@@ -200,6 +200,13 @@
             <param name="id"></param>
             <returns></returns>
         </member>
+        <member name="M:JuhinAPI.Controllers.DocumentController.GetDeliveryDocuments(System.Guid)">
+            <summary>
+            Gets the specific document by Guid Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:JuhinAPI.Controllers.DocumentController.Post(JuhinAPI.DTOs.DocumentCreationDTO)">
             <summary>
             Posts the document file to file storage service
