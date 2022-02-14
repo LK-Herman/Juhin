@@ -70,6 +70,7 @@
 
 
 </div> 
+<CreatedModal/>
 </template>
 
 <script>
@@ -82,10 +83,11 @@ import urlHolder from "../composables/urlHolder.js";
 import PackedItemsAdd from "../components/PackedItemsAdd.vue";
 import getDeliveryDetails from '../composables/getDeliveryDetails.js';
 import { useStore } from 'vuex'
+import CreatedModal from '../components/CreatedModal.vue'
 
 export default {
   props: ["vId", "vendorName", "orderNo", "orderId"],
-  components: { PackedItemsAdd },
+  components: { PackedItemsAdd, CreatedModal },
   setup(props) {
     const mainUrl = urlHolder;
     const store = useStore()
@@ -122,8 +124,8 @@ export default {
         
         await addNewDelivery(deliveryData, props.orderId);
         if (!deliveryError.value) {
+            document.getElementById("mycreated-modal").style.display="block";
             packedItemsFlag.value = true;
-            console.log("Delivery added succesfully");
             await loadDetails(createdId.value)
         }
     }

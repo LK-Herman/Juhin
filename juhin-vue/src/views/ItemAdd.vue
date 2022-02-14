@@ -110,7 +110,7 @@
         
         <button>OK</button>
     </form>
-
+<CreatedModal/>
 </template>
 
 <script>
@@ -122,8 +122,10 @@ import getPallets from '../composables/getPallets.js'
 import addItem from '../composables/addItem.js'
 import urlHolder from '../composables/urlHolder.js'
 import {useRouter} from 'vue-router'
+import CreatedModal from '../components/CreatedModal.vue'
 
 export default {
+    components:{CreatedModal},
     props:['vend'],
     setup(props){
         const router = useRouter()
@@ -189,6 +191,7 @@ export default {
             await addNewItem(itemData)
                 .then(function(){
                     console.log(response.value)
+                    document.getElementById("mycreated-modal").style.display="block"
                 })
 
         }

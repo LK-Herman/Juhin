@@ -28,7 +28,7 @@
             </div>
       </form>
   </div>
-
+<CreatedModal/>
   
 </template>
 
@@ -36,12 +36,14 @@
 import { ref } from '@vue/reactivity'
 import addForwarder from '../composables/addForwarder.js'
 import urlHolder from '../composables/urlHolder.js'
-import { useRouter } from 'vue-router'
+import CreatedModal from '../components/CreatedModal.vue'
 import { onUpdated, watch } from '@vue/runtime-core'
+
 export default {
+    components:{CreatedModal},
     setup(){
         
-        const router = useRouter()
+
         const mainUrl = urlHolder
         
         const user = localStorage.getItem('user')
@@ -69,7 +71,7 @@ export default {
                     }
                     await addNewForwarder(forwarderData)
                     if(!error.value){
-                        router.push({name:'Created'})
+                       document.getElementById("mycreated-modal").style.display="block";
                     }
             }
         }

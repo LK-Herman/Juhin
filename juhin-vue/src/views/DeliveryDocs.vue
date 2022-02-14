@@ -1,5 +1,6 @@
 <template>
-  <h2>Dokumenty</h2>
+<button id="backButton" @click="handleBack"><span class="material-icons">arrow_back</span> Powrót do dostawy</button>
+  <h3>Lista dokumentów</h3>
     <div class="docs-container">
         <div class="documents-list" v-if="!error && docs.length != 0">
             <div class="doc" v-for="document in docs" :key="document.documentId">
@@ -67,10 +68,10 @@
                         </div>
                     </div>
             </form>
-
-
         </div>
+            
     </div>
+    <CreatedModal/>
 </template>
 
 <script>
@@ -80,9 +81,14 @@ import addDocument from '../composables/addDocument.js'
 import { useStore } from 'vuex'
 import urlHolder from '../composables/urlHolder.js'
 import { onMounted, watch } from '@vue/runtime-core'
+import CreatedModal from '../components/CreatedModal.vue'
+import {useRouter} from 'vue-router'
+
 export default {
+    components: {CreatedModal},
     props:['id'],
     setup(props){
+        const router = useRouter()
         const store = useStore()
         const mainUrl = urlHolder
         const userToken = computed(()=> store.getters.getUserToken)
@@ -92,6 +98,9 @@ export default {
         const formType = ref()
         const formName = ref()
 
+        const handleBack = () =>{
+            router.go(-1)
+        }
 
         const onFileChange = (e)=>{
             var files = e.target.files || e.dataTransfer.files;
@@ -124,19 +133,26 @@ export default {
                         formFile.value = null
                         formType.value = ''
                         formName.value = ''
+                        document.getElementById("mycreated-modal").style.display="block"
                     }
                 })
               
         }
       
 
-        return {docs, error, addError, formFile, formType, formName, onFileChange, handleSubmit}
+        return {handleBack, docs, error, addError, formFile, formType, formName, onFileChange, handleSubmit}
     }
 
 }
 </script>
 
 <style>
+#backButton{
+    margin-bottom: 40px;
+}
+#backButton span{
+    margin-right: 10px;
+}
 .adderror{
     padding: 10px;
     }
@@ -152,7 +168,7 @@ export default {
     gap: 40px;
 }
 .docs-container .documents-list{
-    margin-top: 40px;
+    margin-top: 20px;
     }
 .docs-container .documents-list .doc{
     display: grid;
@@ -196,6 +212,7 @@ export default {
     margin: 10px 0px;
 }
 .docs-form form{
+    margin-top: 20px;
     min-width: 200px;
     max-width: 300px;
     background-color: transparent;

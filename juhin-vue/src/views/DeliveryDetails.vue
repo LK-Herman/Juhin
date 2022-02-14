@@ -180,6 +180,7 @@
         </div>
     </div>
     <div v-else>{{error}}</div>
+    <CreatedModal/>
 </template>
 
 
@@ -200,10 +201,11 @@ import getCurrentUser from '../composables/getCurrentUser.js'
 import PackedItemsEdit from '../components/PackedItemsEdit.vue'
 import PackedItemsAdd from '../components/PackedItemsAdd.vue'
 import axios from 'axios'
+import CreatedModal from '../components/CreatedModal.vue'
 
 export default {
     props: ['id'],
-    components: {DeliveryDelete, PackedItemsEdit, PackedItemsAdd},
+    components: {DeliveryDelete, PackedItemsEdit, PackedItemsAdd, CreatedModal},
     setup(props){
         let counter = 1
         const isEditing = ref(false)
@@ -340,6 +342,7 @@ export default {
                             item['counter'] = counter++
                             })
                         })
+                        document.getElementById("mycreated-modal").style.display="block"
                     })
             //console.log(deliveryData)
         }

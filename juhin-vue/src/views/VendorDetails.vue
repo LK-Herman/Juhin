@@ -134,7 +134,7 @@
         <h2>Dostawca został usunięty</h2>    
     </div>
     
-
+<CreatedModal/>
 
 </template>
 
@@ -146,9 +146,10 @@ import { onMounted, ref } from '@vue/runtime-core'
 import {useRouter} from 'vue-router'
 import editVendor from '../composables/editVendor.js'
 import deleteVendorById from '../composables/deleteVendorById'
+import CreatedModal from '../components/CreatedModal.vue'
 
 export default {
-  components: {  },
+  components: { CreatedModal },
   props:['vId'],
   setup(props) {
     const mainUrl = urlHolder
@@ -238,8 +239,9 @@ export default {
             
             await putVendor(props.vId, vendorData)
             if(!responseErrors.value && !error.value){
-                // editFlag.value = false
+                 editFlag.value = false
                 // router.push({name:'Created'})
+                document.getElementById("mycreated-modal").style.display="block";
             }
                 await loadVendor(props.vId)
         }

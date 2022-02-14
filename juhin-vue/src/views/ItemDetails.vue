@@ -217,6 +217,7 @@
             </div>
         </form>
     </div>
+    <CreatedModal/>
 </template>
 
 <script>
@@ -236,9 +237,10 @@ import getWarehouseById from '../composables/getWarehouseById.js'
 import getWarehouses from '../composables/getWarehouses.js'
 import editItemById from '../composables/editItemById.js'
 import {useRouter} from 'vue-router'
+import CreatedModal from '../components/CreatedModal.vue'
 
 export default {
-
+    components:{CreatedModal},
     props:['id'],
     setup(props){
         const mainUrl = urlHolder
@@ -350,6 +352,7 @@ export default {
                         .then(()=>{
                             isEditing.value=false
                             isLoaded.value=true
+                            document.getElementById("mycreated-modal").style.display="block";
                         })    
                 })
 

@@ -44,20 +44,19 @@
       </form>
   </div>
 
-  
+  <CreatedModal/>
 </template>
 
 <script>
 import { ref } from '@vue/reactivity'
 import addVendor from '../composables/addVendor.js'
 import urlHolder from '../composables/urlHolder.js'
-import { useRouter } from 'vue-router'
 import { onUpdated, watch } from '@vue/runtime-core'
+import CreatedModal from '../components/CreatedModal.vue'
 export default {
-    
+    components:{CreatedModal},
     setup(){
         
-        const router = useRouter()
         const mainUrl = urlHolder
 
         const user = localStorage.getItem('user')
@@ -90,7 +89,14 @@ export default {
             
             await addNewVendor(vendorData)
             if(!responseErrors.value && !error.value){
-                router.push({name:'Created'})
+                document.getElementById("mycreated-modal").style.display="block"
+                formVendorCode.value = ''
+                formShortName.value =''
+                formName.value = ''
+                formAddress.value = ''
+                formCountry.value = ''
+                formEmail.value = ''
+                formPhoneNumber.value = ''
             }
         }
 

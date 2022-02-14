@@ -1,8 +1,9 @@
 <template>
-   <div id="mycreated-modal" class="created-modal">
-        <div class="created-modal-content">
-                <div class="created-modal-question">
-                    <p>Czy na pewno chcesz usunąć?</p>
+   <div @click="handleClick()" id="mycreated-modal" class="created-modal">
+        <div  class="created-modal-content">
+                <div class="created-modal-text">
+                    <span class="material-icons">check_circle_outline</span>
+                    <p>ZROBIONE</p>
                 </div>
         </div>
 
@@ -11,14 +12,21 @@
 
 <script>
 export default {
+    
+    setup(){
+        const handleClick = ()=>{
+            document.getElementById("mycreated-modal").style.display="none";
+        }
 
+        return { handleClick }
+    }
 }
 </script>
 
 <style scoped>
 
 .created-modal {
-  display: none; /* Hidden by default */
+  display:none; 
   position: fixed; /* Stay in place */
   z-index: 99; /* Sit on top */
   padding-top: 300px; /* Location of the box */
@@ -34,22 +42,37 @@ export default {
 /* created-modal Content */
 .created-modal-content {
   position: relative;
-  background-color: #313131;
+  /* background-color: #313131; */
+  background-image: linear-gradient(to bottom, #052e00, #073800,#052700);
   color: #fff;
   border-radius: 20px;
   margin: auto;
   padding: 20px;
-  border: 4px solid rgb(144, 144, 144);
-  width: 460px;
+  border: 4px solid #555555;
+  width: 360px;
   box-shadow: 8px 8px 12px 0 rgba(0, 0, 0, 0.5),-8px -8px 12px 0 rgba(0,0,0,0.5);
   -webkit-animation-name: animatetop;
   -webkit-animation-duration: 0.4s;
   animation-name: animatetop;
   animation-duration: 0.4s
 }
-.created-modal-content .created-modal-question {
-    text-align: center;
-    padding: 20px 20px 40px 20px;
+.created-modal-content .created-modal-text {
+    display: flex;
+    justify-content: flex-start;
+    align-content: center;
+    align-items: center;
+    padding: 10px 30px;
+}
+.created-modal-content .created-modal-text p{
+    color: #eeeeee;
+    font-size: 28px;
+    font-weight: 600;
+}
+.created-modal-content .created-modal-text span{
+    color: var(--orange);
+    color:rgb(211, 211, 211);
+    font-size: 60px;
+    margin-right: 40px;
 }
 
 /* Add Animation */

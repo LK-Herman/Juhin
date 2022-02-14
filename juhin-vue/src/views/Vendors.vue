@@ -83,7 +83,7 @@
           </div>
 
       </div>
-
+      <CreatedModal/>  
 
 </template>
 
@@ -92,9 +92,9 @@ import getVendors from '../composables/getVendors.js'
 import urlHolder from '../composables/urlHolder.js'
 import { onMounted, onUpdated, ref, watch, watchEffect } from '@vue/runtime-core'
 import {useRouter} from 'vue-router'
-
+import CreatedModal from '../components/CreatedModal.vue'
 export default {
-  components: {  },
+  components: { CreatedModal },
   
   setup() {
     const url = urlHolder
