@@ -98,10 +98,7 @@
           </div>
 
       </div>
-      <div v-if="!error">
-          <p>{{usersList}}</p>
-
-      </div>
+      
 </template>
 
 <script>
