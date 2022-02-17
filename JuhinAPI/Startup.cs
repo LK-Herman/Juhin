@@ -27,6 +27,9 @@ using Microsoft.Extensions.Azure;
 using Azure.Storage.Queues;
 using Azure.Storage.Blobs;
 using Azure.Core.Extensions;
+using Microsoft.AspNet.Identity;
+using AutoMapper;
+using JuhinAPI.Helpers;
 
 namespace JuhinAPI
 {
@@ -57,13 +60,22 @@ namespace JuhinAPI
             //services.AddScoped<IRepository, DbRepository>();
             services.AddAutoMapper(typeof(Startup));
             services.AddDataProtection();
+
             
+
             services.AddTransient<IFileStorageService, InAppStorageService>();
             services.AddHttpContextAccessor();
             services.AddLogging();
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+
+            //services.AddSingleton<Microsoft.AspNetCore.Identity.UserManager<IdentityUser>>();
+            //services.AddSingleton(provider => new MapperConfiguration(cfg =>
+            //{
+            //    cfg.AddProfile(new AutoMapperProfiles(provider.GetService<Microsoft.AspNetCore.Identity.UserManager<IdentityUser>>()));
+            //}).CreateMapper());
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -125,11 +137,7 @@ namespace JuhinAPI
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 config.IncludeXmlComments(xmlPath);
             });
-            //services.AddAzureClients(builder =>
-            //{
-            //    builder.AddBlobServiceClient(Configuration["ConnectionStrings:AzureStorageConnection:blob"], preferMsi: true);
-            //    builder.AddQueueServiceClient(Configuration["ConnectionStrings:AzureStorageConnection:queue"], preferMsi: true);
-            //});
+          
 
         }
 

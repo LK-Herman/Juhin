@@ -223,8 +223,6 @@ export default {
     
     max-width: 300px;
     min-width: 200px;
-    
-    
 }
 .docs-form form h3{
     margin:0 0 20px 0;
@@ -234,7 +232,6 @@ export default {
     justify-self: center;
     margin: 40px auto 0 auto;
 }
-
 
 .docs-form form .tripleform input{
     padding: 10px 10px;

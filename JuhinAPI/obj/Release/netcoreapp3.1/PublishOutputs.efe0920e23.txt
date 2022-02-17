@@ -16,6 +16,7 @@ C:\Projects\Juhin\JuhinAPI\obj\Release\netcoreapp3.1\PubTmp\Out\Hangfire.AspNetC
 C:\Projects\Juhin\JuhinAPI\obj\Release\netcoreapp3.1\PubTmp\Out\Hangfire.Core.dll
 C:\Projects\Juhin\JuhinAPI\obj\Release\netcoreapp3.1\PubTmp\Out\Hangfire.SqlServer.dll
 C:\Projects\Juhin\JuhinAPI\obj\Release\netcoreapp3.1\PubTmp\Out\MailKit.dll
+C:\Projects\Juhin\JuhinAPI\obj\Release\netcoreapp3.1\PubTmp\Out\Microsoft.AspNet.Identity.Core.dll
 C:\Projects\Juhin\JuhinAPI\obj\Release\netcoreapp3.1\PubTmp\Out\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Projects\Juhin\JuhinAPI\obj\Release\netcoreapp3.1\PubTmp\Out\Microsoft.AspNetCore.Cryptography.Internal.dll
 C:\Projects\Juhin\JuhinAPI\obj\Release\netcoreapp3.1\PubTmp\Out\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll

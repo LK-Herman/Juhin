@@ -11,6 +11,12 @@
             <param name="paginationDTO">Sets the maximum records per page and the page numberr to show</param>
             <returns></returns>
         </member>
+        <member name="M:JuhinAPI.Controllers.AccountsController.GetUsersDetails(JuhinAPI.DTOs.PaginationDTO)">
+            <summary>
+            Shows all users with roles in system
+            </summary>
+            <returns>users</returns>
+        </member>
         <member name="M:JuhinAPI.Controllers.AccountsController.GetRoles">
             <summary>
             Shows all available roles in system

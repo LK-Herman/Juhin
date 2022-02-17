@@ -11,8 +11,12 @@ namespace JuhinAPI.Helpers
 {
     public class AutoMapperProfiles: Profile
     {
+        
+
         public AutoMapperProfiles()
         {
+            
+
             CreateMap<Vendor, VendorDTO>().ReverseMap();
             CreateMap<VendorCreationDTO, Vendor>();
 
@@ -69,10 +73,19 @@ namespace JuhinAPI.Helpers
             CreateMap<IdentityUser, UserDTO>()
                 .ForMember(x => x.EmailAddress, options => options.MapFrom(x => x.Email))
                 .ForMember(x => x.UserId, options => options.MapFrom(x => x.Id));
+            CreateMap<IdentityUser, UserDetailsDTO>()
+                .ForMember(x => x.EmailAddress, options => options.MapFrom(x => x.Email))
+                .ForMember(x => x.UserId, options => options.MapFrom(x => x.Id));
+                 
+                //.ForMember(x => x.IsSpecialist, options => options.MapFrom(MapRoleSpecialist))
+                //.ForMember(x => x.IsWarehouseman, options => options.MapFrom(MapRoleWarehouseman))
+                //.ForMember(x => x.IsGuest, options => options.MapFrom(MapRoleGuest))
+                //.ForMember(x => x.IsAdmin, options => options.MapFrom(MapRoleAdmin));
+                
 
             CreateMap<PurchaseOrder_Delivery, PurchaseOrder_DeliveryDTO>()
                 .ForMember(x => x.EtaDate, options => options.MapFrom(x => x.Delivery.ETADate));
-
+            
         }
 
 
@@ -80,7 +93,23 @@ namespace JuhinAPI.Helpers
         //{
         //    return new VendorDTO() { Name = purchaseOrderDetails.VendorName, ShortName = purchaseOrderDetails.VendorShortName };
         //}
-        
+        //private bool MapRoleAdmin(IdentityUser identityUser, UserDetailsDTO userDetailsDto)
+        //{
+        //    return userManager.IsInRoleAsync(identityUser, "Admin").Result; 
+        //}
+        //private bool MapRoleGuest(IdentityUser identityUser, UserDetailsDTO userDetailsDto)
+        //{
+        //    return userManager.IsInRoleAsync(identityUser, "Guest").Result;
+        //}
+        //private bool MapRoleSpecialist(IdentityUser identityUser, UserDetailsDTO userDetailsDto)
+        //{
+        //    return userManager.IsInRoleAsync(identityUser, "Specialist").Result;
+        //}
+        //private bool MapRoleWarehouseman(IdentityUser identityUser, UserDetailsDTO userDetailsDto)
+        //{
+        //    return userManager.IsInRoleAsync(identityUser, "Wareho").Result;
+        //}
+
         private string MapPackedItemToItem(PackedItem packedItem, PackedItemDetailsDTO detailedPackedItem)
         {
             var itemDTO = new ItemDTO() { Name = detailedPackedItem.Item.Name };

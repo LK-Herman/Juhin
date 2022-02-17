@@ -75,6 +75,62 @@ namespace JuhinAPI.Controllers
 
             return mapper.Map<List<UserDTO>>(users);
         }
+
+        /// <summary>
+        /// Shows all users with roles in system
+        /// </summary>
+        /// <returns>users</returns>
+        [HttpGet("UsersDetails", Name = "getUsersDetails")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        public async Task<ActionResult<List<UserDetailsDTO>>> GetUsersDetails([FromQuery] PaginationDTO paginationDTO)
+        {
+            var queryable = await context.Users.OrderBy(x => x.Email).ToListAsync();
+
+            List<UserDetailsDTO> users = new List<UserDetailsDTO>();
+
+            foreach (var user in queryable)
+            {
+
+                var isAdmin = false;
+                var isSpecialist = false;
+                var isWarehouseman = false;
+                var isGuest = false;
+               
+                var userClaims = await userManager.GetClaimsAsync(user);
+                
+                foreach (var claim in userClaims)
+                {
+                    if (claim.Value.Contains("Admin")) isAdmin = true;
+                    if (claim.Value.Contains("Specialist")) isSpecialist = true;
+                    if (claim.Value.Contains("Warehouseman")) isWarehouseman = true;
+                    if (claim.Value.Contains("Guest")) isGuest = true;
+                }
+
+                users.Add(new UserDetailsDTO
+                {
+                    UserId = user.Id,
+                    EmailAddress = user.Email,
+                    IsAdmin = isAdmin,
+                    IsSpecialist = isSpecialist,
+                    IsGuest = isGuest,
+                    IsWarehouseman = isWarehouseman
+                });
+
+            }
+
+            var usersq = users.AsQueryable();
+            
+            var count = usersq.Count();
+            HttpContext.Response.Headers.Add("All-Records", count.ToString());
+            //await HttpContext.InsertPaginationParametersInResponse(usersq, paginationDTO.RecordsPerPage);
+            var allUsers = usersq.Paginate(paginationDTO).ToList();
+
+            return allUsers;
+        }
+
+
+
+
         [HttpGet("User/{id}", Name = "getUserById")]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult<UserDTO>> GetUserById(string id)

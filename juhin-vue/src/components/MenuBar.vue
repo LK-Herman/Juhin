@@ -2,7 +2,7 @@
 <div class="menubar">
     <div class="title-bar">
         <div id="deliveries" class="menu-icon">
-             <img src="@/assets/images/deliveryIcon.png"/>
+             <span class="material-icons">warehouse</span>
         </div>
         <div>
             <h4 >DOSTAWY</h4>
@@ -17,7 +17,7 @@
 
     <div class="title-bar">
         <div id="orders" class="menu-icon">
-             <img src="@/assets/images/orderIcon.png"/>
+             <span class="material-icons">shopping_cart</span>
         </div>
         <div>
             <h4>ZAMÓWIENIA</h4>
@@ -28,7 +28,7 @@
 
      <div class="title-bar">
         <div id="items" class="menu-icon">
-             <img src="@/assets/images/itemIcon.png"/>
+             <span class="material-icons">extension</span>
         </div>
         <div>
             <h4>TOWARY</h4>
@@ -39,7 +39,7 @@
 
     <div class="title-bar">
         <div id="vendors" class="menu-icon">
-             <img src="@/assets/images/vendorIcon.png"/>
+             <span class="material-icons">factory</span>
         </div>
         <div>
             <h4>DOSTAWCY</h4>
@@ -50,7 +50,7 @@
 
     <div class="title-bar">
         <div id="forwarders" class="menu-icon">
-             <img src="@/assets/images/forwarderIcon.png"/>
+             <span class="material-icons">anchor</span>
         </div>
         <div>
             <h4>PRZEWOŹNICY</h4>
@@ -59,6 +59,15 @@
     <router-link class="forwarders-btn btn" :to="{name:'Forwarders'}">Przeglądaj</router-link>
     <router-link class="forwarders-btn btn" :to="{name:'ForwarderAdd'}">Dodaj</router-link>
     <router-link class="forwarders-btn btn" :to="{name:'ForwarderRanking'}">Ranking</router-link>
+     <div class="title-bar">
+        <div id="users" class="menu-icon">
+             <span class="material-icons">people</span>
+        </div>
+        <div>
+            <h4>UŻYTKOWNICY</h4>
+        </div>
+    </div>
+    <router-link class="users-btn btn" :to="{name:'Users'}">Przeglądaj</router-link>
 </div>
 </template>
 
@@ -91,12 +100,20 @@
 }
 .menubar .menu-icon{
     /* display: inline-block; */
+    display: flex;
     padding: 8px 0;    
     text-align: center;
     width: 60px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
     margin: 3px 10px 3px 5px;
 }
+.menubar .menu-icon span{
+    font-size: 30px;
+}
 .menubar #deliveries {
+    
     background-color: var(--deliveries);
 }
 .menubar #orders{
@@ -111,6 +128,9 @@
 .menubar #forwarders{
     background-color: #613FC0;
 }
+.menubar #users{
+    background-color: #175985;
+}
 .menubar .deliveries-btn:hover{
     background-color: #2A9F98;
 }
@@ -122,6 +142,9 @@
 }
 .menubar .vendors-btn:hover{
     background-color: #528322;
+}
+.menubar .users-btn:hover{
+   background-color: #175985;
 }
 .menubar .forwarders-btn:hover{
     background-color: #613FC0;

@@ -23,6 +23,7 @@ import ForwarderRanking from '../views/ForwarderRanking.vue'
 import VendorDetails from '../views/VendorDetails.vue' 
 import OrderDetails from '../views/OrderDetails.vue' 
 import Created from '../views/Created.vue'
+import Users from '../views/Users.vue'
 import store from '../store/index.js';
 import getCurrentUser from '../composables/getCurrentUser.js'
 import urlHolder from '../composables/urlHolder.js'
@@ -72,6 +73,13 @@ const routes = [
     component: Login,
     props: true,
     
+  },
+  {
+    path: '/users',
+    name: 'Users',
+    component: Users,
+    props: true,
+    beforeEnter: requiredAuth
   },
   {
       path: '/deliveries/upcomming',
