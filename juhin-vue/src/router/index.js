@@ -50,7 +50,7 @@ const requiredAuth = (to, from, next) => {
         next({name: 'Login'})
     } else 
     {
-        if(to.name == 'DeliveryAdd' || to.name == 'ItemAdd' || to.name == 'VendorAdd' || to.name == 'ForwarderAdd' || to.name == 'OrderAdd' && !user.isSpecialist)
+        if((to.name == 'DeliveryAdd' || to.name == 'ItemAdd' || to.name == 'VendorAdd' || to.name == 'ForwarderAdd' || to.name == 'OrderAdd') && !user.isSpecialist)
             {
             next({name:'AccessDenied'})
         }else
