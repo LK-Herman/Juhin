@@ -1,6 +1,6 @@
 <template>
-<div class="menubar">
-    <div class="title-bar">
+<div v-if="user" class="menubar">
+    <div v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" class="title-bar">
         <div id="deliveries" class="menu-icon">
              <span class="material-icons">warehouse</span>
         </div>
@@ -8,14 +8,13 @@
             <h4 >DOSTAWY</h4>
         </div>
     </div>
-    <router-link :to="{name:'Upcoming'}" class="deliveries-btn btn">Najbliższe dostawy</router-link>
-    <router-link :to="{name:'Deliveries'}" class="deliveries-btn btn">Przeglądaj</router-link>
-    <router-link :to="{name:'DeliverySchedule'}" class="deliveries-btn btn">Grafik dostaw</router-link>
-    <router-link :to="{name:'DeliverySearch'}" class="deliveries-btn btn">Wyszukaj</router-link>
+    <router-link v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" :to="{name:'Upcoming'}" class="deliveries-btn btn">Najbliższe dostawy</router-link>
+    <router-link v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" :to="{name:'Deliveries'}" class="deliveries-btn btn">Przeglądaj</router-link>
+    <router-link v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" :to="{name:'DeliverySchedule'}" class="deliveries-btn btn">Grafik dostaw</router-link>
+    <router-link v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" :to="{name:'DeliverySearch'}" class="deliveries-btn btn">Wyszukaj</router-link>
     <!-- <router-link  class="deliveries-btn btn">Dodaj</router-link> -->
     
-
-    <div class="title-bar">
+    <div v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" class="title-bar">
         <div id="orders" class="menu-icon">
              <span class="material-icons">shopping_cart</span>
         </div>
@@ -23,10 +22,10 @@
             <h4>ZAMÓWIENIA</h4>
         </div>
     </div>
-    <router-link :to="{name:'Orders'}" class="orders-btn btn">Przeglądaj</router-link>
+    <router-link v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" :to="{name:'Orders'}" class="orders-btn btn">Przeglądaj</router-link>
     
 
-     <div class="title-bar">
+     <div v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" class="title-bar">
         <div id="items" class="menu-icon">
              <span class="material-icons">extension</span>
         </div>
@@ -34,10 +33,10 @@
             <h4>TOWARY</h4>
         </div>
     </div>
-    <router-link :to="{name:'Items'}" class="items-btn btn">Przeglądaj</router-link>
+    <router-link v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" :to="{name:'Items'}" class="items-btn btn">Przeglądaj</router-link>
     
 
-    <div class="title-bar">
+    <div v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" class="title-bar">
         <div id="vendors" class="menu-icon">
              <span class="material-icons">factory</span>
         </div>
@@ -45,10 +44,10 @@
             <h4>DOSTAWCY</h4>
         </div>
     </div>
-    <router-link class="vendors-btn btn" :to="{name:'Vendors'}">Przeglądaj</router-link>
-    <router-link class="vendors-btn btn" :to="{name:'VendorAdd'}">Dodaj</router-link>
+    <router-link v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" class="vendors-btn btn" :to="{name:'Vendors'}">Przeglądaj</router-link>
+    <router-link v-if="user.isSpecialist" class="vendors-btn btn" :to="{name:'VendorAdd'}">Dodaj</router-link>
 
-    <div class="title-bar">
+    <div v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" class="title-bar">
         <div id="forwarders" class="menu-icon">
              <span class="material-icons">anchor</span>
         </div>
@@ -56,10 +55,10 @@
             <h4>PRZEWOŹNICY</h4>
         </div>
     </div>
-    <router-link class="forwarders-btn btn" :to="{name:'Forwarders'}">Przeglądaj</router-link>
-    <router-link class="forwarders-btn btn" :to="{name:'ForwarderAdd'}">Dodaj</router-link>
-    <router-link class="forwarders-btn btn" :to="{name:'ForwarderRanking'}">Ranking</router-link>
-     <div class="title-bar">
+    <router-link v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" class="forwarders-btn btn" :to="{name:'Forwarders'}">Przeglądaj</router-link>
+    <router-link v-if="user.isSpecialist" class="forwarders-btn btn" :to="{name:'ForwarderAdd'}">Dodaj</router-link>
+    <router-link v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" class="forwarders-btn btn" :to="{name:'ForwarderRanking'}">Ranking</router-link>
+     <div v-if="user.isAdmin" class="title-bar">
         <div id="users" class="menu-icon">
              <span class="material-icons">people</span>
         </div>
@@ -67,20 +66,22 @@
             <h4>UŻYTKOWNICY</h4>
         </div>
     </div>
-    <router-link class="users-btn btn" :to="{name:'Users'}">Przeglądaj</router-link>
+    <router-link  v-if="user.isAdmin" class="users-btn btn" :to="{name:'Users'}">Przeglądaj</router-link>
 </div>
+
 </template>
 
 <script>
+import { computed, ref } from '@vue/reactivity'
+import { useStore } from 'vuex'
+export default {
+setup(){
+    const store = useStore()
+    const user = ref(computed(()=>store.getters.getUser))
 
-// export default {
-// setup(){
-
-//     const user = JSON.parse( localStorage.user )
-    
-//     return{ }
-// }
-// }
+    return{ user }
+}
+}
 </script>
 
 <style>

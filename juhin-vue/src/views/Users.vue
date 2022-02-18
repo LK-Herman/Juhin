@@ -31,13 +31,13 @@
                 <div v-for="user in usersList" :key="user.emailAddress">
                         <div id="users-container" class="table-container">    
                             <div class="sub-table-list" >
-                                <p>1</p>
+                                <p>{{user.counter}}</p>
                             </div>
                             <div>
                                 <p>{{user.emailAddress}}</p>
                             </div>
                             <div class="userSwitch">
-                                <input type="checkbox" name="userSwitch" class="userSwitch-cb" :id="user.emailAddress + 'guest'" v-model="user.isGuest">
+                                <input type="checkbox" name="userSwitch" class="userSwitch-cb" :id="user.emailAddress + 'guest'" v-model="user.isGuest" @click="handleRole(user.userId, 'Guest', !user.isGuest)">
                                 <label class="userSwitch-label" :for="user.emailAddress + 'guest'">
                                 <div class="userSwitch-inner"></div>
                                 <div class="userSwitch-switch"></div>
@@ -46,7 +46,7 @@
 
                            
                             <div class="userSwitch">
-                                <input type="checkbox" name="userSwitch" class="userSwitch-cb" :id="user.emailAddress + 'ware'" v-model="user.isWarehouseman">
+                                <input type="checkbox" name="userSwitch" class="userSwitch-cb" :id="user.emailAddress + 'ware'" v-model="user.isWarehouseman" @click="handleRole(user.userId, 'Warehouseman', !user.isWarehouseman)">
                                 <label class="userSwitch-label" :for="user.emailAddress + 'ware'">
                                 <div class="userSwitch-inner"></div>
                                 <div class="userSwitch-switch"></div>
@@ -54,14 +54,14 @@
                             </div>
 
                             <div class="userSwitch">
-                                <input type="checkbox" name="userSwitch" class="userSwitch-cb" :id="user.emailAddress + 'spec'" v-model="user.isSpecialist">
+                                <input type="checkbox" name="userSwitch" class="userSwitch-cb" :id="user.emailAddress + 'spec'" v-model="user.isSpecialist" @click="handleRole(user.userId, 'Specialist', !user.isSpecialist)">
                                 <label class="userSwitch-label" :for="user.emailAddress + 'spec'">
                                 <div class="userSwitch-inner"></div>
                                 <div class="userSwitch-switch"></div>
                                 </label>
                             </div>
                             <div class="userSwitch">
-                                <input type="checkbox" name="userSwitch" class="userSwitch-cb" :id="user.emailAddress + 'admin'" v-model="user.isAdmin">
+                                <input type="checkbox" name="userSwitch" class="userSwitch-cb" :id="user.emailAddress + 'admin'" v-model="user.isAdmin" @click="handleRole(user.userId, 'Admin', !user.isAdmin)">
                                 <label class="userSwitch-label" :for="user.emailAddress + 'admin'">
                                 <div class="userSwitch-inner"></div>
                                 <div class="userSwitch-switch"></div>
@@ -98,6 +98,9 @@
           </div>
 
       </div>
+      <!-- <div v-if="!error">
+          {{usersList}}
+      </div> -->
       
 </template>
 
@@ -108,6 +111,7 @@ import getUsers from '../composables/getUsers.js'
 import getUserById from '../composables/getUserById.js'
 import urlHolder from '../composables/urlHolder.js'
 import { onMounted } from '@vue/runtime-core'
+import axios from 'axios'
 export default {
     setup(){
         const mainUrl = urlHolder  
@@ -122,16 +126,36 @@ export default {
 
         const {loadUsers, error, usersList, totalRecords, lastPage} = getUsers(mainUrl, userToken.value)
         
-        const getUserData = (id)=>{
-            getUser(id)
-            return email
-        }
-
         onMounted(()=>{
+            let counter = 1
             loadUsers(1,50)
+                .then(()=>{
+                    usersList.value.forEach(user => {
+                        user['counter'] = counter
+                        counter++
+                    });
+                })
+
         })
 
-        return {userToken, usersList, error}
+        const handleRole = async  (id, role, toggleSwitch) =>{
+            let roleData = {
+                userId : id,
+                roleName : role
+            }
+            let endpoint = ''
+            toggleSwitch? endpoint = "AssignRole":endpoint = "RemoveRole"
+
+            await axios.post(mainUrl + "accounts/"+endpoint, roleData, 
+                {
+                     headers: {'Authorization':'Bearer ' + userToken.value,
+                            'Accept':'*/*'
+                    }
+                })
+
+        }
+
+        return {userToken, usersList, error, handleRole}
     }
 
 }

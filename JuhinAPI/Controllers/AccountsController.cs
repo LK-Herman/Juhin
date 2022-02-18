@@ -62,7 +62,7 @@ namespace JuhinAPI.Controllers
         /// <param name="paginationDTO">Sets the maximum records per page and the page numberr to show</param>
         /// <returns></returns>
         [HttpGet("Users", Name = "getUsers")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult<List<UserDTO>>> Get([FromQuery] PaginationDTO paginationDTO)
         {
             var queryable = context.Users.AsQueryable();
@@ -81,7 +81,7 @@ namespace JuhinAPI.Controllers
         /// </summary>
         /// <returns>users</returns>
         [HttpGet("UsersDetails", Name = "getUsersDetails")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult<List<UserDetailsDTO>>> GetUsersDetails([FromQuery] PaginationDTO paginationDTO)
         {
             var queryable = await context.Users.OrderBy(x => x.Email).ToListAsync();
@@ -127,9 +127,6 @@ namespace JuhinAPI.Controllers
 
             return allUsers;
         }
-
-
-
 
         [HttpGet("User/{id}", Name = "getUserById")]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]

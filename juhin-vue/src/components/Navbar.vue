@@ -8,12 +8,13 @@
     <div class="logobar-out">
         <div class="logobar-in">
             <div>
-                <p id="sublogo"> WAREHOUSE MANAGEMENT </p>
+                <p id="sublogo"> SYSTEM ZARZĄDZANIA DOSTAWAMI </p>
             </div>
             <div class="logobar-links">
                 
-                <p v-if="userRolePL" class="links-item" id="email-address">{{userRolePL}} </p>
-                <p v-if="isLogged" class="links-item" ><span class="material-icons md-48">manage_accounts</span></p>
+                <p id="yellowfont" v-if="userRolePL" class="links-item">{{userRolePL}} </p>
+                <p id="yellowfont" v-if="isLogged && userRolePL.includes('Administrator')" class="links-item"><span class="material-icons md-48">manage_accounts</span></p>
+                <p id="yellowfont" v-if="isLogged && !userRolePL.includes('Administrator')" class="links-item"><span class="material-icons md-48">person</span></p>
                 <p v-if="isLogged" class="links-item" id="email-address">{{email}}</p>
                 <p v-if="!isLogged" class="links-item">Zarejestruj się</p>
                 <a v-if="isLogged" class="links-item" @click="handleNavLogout">Wyloguj</a>
@@ -70,7 +71,11 @@ export default {
                 if(user.value['userId'])
                 {
                     email.value = user.value.emailAddress
-                    userRolePL.value = user.value.userRole
+                    if(user.value.isGuest) userRolePL.value = "Gość"
+                    if(user.value.isWarehouseman) userRolePL.value = "Magazynier"
+                    if(user.value.isSpecialist) userRolePL.value = "Logistyk"
+                    if(user.value.isAdmin) userRolePL.value = "Administrator"
+                    if(user.value.isSpecialist && user.value.isAdmin) userRolePL.value = "Logistyk i Administrator"
                 }
                 else
                 {
@@ -96,7 +101,11 @@ export default {
             user.value = us.value
             if(user.value){
                 email.value = user.value.emailAddress
-                userRolePL.value = user.value.userRole
+                if(user.value.isGuest) userRolePL.value = "Gość"
+                if(user.value.isWarehouseman) userRolePL.value = "Magazynier"
+                if(user.value.isSpecialist) userRolePL.value = "Logistyk"
+                if(user.value.isAdmin) userRolePL.value = "Administrator"
+                if(user.value.isSpecialist && user.value.isAdmin) userRolePL.value = "Logistyk i Administrator"
             }
         })
         return {  handleNavLogout, userRolePL, email,isLogged, user}
@@ -106,7 +115,6 @@ export default {
 </script>
 
 <style>
-
 .navbar{
     display: grid;
     grid-template-rows: 60px 60px;
@@ -165,6 +173,12 @@ export default {
 }
 .navbar .logobar-in .logobar-links .links-item:hover{
     color: rgb(255, 182, 25);
+}
+.logobar-links .links-item#yellowfont span{
+    font-size: 30px;
+}
+.logobar-links p.links-item#yellowfont:hover{
+    color: rgb(218, 218, 218);
 }
 #sublogo{
     font-family: 'Amaranth', sans-serif;

@@ -1,5 +1,5 @@
 <template>
-
+<div v-if="user">
      <div v-if="!venError" class="vendor-details-container">
         <div class="item-short">
             <h4>SKRÓT</h4>
@@ -117,12 +117,12 @@
         </div>
         <div class="item-buttons">
             <button @click="handleBack" ><span class="material-icons">keyboard_backspace</span> Powrót</button>
-            <button class="edit-btn" @click="handleEdit">Edytuj</button>
-            <button class="delete-btn">Usuń</button>
+            <button v-if="user.isSpecialist" class="edit-btn" @click="handleEdit">Edytuj</button>
+            <button v-if="user.isSpecialist" class="delete-btn">Usuń</button>
         </div>
     </div>
 
-    <div v-if="isEditing" class="edit-item-form-container">
+    <div v-if="isEditing && user.isSpecialist" class="edit-item-form-container">
         <form @submit.prevent="handleSubmit">
             <div class="triple314">
                 <div>
@@ -218,6 +218,7 @@
         </form>
     </div>
     <CreatedModal/>
+</div>
 </template>
 
 <script>
@@ -245,6 +246,7 @@ export default {
     setup(props){
         const mainUrl = urlHolder
         const store = useStore()
+        const user = ref(computed(()=>store.getters.getUser))
         const userToken = computed(()=> store.getters.getUserToken)
         const {item, error, loadItem} = getItemById(mainUrl, userToken.value)
         const {vendor, error:venError, loadVendor} = getVendorById(mainUrl, userToken.value)
@@ -359,6 +361,7 @@ export default {
         })
 
         return{
+            user,
             handleSubmit,
             handleBack,
             handleEdit,

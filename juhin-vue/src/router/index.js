@@ -3,6 +3,7 @@ import Main from '../views/Main.vue'
 import Login from '../views/Login.vue'
 import Error404 from '../views/Error404.vue'
 
+import AccessDenied from '../views/AccessDenied.vue'
 import Upcoming from '../views/Upcoming.vue'
 import Deliveries from '../views/Deliveries.vue'
 import DeliverySearch from '../views/DeliverySearch.vue'
@@ -36,6 +37,9 @@ import urlHolder from '../composables/urlHolder.js'
 const requiredAuth = (to, from, next) => {
     let expireTime = new Date(localStorage.expiration)
     let actualTime = new Date()
+    let user = store.getters.getUser
+    console.log(to)
+
     // const mainUrl = urlHolder
     // const {getUser} = getCurrentUser(mainUrl)
     // console.log(store)
@@ -44,8 +48,22 @@ const requiredAuth = (to, from, next) => {
     if (!expireTime || expireTime < actualTime){
         store.commit('setIsLogged', false)
         next({name: 'Login'})
-    } else {
-        next()
+    } else 
+    {
+        if(to.name == 'DeliveryAdd' || to.name == 'ItemAdd' || to.name == 'VendorAdd' || to.name == 'ForwarderAdd' || to.name == 'OrderAdd' && !user.isSpecialist)
+            {
+            next({name:'AccessDenied'})
+        }else
+        {
+            if(to.name == 'Users' && !user.isAdmin)
+            {
+                next({name:'AccessDenied'})
+            }else
+            {
+                next()
+            }
+        }
+       
     }
   }
 
@@ -57,12 +75,12 @@ const routes = [
     props: true,
     beforeEnter: requiredAuth
   },
-//   {
-//     path: '/*',
-//     name: 'Error404',
-//     component: Error404,
-//     beforeEnter: requiredAuth
-//   },
+  {
+    path:  '/:pathMatch(.*)*',
+    name: 'Error404',
+    component: Error404,
+    beforeEnter: requiredAuth
+  },
 //   {
 //     path: '/hangfire',
 //     beforeEnter: requiredAuth
@@ -79,6 +97,12 @@ const routes = [
     name: 'Users',
     component: Users,
     props: true,
+    beforeEnter: requiredAuth
+  },
+  {
+    path: '/denied',
+    name: 'AccessDenied',
+    component: AccessDenied,
     beforeEnter: requiredAuth
   },
   {

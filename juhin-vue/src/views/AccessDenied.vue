@@ -1,10 +1,10 @@
 <template>
-<div class="main-error-container">
+<div class="main-deniedcontainer">
 
-    <div class="error-container">
-    <h2 class="error-item">NIE ZNALEZIONO STRONY</h2>
-    <h3 class="error-item"><span class="material-icons">error</span></h3>
-    <h3 class="error-item">..coś poszło nie tak.. </h3>
+    <div class="deniedcontainer">
+    <h2 class="denieditem">BRAK DOSTĘPU</h2>
+    <h3 class="denieditem"><span class="material-icons">no_accounts</span></h3>
+    <h3 class="denieditem">Skontaktuj się z administratorem w celu przyznania dostępu do tej strony.</h3>
     </div>
   
 </div>
@@ -17,11 +17,11 @@ export default {
 </script>
 
 <style>
-.main-error-container{
+.main-deniedcontainer{
     min-width: 1000px;
     
 }
-.error-container{
+.deniedcontainer{
     max-width: 450px;
     min-width: 400px;
     display: flex;
@@ -33,13 +33,14 @@ export default {
     border-radius: 50px;
     box-shadow: 20px 20px 30px rgba(15,15,15,0.5);
 }
-.error-container .error-item{
+.deniedcontainer .denieditem{
     margin: 15px 0;
 }
-.error-container h3.error-item{
+.deniedcontainer h3.denieditem{
+    text-align: center;
     color: #999;
 }
-.error-container .error-item span{
+.deniedcontainer .denieditem span{
     font-size: 80px;
     /* text-shadow: 4px 4px 6px rgba(15,15,15,0.5); */
     color: #dd0025;
