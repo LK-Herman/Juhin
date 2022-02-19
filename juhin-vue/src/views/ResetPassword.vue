@@ -2,23 +2,17 @@
   <div>
       <form id="login-form" @submit.prevent="handleSubmit">
             <h4>JUHIN - SYSTEM ZARZĄDZANIA DOSTAWAMI</h4>
-          <h2>Zaloguj się</h2>
+          <h2>Zresetuj hasło</h2>
 
           <label >Adres Email</label>
           <input v-model="email" type="email" required placeholder="adres@email.pl">
-          <label for="">Hasło</label>
-          <input v-model="password" type="password" required placeholder="* * * hasło * * *">
-          <div class="login-links">
-              <router-link :to="{name: 'Register'}">
-                <p>Zarejestruj się</p>
-              </router-link>
-              <router-link :to="{name: 'ResetPassword'}">
-                <p>Nie pamiętasz hasła?</p>
-              </router-link>
-          </div>
-          <button id="login-btn">Zaloguj</button>
+          
+          <button id="login-btn">Reset</button>
           <div v-if="error">
               <div class="error-msg">{{error}}</div>
+          </div>
+          <div v-if="message" class="message-msg">
+              <p >{{message}}</p>
           </div>
       </form>
       
@@ -32,6 +26,7 @@ import urlHolder from '../composables/urlHolder.js'
 import loginUser from '../composables/loginUser.js'
 import getCurrentUser from '../composables/getCurrentUser.js'
 import { useStore } from 'vuex'
+import axios from 'axios'
 
 export default {
     props: [],
@@ -40,37 +35,35 @@ export default {
         const mainUrl = urlHolder
         const router = useRouter()
         const email = ref('')
-        const password =ref('')
-        const {getUser, user, error:getError} = getCurrentUser(mainUrl)
+        const userId = ref('')
         const store = useStore()
-        const {login, error} = loginUser(mainUrl)
-        
+        const error = ref()
+        const message = ref()
         
         const handleSubmit = async () =>
         {
-            await login(email.value, password.value)
-                .then(()=>
-                {
-                    if(!error.value)
+           axios.get(mainUrl+'accounts/User/byemail/' + email.value, {
+               headers: { 'Accept':'*/*'}})
+                .then(resp => 
                     {
-                        
-                        const userToken = computed(() => store.getters.getUserToken)
-                        getUser(userToken.value)
-                        if(!getError.value)
-                        {   
-                            router.push({name:"Main"})
-                            console.log('pushed to main')
+                        userId.value = resp.data.userId
+                        console.log(userId.value)
+           
+                        if(userId.value != ''){
+                            axios.post(mainUrl+'accounts/ResetTokenRequest?userId=' + userId.value)
+                            .then(res => 
+                                {
+                                    console.log('Email send')
+                                    message.value = res.data
+                                })
+                            .catch(err => error.value = err.message)
                         }
-                        // {
-                        //     context.emit('login-event', {email: email.value, token:userToken.value, user:user.value })
-                        // }
-                    }
-
-                })
+               })
+           .catch(err => error.value = err.message)
             
         } 
         
-        return { handleSubmit, error, email, password}
+        return { handleSubmit, error, email, message}
     }
 }
 </script>
@@ -87,6 +80,10 @@ export default {
     color: var(--warning);
     font-size: 12px;
     text-align: center;
+}
+#login-form .message-msg p{
+    text-align: center;
+    font-size: 16px;
 }
 #login-form h4{
     font-family: 'Amaranth', sans-serif;

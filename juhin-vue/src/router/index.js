@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Main from '../views/Main.vue'
 import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
 import Error404 from '../views/Error404.vue'
 
 import AccessDenied from '../views/AccessDenied.vue'
+import ResetPassword from '../views/ResetPassword.vue'
 import Upcoming from '../views/Upcoming.vue'
 import Deliveries from '../views/Deliveries.vue'
 import DeliverySearch from '../views/DeliverySearch.vue'
@@ -50,19 +52,36 @@ const requiredAuth = (to, from, next) => {
         next({name: 'Login'})
     } else 
     {
-        if((to.name == 'DeliveryAdd' || to.name == 'ItemAdd' || to.name == 'VendorAdd' || to.name == 'ForwarderAdd' || to.name == 'OrderAdd') && !user.isSpecialist)
-            {
-            next({name:'AccessDenied'})
-        }else
-        {
-            if(to.name == 'Users' && !user.isAdmin)
-            {
-                next({name:'AccessDenied'})
-            }else
-            {
+        switch (to.name) {
+            case 'DeliveryAdd':
+                if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
+                break;
+            case 'ItemAdd':
+                if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
+                break;
+            case 'VendorAdd':
+                if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
+                break;
+            case 'ForwarderAdd':
+                if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
+                break;
+            case 'OrderAdd':
+                if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
+                break;
+            case 'Users':
+                if(!user.isAdmin) {next({name:'AccessDenied'})}else{next()}
+                break;
+            default:
                 next()
-            }
+                break;
         }
+        // if((to.name == 'DeliveryAdd' || to.name == 'ItemAdd' || to.name == 'VendorAdd' || to.name == 'ForwarderAdd' || to.name == 'OrderAdd') && !user.isSpecialist)
+        //     {
+        //     next({name:'AccessDenied'})
+        // }else
+        // {
+           
+        // }
        
     }
   }
@@ -91,6 +110,18 @@ const routes = [
     component: Login,
     props: true,
     
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register,
+    props: true,
+  },
+  {
+    path: '/reset',
+    name: 'ResetPassword',
+    component: ResetPassword,
+    props: true,
   },
   {
     path: '/users',

@@ -16,7 +16,10 @@
                 <p id="yellowfont" v-if="isLogged && userRolePL.includes('Administrator')" class="links-item"><span class="material-icons md-48">manage_accounts</span></p>
                 <p id="yellowfont" v-if="isLogged && !userRolePL.includes('Administrator')" class="links-item"><span class="material-icons md-48">person</span></p>
                 <p v-if="isLogged" class="links-item" id="email-address">{{email}}</p>
-                <p v-if="!isLogged" class="links-item">Zarejestruj się</p>
+                <router-link :to="{name: 'Register'}">
+                    <p v-if="!isLogged" class="links-item">Zarejestruj się</p>
+                </router-link>
+                
                 <a v-if="isLogged" class="links-item" @click="handleNavLogout">Wyloguj</a>
                 <router-link v-else :to="{name:'Login'}" class="links-item">Zaloguj się</router-link>
             </div>

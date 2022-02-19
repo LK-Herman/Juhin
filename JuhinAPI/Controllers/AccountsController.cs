@@ -136,6 +136,14 @@ namespace JuhinAPI.Controllers
 
             return mapper.Map<UserDTO>(user);
         }
+        [HttpGet("User/byemail/{email}", Name = "getUserByEmail")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        public async Task<ActionResult<UserDTO>> GetUserByEmail(string email)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Email == email);
+
+            return mapper.Map<UserDTO>(user);
+        }
         /// <summary>
         /// Shows all available roles in system
         /// </summary>

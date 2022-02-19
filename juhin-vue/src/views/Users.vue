@@ -98,9 +98,12 @@
           </div>
 
       </div>
-      <!-- <div v-if="!error">
-          {{usersList}}
-      </div> -->
+      <div v-if="!error">
+          <div v-for="user in usersList" :key="user.userId">
+              {{user.emailAddress}} : {{user.userId}}  
+
+          </div>
+      </div>
       
 </template>
 
