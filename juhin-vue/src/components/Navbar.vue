@@ -67,7 +67,7 @@ export default {
         onMounted(async ()=>
         {
             const isLogged = computed(()=> store.getters.getIsLogged)
-            if(isLogged.value)
+            if(isLogged.value || window.location.pathname == '/reset' || window.location.pathname == '/resetpasswordconfirmation')
             {
                 const us = computed(()=> store.getters.getUser)
                 user.value = us.value
@@ -92,7 +92,8 @@ export default {
                     }
                 }
             }else
-            {
+            {   console.log(window.location.pathname)
+                console.log(router.currentRoute.value)
                 router.push({name:'Login'})   
             }
         })

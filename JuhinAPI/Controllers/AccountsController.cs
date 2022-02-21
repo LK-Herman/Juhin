@@ -272,7 +272,7 @@ namespace JuhinAPI.Controllers
 
         [HttpPost("ResetTokenRequest", Name = "resetTokenRequest")]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public async Task<ActionResult> ResetTokenRequest([FromQuery] string userId)
+        public async Task<ActionResult> ResetTokenRequest([FromQuery] string userId, [FromQuery] string url)
         {
             var user = await userManager.FindByIdAsync(userId);
             if (user != null)
@@ -281,9 +281,10 @@ namespace JuhinAPI.Controllers
                 UserResetInfo userInfo = new UserResetInfo { UserId = user.Id, ResetPasswordToken = token};
                 //var callbackUrl = Url.Action(action: "ResetPassword", controller:"Accounts", userInfo, protocol:Request.Scheme);
                 //var callbackUrl = Url.Link(routeName: "resetPassword", new {Controller = "Accounts", Action = "ResetPassword", code = token });
-                var callbackUrl = Url.Action(action: null,  controller:"Accounts", userInfo, protocol: Request.Scheme);
+                var callbackUrl = Url.Content(url + "?userId=" + userId + "&ResetPasswordToken="+ token);
+                //var callbackUrl = Url.Action(action: null,  controller:"Accounts", userInfo, protocol: Request.Scheme);
                 SendLinkByEmail(callbackUrl, user);
-                return Ok("Link was send via Email");
+                return Ok(callbackUrl);
             }
             return NotFound();
         }

@@ -1,19 +1,20 @@
 <template>
   <div>
       <form id="login-form" @submit.prevent="handleSubmit">
-            <h4>JUHIN - SYSTEM ZARZĄDZANIA DOSTAWAMI</h4>
-          <h2>Zresetuj hasło</h2>
-
-          <label >Adres Email</label>
-          <input v-model="email" type="email" required placeholder="adres@email.pl">
-          
-          <button id="login-btn">Reset</button>
-          <div v-if="error">
-              <div class="error-msg">{{error}}</div>
-          </div>
-          <div v-if="message" class="message-msg">
-              <p >{{message}}</p>
-          </div>
+            <h4 id="rem-header">JUHIN - SYSTEM ZARZĄDZANIA DOSTAWAMI</h4>
+            <p id="dontremember"><span class="material-icons">help</span></p>
+            <h2 id="rem-header">Nie pamiętasz hasła?</h2>
+            <p id="rem-desc">Na Twój adres email zostanie wysłany link aktywacyjny, który przeniesie Cię do formularza zmiany hasła.</p>
+            <label >Adres Email</label>
+            <input v-model="email" type="email" required placeholder="adres@email.pl">
+            
+            <button id="login-btn">Wyślij</button>
+            <div v-if="error">
+                <div class="error-msg">{{error}}</div>
+            </div>
+            <div v-if="message" class="message-msg">
+                <p >{{message}}</p>
+            </div>
       </form>
       
   </div>
@@ -48,14 +49,17 @@ export default {
                     {
                         userId.value = resp.data.userId
                         console.log(userId.value)
-           
+                        let url = window.location.href + 'passwordconfirmation'
+                        console.log(url)
                         if(userId.value != ''){
-                            axios.post(mainUrl+'accounts/ResetTokenRequest?userId=' + userId.value)
+                            axios.post(mainUrl+'accounts/ResetTokenRequest?userId=' + userId.value + '&url='+ url)
                             .then(res => 
                                 {
                                     console.log('Email send')
-                                    message.value = res.data
-                                })
+                                    message.value = "Link został wysłany na adres "+email.value
+                                    console.log(res.data)
+                                    
+                                })  
                             .catch(err => error.value = err.message)
                         }
                })
@@ -69,49 +73,26 @@ export default {
 </script>
 
 <style>
-
-#login-form{
-    display: flex;
-    flex-flow: column;
-    background-image: linear-gradient(#282828, var(--back-grey), var(--back-grey2));
-    max-width: 340px;
-}
-#login-form .error-msg{
-    color: var(--warning);
-    font-size: 12px;
+form #dontremember{
     text-align: center;
 }
-#login-form .message-msg p{
+form h2#rem-header{
+    margin-bottom: 20px;
+    padding: 0;
+}
+form p#rem-desc{
+    margin-bottom: 35px;
     text-align: center;
-    font-size: 16px;
 }
-#login-form h4{
-    font-family: 'Amaranth', sans-serif;
-    font-size: 0.8em;
-    font-weight: 300;
-    align-self: center;
-    margin:5px 0 5px 0;
+form h4#rem-header{
+    margin-bottom:20px;
 }
-#login-form h2{
-    font-weight: 400;
-    align-self: center;
-    margin:15px 0 25px 0;
+form #dontremember span{
+    color: #faaf00;
+    font-size: 60px;
+    margin: 0;
+
 }
 
-#login-form .login-links{
-    margin: 10px 0;
-    display: flex;
-    flex-flow: row;
-    justify-content: space-between;
-}
-#login-form #login-btn{
-    margin: 20px 5px;
-    width: 40%;
-    align-self: center;
-    box-shadow: 2px 2px 4px rgba(10,10,10, 0.5);
-}
-#login-form #login-btn:hover{
-    box-shadow: 0px 0px 0px rgba(10, 10, 10, 0.5);
-    background-color: #6D8CDC;
-}
+
 </style>

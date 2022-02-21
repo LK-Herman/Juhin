@@ -6,6 +6,7 @@ import Error404 from '../views/Error404.vue'
 
 import AccessDenied from '../views/AccessDenied.vue'
 import ResetPassword from '../views/ResetPassword.vue'
+import ResetPasswordConfirmation from '../views/ResetPasswordConfirmation.vue'
 import Upcoming from '../views/Upcoming.vue'
 import Deliveries from '../views/Deliveries.vue'
 import DeliverySearch from '../views/DeliverySearch.vue'
@@ -40,51 +41,50 @@ const requiredAuth = (to, from, next) => {
     let expireTime = new Date(localStorage.expiration)
     let actualTime = new Date()
     let user = store.getters.getUser
-    console.log(to)
+    console.log(to.name)
 
     // const mainUrl = urlHolder
     // const {getUser} = getCurrentUser(mainUrl)
     // console.log(store)
     // console.log(expireTime)
     // console.log(actualTime)
-    if (!expireTime || expireTime < actualTime){
-        store.commit('setIsLogged', false)
-        next({name: 'Login'})
-    } else 
-    {
-        switch (to.name) {
-            case 'DeliveryAdd':
-                if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
-                break;
-            case 'ItemAdd':
-                if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
-                break;
-            case 'VendorAdd':
-                if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
-                break;
-            case 'ForwarderAdd':
-                if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
-                break;
-            case 'OrderAdd':
-                if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
-                break;
-            case 'Users':
-                if(!user.isAdmin) {next({name:'AccessDenied'})}else{next()}
-                break;
-            default:
-                next()
-                break;
+    // if(to.name =='ResetPasswordConfirmation' || to.name =='ResetPassword') 
+    // {
+    //     next()
+    // }
+    // else{
+
+        if (!expireTime || expireTime < actualTime){
+            store.commit('setIsLogged', false)
+            next({name: 'Login'})
+        } else 
+        {
+            switch (to.name) {
+                case 'DeliveryAdd':
+                    if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
+                    break;
+                case 'ItemAdd':
+                    if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
+                    break;
+                case 'VendorAdd':
+                    if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
+                    break;
+                case 'ForwarderAdd':
+                    if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
+                    break;
+                case 'OrderAdd':
+                    if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
+                    break;
+                case 'Users':
+                    if(!user.isAdmin) {next({name:'AccessDenied'})}else{next()}
+                    break;
+                default:
+                    next()
+                    break;
+            }
         }
-        // if((to.name == 'DeliveryAdd' || to.name == 'ItemAdd' || to.name == 'VendorAdd' || to.name == 'ForwarderAdd' || to.name == 'OrderAdd') && !user.isSpecialist)
-        //     {
-        //     next({name:'AccessDenied'})
-        // }else
-        // {
-           
-        // }
-       
     }
-  }
+// }
 
 const routes = [
   {
@@ -121,6 +121,12 @@ const routes = [
     path: '/reset',
     name: 'ResetPassword',
     component: ResetPassword,
+    props: true,
+  },
+  {
+    path: '/resetpasswordconfirmation',
+    name: 'ResetPasswordConfirmation',
+    component: ResetPasswordConfirmation,
     props: true,
   },
   {
