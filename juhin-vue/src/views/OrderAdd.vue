@@ -16,6 +16,7 @@
             </div>
         </div>
     </div>
+    
 
     <form @submit.prevent="handleSubmit" id="parts-form">
         <div class="order-double">
@@ -44,9 +45,11 @@
                     <button class="btn sub-btn" @click.prevent="handleAddDelivery" >Dodaj dostawę</button>
                 </div>
             </div>
-            
+            <div>
+            </div>
         </div>
     </form>
+    <button @click="handleBack">Powrót</button>
   
 </template>
 
@@ -72,8 +75,13 @@ export default {
         const tempOrderNumber = ref('')
         const {addNewOrder, error:addError, response} = addOrder(mainUrl, userToken.value)
         
+        const handleBack = () => 
+        {
+            router.back()
+        }
+
          onMounted(()=>{
-            if(userToken === '' || props.vend === undefined ){
+            if(userToken.value === '' || props.vend === undefined ){
                 router.push({name:'Main'})
             }else{
                 vendor.value = JSON.parse(props.vend)
@@ -94,7 +102,6 @@ export default {
 
              router.push({name:'DeliveryAdd', params:{
                                         vId: vendor.value.vendorId, 
-                                        user: user, 
                                         vendorName: vendor.value.name, 
                                         orderNo:tempOrderNumber.value,
                                         orderId:response.value.data.orderId}}
@@ -109,7 +116,7 @@ export default {
                orderNumber.value = ''}
        })
 
-        return { orderNumber, addError, response, handleSubmit, vendor, isOK, tempOrderNumber, handleAddDelivery }
+        return { orderNumber, addError, response, handleSubmit, vendor, isOK, tempOrderNumber, handleAddDelivery, handleBack }
     }
 
 }

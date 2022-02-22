@@ -20,7 +20,7 @@
         <div class="center-text" v-else>
             <br>
             <h3 class="warning">Brak pozycji towarowych do wyboru.</h3>
-            <p>(dodaj pozycje towarowe dla danego dostawcy w sekcji TOWARY)</p>
+            <p>(dodaj pozycje towarowe dla danego dostawcy w sekcji DOSTAWCY > DODAJ MATERIAŁY)</p>
         </div>
      
     </div>

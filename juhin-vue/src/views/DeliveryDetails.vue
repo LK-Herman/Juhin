@@ -4,7 +4,7 @@
         <div class="delivery-details-container">
             <div class="item-v">
                 <div v-for="order in delivery.purchaseOrders" :key="order.orderId">
-                    <div class="vendor-header" >
+                    <div @click="handleGoToVendor(order.vendorId)" class="vendor-header" >
                         <img src="../assets/images/vendorIcon.png">
                         <h1 class="text-yellow">{{order.vendorName}}</h1>
                     </div>
@@ -43,8 +43,8 @@
             <div  v-if="!isEditing" class="item-p">
                 <div class="item-p-head">
                     <h4>LISTA TOWARÓW: </h4>    
-                    {{toggleEditList}}
-                    <div >
+                    
+                    <div v-if="user.isSpecialist || user.isWarehouseman">
                         <button id="editlist" @click="handleEditList">Edytuj listę</button>
                     </div>
                 </div>
@@ -99,10 +99,10 @@
 
             <div v-if="!isEditing" class="item-btn">
                 <button @click="handleBack"> <span class="material-icons">keyboard_backspace</span> Powrót</button>
-                <button @click="handleEditOrder" class="edit-btn">Edytuj</button>
+                <button v-if="user.isSpecialist || user.isWarehouseman" @click="handleEditOrder" class="edit-btn">Edytuj</button>
                 <button id="subscription" class="sub-btn" :class="{suboff:isSubscribed}" @click="handleSubscription">Subskrybuj</button>
-                <router-link id="docs" class="btn" :to="{name:'DeliveryDocs', params: {id:id}}">Dokumenty</router-link>
-                <button v-if="delivery.statusId == 1" class="delete-btn" @click="handleDelete">Usuń</button>
+                <router-link v-if="user.isSpecialist || user.isWarehouseman" id="docs" class="btn" :to="{name:'DeliveryDocs', params: {id:id}}">Dokumenty</router-link>
+                <button v-if="(delivery.statusId != 3 && user.isAdmin) || (delivery.statusId != 3 && user.isSpecialist)" class="delete-btn" @click="handleDelete">Usuń</button>
             </div>
 
 
@@ -113,7 +113,7 @@
             <DeliveryDelete :id="id" :orders="delivery.purchaseOrders"/>
         </div>
 
-        <div v-if="isEditing" >
+        <div v-if="(isEditing && user.isAdmin) || (isEditing && user.isSpecialist) || (isEditing && user.isWarehouseman)" >
 
             <form @submit.prevent="handleSubmitChanges" class="delivery-form">
                 <div class="triple">
@@ -212,7 +212,7 @@ export default {
         const rating = ref (100)
         const mainUrl = urlHolder
         const store = useStore()
-        let user = computed(()=> store.getters.getUser)
+        const user = computed(()=> store.getters.getUser)
         const { getUser, error:getUserError } = getCurrentUser(mainUrl)
         const userToken = computed(()=> store.getters.getUserToken)
 
@@ -295,6 +295,10 @@ export default {
                 document.getElementById('subscription').innerHTML = "Wyłącz subskrypcję"
             }
         })
+
+        const handleGoToVendor = (vendorId)=>{
+            router.push({name:'VendorDetails', params: {vId:vendorId}})
+        }
 
         const handleEditOrder = () =>{
             isEditing.value = true
@@ -406,6 +410,7 @@ export default {
         }
 
         return{ 
+                user,
                 deletePackedItem,
                 handleRefreshTable,
                 toggleEditList,
@@ -420,7 +425,8 @@ export default {
                 handleDelete, 
                 handleBack,
                 handleSubmitChanges,
-                handleEditOrder, 
+                handleEditOrder,
+                handleGoToVendor, 
                 isEditing,
                 rating,
                 formPrio,
@@ -476,6 +482,7 @@ export default {
 .delivery-details-container .vendor-header{
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 .delivery-details-container .vendor-header h1{
     padding-left: 24px;

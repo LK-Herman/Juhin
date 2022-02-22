@@ -9,7 +9,7 @@
                 </div>
                 <div>
                     <p id="header">NUMER DOKUMENTU</p>
-                    <p>{{document.number}}</p>
+                    <p id="doc-number">{{document.number}}</p>
                 </div>
                 <div>
                     <p id="header">TYP DOKUMENTU</p>
@@ -26,8 +26,10 @@
             </div>
         </div>
 
-
-        <div class="docs-form">
+        <div v-if="!user.isAdmin || !user.isSpecialist" class="docs-form">
+            <!-- <p>Dodawanie dokumentacji jest niedostępne.</p> -->
+        </div>
+        <div v-if="user.isAdmin || user.isSpecialist" class="docs-form">
             <form @submit.prevent="handleSubmit">
                 <h3>Dodaj dokument</h3>
                 <div class="tripleform">
@@ -91,6 +93,7 @@ export default {
         const router = useRouter()
         const store = useStore()
         const mainUrl = urlHolder
+        const user = computed(()=>store.getters.getUser)
         const userToken = computed(()=> store.getters.getUserToken)
         const {loadDocs, error, docs} = getDeliveryDocs(mainUrl, userToken.value)
         const {addNewDoc, error:addError, response} = addDocument(mainUrl, userToken.value)
@@ -140,7 +143,7 @@ export default {
         }
       
 
-        return {handleBack, docs, error, addError, formFile, formType, formName, onFileChange, handleSubmit}
+        return {user, handleBack, docs, error, addError, formFile, formType, formName, onFileChange, handleSubmit}
     }
 
 }
@@ -164,7 +167,7 @@ export default {
 }
 .docs-container{
     display: grid;
-    grid-template-columns: 3fr 2fr;
+    grid-template-columns: 500px 360px;
     gap: 40px;
 }
 .docs-container .documents-list{
@@ -173,10 +176,14 @@ export default {
 .docs-container .documents-list .doc{
     display: grid;
     grid-template-columns: 1fr 3fr 3fr;
+    gap: 18px;
     /* background-color: rgb(70, 70, 70); */
     border: solid 3px rgb(70, 70, 70);
     margin-bottom:20px;  
     padding: 10px 16px;
+}
+.docs-container .documents-list .doc #doc-number{
+    color: rgb(253, 173, 0);
 }
 .docs-container .documents-list .doc #nodocs{
      grid-column-start: 1;
@@ -186,7 +193,6 @@ export default {
     align-self: center;
     justify-self: center;
     margin: 30px 0;
-
 }
 .docs-container .documents-list .doc #docicon{
     grid-column-start: 1;

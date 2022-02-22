@@ -90,19 +90,22 @@
 <script>
 import getVendors from '../composables/getVendors.js'
 import urlHolder from '../composables/urlHolder.js'
-import { onMounted, onUpdated, ref, watch, watchEffect } from '@vue/runtime-core'
+import { computed, onMounted, onUpdated, ref, watch, watchEffect } from '@vue/runtime-core'
 import {useRouter} from 'vue-router'
 import CreatedModal from '../components/CreatedModal.vue'
+import { useStore } from 'vuex'
+
 export default {
   components: { CreatedModal },
   
   setup() {
     const url = urlHolder
+    const store = useStore()
 
-        const user = localStorage.getItem('user')
-        const userToken = localStorage.getItem('token')
+    const user = computed(()=>store.getters.getUser)
+    const userToken = computed(()=>store.getters.getUserToken)
 
-    const {vendors, error, loadVendors, totalRecords} = getVendors(url, userToken)
+    const {vendors, error, loadVendors, totalRecords} = getVendors(url, userToken.value)
     const pageNo = ref(1)
     const recordsPerPage = ref(10)
     const lastPage = ref(1)
@@ -120,9 +123,7 @@ export default {
     }
     const handleClick = (vendor) =>{
         router.push({ name:'VendorDetails', 
-                      params:{  vId:vendor.vendorId, 
-                                userToken:'userToken', 
-                                user:'user'}
+                      params:{ vId:vendor.vendorId } 
         })
     }
 
@@ -161,6 +162,7 @@ export default {
     }
 
     return { 
+            user,
             vendors, 
             error, 
             pageNo, 

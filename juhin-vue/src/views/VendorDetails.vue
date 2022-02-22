@@ -39,20 +39,25 @@
             <div class="vendor-btns-container">
                 <div class="btns-items">
                     <p>Edytuj dane dostawcy, nazwę, adres,  dane kontaktowe itd.</p>
-                    <button @click="handleEditVendor">Edytuj dane dostawcy</button>
+                    <button v-if="user.isSpecialist" @click="handleEditVendor">Edytuj dane dostawcy</button>
+                    <div class="unabled" v-else> opcja niedostępna*</div>
                 </div>
                 <div class="btns-items">
                     <p>Wprowadź nowe zamówienie dla tego dostawcy </p>
-                    <button @click="handleAddOrder">Dodaj zamówienie</button>
+                    <button v-if="user.isSpecialist" @click="handleAddOrder">Dodaj zamówienie</button>
+                    <div class="unabled" v-else> opcja niedostępna*</div>
                 </div>
                 <div class="btns-items">
-                    <p>Dodaj nowe materiały, które dostarcza {{vendor.name}} </p>
-                    <button @click="handleAddItem">Dodaj materiały</button>
+                    <p>Dodaj nowe materiały, które dostarcza</p>
+                    <p>{{vendor.name}}</p>
+                    <button v-if="user.isSpecialist" @click="handleAddItem">Dodaj materiały</button>
+                    <div class="unabled" v-else> opcja niedostępna*</div>
                     <!-- <router-link :to="{name:'ItemAdd', params:{vId:vId}}" :userToken="userToken" :user="user">Dodaj materiały</router-link> -->
                 </div>
             </div>
+            <p v-if="!user.isSpecialist" id="comment-admin">* Skontaktuj się z administratorem w celu uzyskania dodatkowych uprawnień.</p>
         </div>
-        <div v-if="editFlag">
+        <div v-if="editFlag && user.isSpecialist">
             <form @submit.prevent="handleSubmit" class="vendor-form edit-vendor" >
                 <div>
                     <h3>Edytuj dane dostawcy</h3>
@@ -142,27 +147,27 @@
 
 import urlHolder from '../composables/urlHolder.js'
 import getVendorById from '../composables/getVendorById.js'
-import { onMounted, ref } from '@vue/runtime-core'
+import { computed, onMounted, ref } from '@vue/runtime-core'
 import {useRouter} from 'vue-router'
 import editVendor from '../composables/editVendor.js'
 import deleteVendorById from '../composables/deleteVendorById'
 import CreatedModal from '../components/CreatedModal.vue'
-
+import { useStore } from 'vuex'
 export default {
   components: { CreatedModal },
   props:['vId'],
   setup(props) {
     const mainUrl = urlHolder
+    const store = useStore()
+    const userToken = computed(()=>store.getters.getUserToken)
+    const user = computed(()=>store.getters.getUser)
     
-    const user = localStorage.getItem('user')
-    const userToken = localStorage.getItem('token')
-    
-    const {loadVendor, error, vendor} = getVendorById(mainUrl, userToken)
-    const {deleteVendor, error:delError} = deleteVendorById(mainUrl, userToken)
+    const {loadVendor, error, vendor} = getVendorById(mainUrl, userToken.value)
+    const {deleteVendor, error:delError} = deleteVendorById(mainUrl, userToken.value)
     const router = useRouter()
     const editFlag = ref(false)
     const isDeleted = ref(false)
-
+    
     const formVendorCode = ref('')
     const formShortName = ref('')
     const formName = ref('')
@@ -173,11 +178,9 @@ export default {
     const formIsActive = ref(true)
 
     onMounted(async()=>{
-        if(props.vId != ''){
+        if(props.vId != '')
+        {
             await loadVendor(props.vId)
-                // .then(function(){
-
-                // })
         }
         else
         {
@@ -187,21 +190,11 @@ export default {
 
     const handleAddItem = () =>{
         
-        router.push({name:'ItemAdd', params:{
-            
-                userToken:userToken, 
-                user:user, 
-                vend:JSON.stringify(vendor.value)
-                }})
+        router.push({name:'ItemAdd', params:{ vend:JSON.stringify(vendor.value) }})
     }
     const handleAddOrder = () =>{
         
-        router.push({name:'OrderAdd', params:{
-            
-                userToken:userToken, 
-                user:user, 
-                vend:JSON.stringify(vendor.value)
-                }})
+        router.push({name:'OrderAdd', params:{ vend:JSON.stringify(vendor.value) }})
     }
 
         //edit vendor
@@ -221,7 +214,7 @@ export default {
             putError.value = ''
         }
 
-        const {putVendor, error:putError, responseErrors} = editVendor(mainUrl, userToken)
+        const {putVendor, error:putError, responseErrors} = editVendor(mainUrl, userToken.value)
 
         const handleSubmit = async () =>{
                 responseErrors.value = null
@@ -267,7 +260,9 @@ export default {
         }
 
     
-    return {    error,
+    return {    
+                user,
+                error,
                 putError,
                 responseErrors,
                 vendor, 
@@ -293,6 +288,11 @@ export default {
 }
 </script>
 <style >
+#comment-admin{
+    color: #888;
+    font-size: 12px;
+}
+
 .vendor-details-container{
     display: grid;
     grid-template-columns: 150px 342px 242px 202px;
@@ -336,6 +336,12 @@ export default {
     margin: 5px;
     text-align: center;
     box-shadow: 5px 5px 8px rgba(10,10,10,0.5);
+}
+.vendor-btns-container .btns-items .unabled{
+    padding: 6px 12px;
+    background-color: #555;
+    color: #999;
+    margin-top: 20px;
 }
 .vendor-btns-container .btns-items button{
     margin: 15px 0 0 0;

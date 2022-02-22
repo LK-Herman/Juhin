@@ -42,7 +42,6 @@
                             <div class="last-col">
                                 <router-link :to="{name:'DeliveryAdd', params:{
                                             vId:order.vendorId, 
-                                            user:user, 
                                             vendorName:order.vendorName, 
                                             orderNo:order.orderNumber,
                                             orderId:order.orderId}}" class="btn sub-btn">Dodaj dostawę

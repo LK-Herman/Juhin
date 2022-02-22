@@ -18,7 +18,7 @@
         </div>
     </div>
     
-    <form id="parts-form" @submit.prevent="handleSubmit">
+    <form v-if="user.isAdmin || user.isSpecialist || user.isWarehouseman" id="parts-form" @submit.prevent="handleSubmit">
         <h3 class="center-text">Wprowadź dane towarowe</h3>
         <div class="double1">
             <div>
@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from '@vue/runtime-core'
+import { computed, onMounted, ref } from '@vue/runtime-core'
 import getWarehouses from '../composables/getWarehouses.js'
 import getCurrency from '../composables/getCurrency.js'
 import getUnits from '../composables/getUnits.js'
@@ -123,6 +123,7 @@ import addItem from '../composables/addItem.js'
 import urlHolder from '../composables/urlHolder.js'
 import {useRouter} from 'vue-router'
 import CreatedModal from '../components/CreatedModal.vue'
+import { useStore } from 'vuex'
 
 export default {
     components:{CreatedModal},
@@ -146,17 +147,19 @@ export default {
         const maxOri = ref(null)
         const maxEur = ref(null)
         const price = ref(null)
-        const user = localStorage.getItem('user')
-        const userToken = localStorage.getItem('token')
 
-        const {loadWarehouses, warehouses, error:wherror} = getWarehouses(mainUrl, userToken)
-        const {loadCurrency, currencyList, error:curerror} = getCurrency(mainUrl, userToken)
-        const {loadUnits, units, error:unierror} = getUnits(mainUrl, userToken)
-        const {loadPallets, pallets, error:palerror} = getPallets(mainUrl, userToken)
-        const {addNewItem, error:addError, response} = addItem(mainUrl, userToken)
+        const store = useStore()
+        const user = computed(()=>store.getters.getUser)
+        const userToken = computed(()=>store.getters.getUserToken)
+
+        const {loadWarehouses, warehouses, error:wherror} = getWarehouses(mainUrl, userToken.value)
+        const {loadCurrency, currencyList, error:curerror} = getCurrency(mainUrl, userToken.value)
+        const {loadUnits, units, error:unierror} = getUnits(mainUrl, userToken.value)
+        const {loadPallets, pallets, error:palerror} = getPallets(mainUrl, userToken.value)
+        const {addNewItem, error:addError, response} = addItem(mainUrl, userToken.value)
 
         onMounted(()=>{
-            if(userToken === '' || props.vend === undefined ){
+            if(userToken.value === '' || props.vend === undefined ){
                 router.push({name:'Main'})
             }else{
                 vendor.value = JSON.parse(props.vend)
@@ -198,6 +201,7 @@ export default {
 
 
         return{
+            user,
             vendor, 
             warehouses, 
             units,

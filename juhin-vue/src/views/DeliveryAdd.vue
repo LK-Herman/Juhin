@@ -9,7 +9,6 @@
         </div>
         <div></div>
       </div>
-
         <div v-if="error" class="error">
             <p>{{ error }}</p>
         </div>
@@ -42,7 +41,7 @@
         <p class="center-text">Dodaj pozycje towarowe do zamówiena</p>
         </div>
         <div>
-        <PackedItemsAdd :userToken="userToken" :vId="vId" :id="createdId" @item-added-event="handleRefreshTable" />
+            <PackedItemsAdd :userToken="userToken" :vId="vId" :id="createdId" @item-added-event="handleRefreshTable" />
         </div>
         <div v-if="!loadedDeliveryError">
             <div v-if="delivery.packedItems != 0" class="divTable blueTable">
@@ -66,7 +65,10 @@
                 </div>
             </div>
         </div>
+        <div v-else>
+        </div>
     </div>
+    <button id="cancel" class="btn" @click="handleBack">Anuluj</button>
 
 
 </div> 
@@ -84,6 +86,7 @@ import PackedItemsAdd from "../components/PackedItemsAdd.vue";
 import getDeliveryDetails from '../composables/getDeliveryDetails.js';
 import { useStore } from 'vuex'
 import CreatedModal from '../components/CreatedModal.vue'
+import { useRouter } from 'vue-router'
 
 export default {
   props: ["vId", "vendorName", "orderNo", "orderId"],
@@ -93,6 +96,7 @@ export default {
     const store = useStore()
     const user = computed(()=> store.getters.getUser)
     const userToken = computed(()=> store.getters.getUserToken)
+    const router = useRouter()
 
     const eta = ref(moment().format("YYYY-MM-DDThh:mm"));
     const comment = ref("");
@@ -102,6 +106,10 @@ export default {
     const { loadForwarders, error, forwarders } = getForwarders( mainUrl, userToken.value);
     const { addNewDelivery, error: deliveryError, createdId } = addDelivery(mainUrl, userToken.value );
     const { loadDetails, error:loadedDeliveryError, delivery } = getDeliveryDetails ( mainUrl, userToken.value )
+
+    const handleBack = ()=>{
+        router.back()
+    }
 
     onMounted(() => {
       loadForwarders(1, 100);
@@ -142,7 +150,9 @@ export default {
 
     return {
         user,
+        userToken,
         handleNewDeliverySubmit,
+        handleBack,
         eta,
         comment,
         forwarders,
@@ -160,6 +170,9 @@ export default {
 </script>
 
 <style>
+#cancel{
+    margin-top:40px;
+}
 form.add-delivery {
   background-color: transparent;
   box-shadow: none;
