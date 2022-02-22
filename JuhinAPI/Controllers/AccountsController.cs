@@ -390,11 +390,11 @@ namespace JuhinAPI.Controllers
                 message.Subject = "JuhinAPI Password Reset Notification";
                 message.Content =
                     "<div style=\"margin: 10px; width:400px; font-family: Calibri; font-size:16px; border-radius:16px; overflow:hidden; background-image: linear-gradient(#161f24, #727272, #969696); background-color: #95bebe;\">" +
-                        "<div style=\"border-radius:0px; text-align:center; padding:2px; margin:0px; color:white; font-size:20px;background-image: linear-gradient(#00cfeb,#008fa8,#006f88, #006f88, #005f78); background-color:#95bebe;\">" +
+                        "<div style=\"border-radius:0px; text-align:center; padding:2px; margin:0px; color:white; font-size:20px; background-color: #333; background-image: linear-gradient(#00cfeb,#008fa8,#006f88, #006f88, #005f78); background-color:#95bebe;\">" +
                             "<p style=\"margin-bottom: 2px;\"> PASSWORD RESET NOTIFICATION</p>" +
                             "<p style=\"font-size:16px; margin-top: 2px;\">To reset your password, please use the link below:</p>" +
                         "</div>" +
-                        "<div style=\"padding:5px 10px 5px 10px; color:#e3e3e3; background-color:#c7f1fa;\">" +
+                        "<div style=\"padding:5px 10px 5px 10px; color:#e3e3e3; background-color: #333;\">" +
                             "<p style=\"text-align:center; color:#e3e3e3\"><a href = "+url+" > RESET PASSWORD LINK </a></p>" +
                         "</div>" +
                     "</div>";

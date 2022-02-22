@@ -456,8 +456,8 @@ namespace JuhinAPI.Controllers
                 var message = new EmailMessage();
                 message.Subject = "JuhinAPI Status Notification";
                 message.Content =
-                    "<div style=\"margin: 10px; width:400px; font-family: Calibri; font-size:16px; border-radius:16px; overflow:hidden; background-image: linear-gradient(#161f24, #727272, #969696); background-color: #95bebe;\">" +
-                        "<div style=\"border-radius:0px; text-align:center; padding:2px; margin:0px; color:white; font-size:20px; background-image: linear-gradient(#00cfeb,#008fa8,#006f88, #006f88, #005f78);\">" +
+                    "<div style=\"margin: 10px; width:400px; font-family: Calibri; font-size:16px; border-radius:16px; overflow:hidden; background-color:#333; background-image: linear-gradient(#161f24, #727272, #969696); background-color: #95bebe;\">" +
+                        "<div style=\"border-radius:0px; text-align:center; padding:2px; margin:0px; color:white; font-size:20px; background-color:#353535; background-image: linear-gradient(#00cfeb,#008fa8,#006f88, #006f88, #005f78);\">" +
                             "<p style=\"margin-bottom: 2px;\"> DELIVERY SUBSCRIPTION NOTICE</p>" +
                             "<p style=\"font-size:16px; margin-top: 2px;\">Status of your delivery has been updated.</p>" +
                         "</div>" +
