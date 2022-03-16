@@ -350,11 +350,25 @@ export default {
             editItem(props.id, itemData)
                 .then(()=>
                 {
+                    document.getElementById("mycreated-modal").style.display="block";
                     loadItem(props.id)
                         .then(()=>{
                             isEditing.value=false
-                            isLoaded.value=true
-                            document.getElementById("mycreated-modal").style.display="block";
+                            // isLoaded.value=true
+                            loadVendor(item.value.vendorId)
+                            loadPalletById(item.value.palletId)
+                            loadUnitById(item.value.unitId)
+                            loadWarehouseById(item.value.warehouseId)
+                            loadCurrencyById(item.value.currencyId)
+                            loadUnits(1,50)
+                            loadWarehouses(1,50)
+                            loadCurrency(1,50)
+                            loadPallets(1,50)
+                            .then(()=>
+                                    {
+                                        isLoaded.value = true
+
+                                    })
                         })    
                 })
 

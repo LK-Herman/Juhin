@@ -2,7 +2,7 @@
 <div v-if="user" class="menubar">
     <div v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" class="title-bar">
         <div id="deliveries" class="menu-icon">
-             <span class="material-icons">warehouse</span>
+             <span class="material-icons">local_shipping</span>
         </div>
         <div>
             <h4 >DOSTAWY</h4>
@@ -58,7 +58,18 @@
     <router-link v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" class="forwarders-btn btn" :to="{name:'Forwarders'}">Przeglądaj</router-link>
     <router-link v-if="user.isSpecialist" class="forwarders-btn btn" :to="{name:'ForwarderAdd'}">Dodaj</router-link>
     <router-link v-if="user.isGuest || user.isSpecialist || user.isWarehouseman" class="forwarders-btn btn" :to="{name:'ForwarderRanking'}">Ranking</router-link>
-     <div v-if="user.isAdmin" class="title-bar">
+    <div v-if="user.isSpecialist" class="title-bar">
+        <div id="warehouses" class="menu-icon">
+             <span class="material-icons">warehouse</span>
+        </div>
+        <div>
+            <h4>MAGAZYNY</h4>
+        </div>
+    </div>
+    <router-link v-if="user.isSpecialist" class="warehouses-btn btn" :to="{name:'Warehouses'}">Przeglądaj</router-link>
+    
+
+    <div v-if="user.isAdmin" class="title-bar">
         <div id="users" class="menu-icon">
              <span class="material-icons">people</span>
         </div>
@@ -129,6 +140,9 @@ setup(){
 .menubar #forwarders{
     background-color: #613FC0;
 }
+.menubar #warehouses{
+    background-color: #3322cf;
+}
 .menubar #users{
     background-color: #175985;
 }
@@ -149,6 +163,9 @@ setup(){
 }
 .menubar .forwarders-btn:hover{
     background-color: #613FC0;
+}
+.menubar .warehouses-btn:hover{
+    background-color: #3322cf;
 }
 
 .menubar .title-bar{

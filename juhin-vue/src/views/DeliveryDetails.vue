@@ -261,10 +261,10 @@ export default {
                 })
             
         })
-        onUpdated(()=>
-        {
-            getUser(userToken.value)
-        })
+        // onUpdated(()=>
+        // {
+        //     getUser(userToken.value)
+        // })
         const handleSubscription = () =>
         {   
             if(isSubscribed.value == false)

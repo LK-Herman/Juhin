@@ -26,6 +26,7 @@ import ForwarderAdd from '../views/ForwarderAdd.vue'
 import ForwarderRanking from '../views/ForwarderRanking.vue'
 import VendorDetails from '../views/VendorDetails.vue' 
 import OrderDetails from '../views/OrderDetails.vue' 
+import Warehouses from '../views/Warehouses'
 import Created from '../views/Created.vue'
 import Users from '../views/Users.vue'
 import store from '../store/index.js';
@@ -77,6 +78,9 @@ const requiredAuth = (to, from, next) => {
                     break;
                 case 'Users':
                     if(!user.isAdmin) {next({name:'AccessDenied'})}else{next()}
+                    break;
+                case 'Warehouses':
+                    if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
                     break;
                 default:
                     next()
@@ -271,6 +275,13 @@ const routes = [
     path: '/forwarders/ranking',
     name: 'ForwarderRanking',
     component: ForwarderRanking,
+    props: true,
+    beforeEnter: requiredAuth
+  },
+  {
+    path: '/warehouses',
+    name: 'Warehouses',
+    component: Warehouses,
     props: true,
     beforeEnter: requiredAuth
   },
