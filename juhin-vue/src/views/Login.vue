@@ -16,6 +16,7 @@
                 <p>Nie pamiętasz hasła?</p>
               </router-link>
           </div>
+          
           <button id="login-btn">Zaloguj</button>
           <div v-if="error">
               <div class="error-msg">{{error}}</div>
@@ -33,8 +34,10 @@ import loginUser from '../composables/loginUser.js'
 import getCurrentUser from '../composables/getCurrentUser.js'
 import { useStore } from 'vuex'
 
+
 export default {
     props: [],
+    
     emits:['login-event'],
     setup(props, context){
         const mainUrl = urlHolder

@@ -15,10 +15,20 @@
                 <p>Posiadasz już konto - Zaloguj się</p>
               </router-link>
           </div>
+          <div id="captcha">
+            <VueRecaptcha
+                :sitekey="siteKey"
+                :load-recaptcha-script="true"
+                @verify="handleSuccess"
+                @error="handleError"
+                theme="dark"
+            ></VueRecaptcha>
+          </div>
+
           <button id="login-btn">Rejestruj</button>
           <div v-if="error">
               <div class="error-msg" v-for="err in error" :key="err">
-                  <p>{{err}}</p>
+                  {{err}}
               </div>
           </div>
       </form>
@@ -34,10 +44,12 @@ import loginUser from '../composables/loginUser.js'
 import getCurrentUser from '../composables/getCurrentUser.js'
 import { useStore } from 'vuex'
 import axios from 'axios'
+import { VueRecaptcha } from 'vue-recaptcha';
 
 export default {
     props: [],
     emits:['login-event'],
+    components: {VueRecaptcha},
     setup(props, context){
         const mainUrl = urlHolder
         const router = useRouter()
@@ -47,58 +59,76 @@ export default {
         const {getUser, user, error:getError} = getCurrentUser(mainUrl)
         const store = useStore()
         const {login, error} = loginUser(mainUrl)
-        
-        
+        var captchaVerificationResult = false
+        const siteKey = ref('6LeI_OkfAAAAAJKpXkpAxPqYyobYrwtaqpBeV6N3')
+           
+
+        const handleError = () => {
+        console.log("Captcha error")
+        captchaVerificationResult = false
+        };
+
+        const handleSuccess = (response) => {
+        console.log("Captcha verification succeeded")
+        captchaVerificationResult = true
+        };
+
         const handleSubmit = async () =>
         {
             error.value = null
-            if(password.value == password2.value)
+            if(captchaVerificationResult)
             {
-                let registerData = {
-                    emailAddress : email.value,
-                    password : password2.value
-                }
+                if(password.value == password2.value)
+                {
+                    let registerData = {
+                        emailAddress : email.value,
+                        password : password2.value
+                    }
 
-                await axios.post(mainUrl+"accounts/Create", registerData,{
-                     headers: {'Accept':'*/*'}
-                    }).then(()=>{
-                        login(email.value, password.value)
-                            .then(()=>
-                            {
-                                if(!error.value)
+                    await axios.post(mainUrl+"accounts/Create", registerData,{
+                        headers: {'Accept':'*/*'}
+                        }).then(()=>{
+                            login(email.value, password.value)
+                                .then(()=>
                                 {
-                                    
-                                    const userToken = computed(() => store.getters.getUserToken)
-                                    getUser(userToken.value)
-                                    if(!getError.value)
-                                    {   
-                                        router.push({name:"Main"})
+                                    if(!error.value)
+                                    {
+                                        
+                                        const userToken = computed(() => store.getters.getUserToken)
+                                        getUser(userToken.value)
+                                        if(!getError.value)
+                                        {   
+                                            router.push({name:"Main"})
+                                        }
+                                    }
+                                })
+                        }).catch(err => {
+                                    if(err.response.data.length>0){
+                                        let index = 0
+                                        let errors = []
+                                        err.response.data.forEach(element => {
+                                            errors[index]=element.description
+                                            index++
+                                        });
+                                        error.value = errors
+                                    }else{
+                                        let errors = [err.message]
+                                        error.value = errors
                                     }
                                 }
-                            })
-                    }).catch(err => {
-                                if(err.response.data.length>0){
-                                    let index = 0
-                                    let errors = []
-                                    err.response.data.forEach(element => {
-                                        errors[index]=element.description
-                                        index++
-                                    });
-                                    error.value = errors
-                                }else{
-                                    let errors = [err.message]
-                                    error.value = errors
-                                }
-                            }
-                            
-                        )
+                                
+                            )
 
+                }else
+                {
+                    error.value = ["Hasła się nie zgadzają!"]
+                }
             }else
             {
-                error.value = "Hasła się nie zgadzają!"
-            }
+                error.value =["Zaznacz pole - Nie jestem robotem"]
+            }  
         } 
-        return { handleSubmit, error, email, password, password2}
+        return { handleSubmit, error, email, password, password2, handleError, handleSuccess, siteKey}
     }
 }
 </script>
@@ -110,6 +140,10 @@ export default {
     flex-flow: column;
     background-image: linear-gradient(#282828, var(--back-grey), var(--back-grey2));
     max-width: 340px;
+}
+#login-form #captcha{
+    text-align: center;
+    margin: 6px auto;
 }
 #login-form .error-msg{
     font-size: 13px;
