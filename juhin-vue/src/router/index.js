@@ -43,18 +43,7 @@ const requiredAuth = (to, from, next) => {
     let actualTime = new Date()
     let user = store.getters.getUser
     console.log(to.name)
-
-    // const mainUrl = urlHolder
-    // const {getUser} = getCurrentUser(mainUrl)
-    // console.log(store)
-    // console.log(expireTime)
-    // console.log(actualTime)
-    // if(to.name =='ResetPasswordConfirmation' || to.name =='ResetPassword') 
-    // {
-    //     next()
-    // }
-    // else{
-
+    
         if (!expireTime || expireTime < actualTime){
             store.commit('setIsLogged', false)
             next({name: 'Login'})
@@ -104,10 +93,6 @@ const routes = [
     component: Error404,
     beforeEnter: requiredAuth
   },
-//   {
-//     path: '/hangfire',
-//     beforeEnter: requiredAuth
-//   },
   {
     path: '/login',
     name: 'Login',

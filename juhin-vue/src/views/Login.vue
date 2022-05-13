@@ -89,9 +89,9 @@ export default {
     text-align: center;
 }
 #login-form h4{
-    font-family: 'Amaranth', sans-serif;
+   
     font-size: 0.8em;
-    font-weight: 300;
+    
     align-self: center;
     margin:5px 0 5px 0;
 }
