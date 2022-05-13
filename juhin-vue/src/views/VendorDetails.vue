@@ -110,9 +110,9 @@
                 </div>
             
                 <div class="submit">
-                    <button>Dodaj</button>
+                    <button>Zapisz</button>
                 </div>
-                <div>
+                <div v-if="user.isAdmin">
                     <button class="delete-btn" @click="handleDelete">Usuń dostawcę</button>
                 </div>
         </form>

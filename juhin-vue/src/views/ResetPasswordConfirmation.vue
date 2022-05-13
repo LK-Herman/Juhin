@@ -106,7 +106,7 @@ export default {
     font-size: 16px;
 }
 #login-form h4{
-    font-family: 'Amaranth', sans-serif;
+   
     font-size: 0.8em;
     font-weight: 300;
     align-self: center;

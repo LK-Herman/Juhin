@@ -7,7 +7,6 @@ const loginUser = (url) =>{
     let loginData = null
     const error = ref('')
     const store = useStore()
-    // const token = ref('')
     
     const login = async (userEmail, password) => 
     {
@@ -23,9 +22,7 @@ const loginUser = (url) =>{
                 'Content-Type':'application/json',
                 'Accept':'*/*'
             },  
-            // body: JSON.stringify(userData)
         }
-    
         try 
         {
             let resp = await axios.post(url + 'accounts/Login/',userData, requestOptions)
@@ -44,14 +41,11 @@ const loginUser = (url) =>{
             store.commit('setIsLogged',true)
             localStorage.expiration = loginData.expiration
             localStorage.token = loginData.token
-            // token.value = loginData.value.token
-            // console.log(loginData.value)
             error.value = ''
         } 
         catch (er) 
         {
                 error.value = er.message
-                //console.log(error.value)
         }
     }
     

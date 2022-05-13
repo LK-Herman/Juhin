@@ -70,13 +70,7 @@ namespace JuhinAPI
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-
-            //services.AddSingleton<Microsoft.AspNetCore.Identity.UserManager<IdentityUser>>();
-            //services.AddSingleton(provider => new MapperConfiguration(cfg =>
-            //{
-            //    cfg.AddProfile(new AutoMapperProfiles(provider.GetService<Microsoft.AspNetCore.Identity.UserManager<IdentityUser>>()));
-            //}).CreateMapper());
-
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 options.TokenValidationParameters = new TokenValidationParameters

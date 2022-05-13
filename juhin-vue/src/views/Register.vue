@@ -118,13 +118,7 @@ export default {
 #login-form .error-msg p{
     color: var(--warning);
 }
-#login-form h4{
-    font-family: 'Amaranth', sans-serif;
-    font-size: 0.8em;
-    font-weight: 300;
-    align-self: center;
-    margin:5px 0 5px 0;
-}
+
 #login-form h2{
     font-weight: 400;
     align-self: center;

@@ -13,14 +13,10 @@ namespace JuhinAPI.Models
         public Guid DeliveryId { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
-        
         public DateTime ETADate { get; set; }
-        
         public DateTime DeliveryDate { get; set; }
-        
         public int Rating { get; set; }
         public bool IsPriority { get; set; } = false;
-
         public string Comment { get; set; }
 
         //Delivery 1-m Document

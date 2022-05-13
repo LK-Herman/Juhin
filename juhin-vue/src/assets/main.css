@@ -1,5 +1,7 @@
 /* custom font */
-@import url('https://fonts.googleapis.com/css2?family=Amaranth&family=Bebas+Neue&family=Quicksand:wght@300;400;500;700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Amaranth&family=Bebas+Neue&family=Quicksand:wght@400;500;700&family=Roboto&family=Roboto+Condensed&family=Saira+Extra+Condensed&display=swap');
+
 /* variables */
 :root {
     --back-dark: #252525;

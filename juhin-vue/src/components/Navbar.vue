@@ -185,9 +185,10 @@ export default {
     color: rgb(218, 218, 218);
 }
 #sublogo{
-    font-family: 'Amaranth', sans-serif;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 400;
     font-size: 16px;
-    padding-left: 36px;
+    padding-left: 24px;
 }
 .material-icons{
     vertical-align: middle;
