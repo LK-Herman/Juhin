@@ -24,9 +24,7 @@
                     <div>
                         <p>ADMINISTRATOR</p>
                     </div>
-                    <div>
-                        <p>USUŃ KONTO</p>
-                    </div>
+                  
                 </div>
                 <div v-for="user in usersList" :key="user.emailAddress">
                         <div id="users-container" class="table-container">    
@@ -67,10 +65,7 @@
                                 <div class="userSwitch-switch"></div>
                                 </label>
                             </div>
-                            <div>
-                                <button id="delUser">Usuń</button>
-                               
-                            </div>
+                            
                         </div>
                         <!-- </router-link> -->
                    
@@ -98,13 +93,7 @@
           </div>
 
       </div>
-      <!-- <div v-if="!error">
-          <div v-for="user in usersList" :key="user.userId">
-              {{user.emailAddress}} : {{user.userId}}  
-                <br>
-                
-          </div>
-      </div> -->
+     
       
 </template>
 
@@ -169,10 +158,10 @@ export default {
 <style>
 .table-list .table-header#users-header{
     background-color: #175985;
-    grid-template-columns: 50px 250px 100px 100px 100px 100px 150px ;
+    grid-template-columns: 50px 250px 100px 100px 100px 100px;
 }
 .table-container#users-container{
-    grid-template-columns: 50px 250px 100px 100px 100px 100px 150px ;
+    grid-template-columns: 50px 250px 100px 100px 100px 100px;
     padding: 10px;
 }
 .table-container#users-container:active{

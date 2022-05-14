@@ -63,14 +63,15 @@ export default {
         const siteKey = ref('6LeI_OkfAAAAAJKpXkpAxPqYyobYrwtaqpBeV6N3')
            
 
-        const handleError = () => {
-        console.log("Captcha error")
-        captchaVerificationResult = false
+        const handleSuccess = (response) => 
+        {
+            console.log("Captcha verification succeeded")
+            captchaVerificationResult = true
         };
-
-        const handleSuccess = (response) => {
-        console.log("Captcha verification succeeded")
-        captchaVerificationResult = true
+        const handleError = () => 
+        {
+            console.log("Captcha error")
+            captchaVerificationResult = false
         };
 
         const handleSubmit = async () =>
@@ -125,7 +126,7 @@ export default {
                 }
             }else
             {
-                error.value =["Zaznacz pole - Nie jestem robotem"]
+                error.value =["Uzupełnij wszystkie wymagane pola."]
             }  
         } 
         return { handleSubmit, error, email, password, password2, handleError, handleSuccess, siteKey}
