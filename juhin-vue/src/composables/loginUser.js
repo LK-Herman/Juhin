@@ -7,9 +7,11 @@ const loginUser = (url) =>{
     let loginData = null
     const error = ref('')
     const store = useStore()
+    const isPending = ref(false)
     
     const login = async (userEmail, password) => 
     {
+        isPending.value = true
         let userData = {emailAddress:userEmail, password:password}
         var requestOptions = 
         {
@@ -31,6 +33,7 @@ const loginUser = (url) =>{
                 if(resp.status == 400)
                 {
                     throw Error('Niepoprawne dane logowania (400)')
+                    isPending.value = false
                 }
                 throw Error('Dane niedostępne')
             }
@@ -41,6 +44,7 @@ const loginUser = (url) =>{
             store.commit('setIsLogged',true)
             localStorage.expiration = loginData.expiration
             localStorage.token = loginData.token
+            isPending.value = false
             error.value = ''
         } 
         catch (er) 
@@ -49,6 +53,6 @@ const loginUser = (url) =>{
         }
     }
     
-    return {login, error}
+    return {login, error, isPending}
 }
 export default loginUser

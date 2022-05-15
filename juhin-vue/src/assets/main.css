@@ -190,17 +190,19 @@ option{
     text-align: center;
   }
     
-.lds-circle {
+  .lds-circle {
+
     display: inline-block;
     transform: translateZ(1px);
   }
-.lds-circle > div {
+  .lds-circle > div {
     display: inline-block;
+    position: absolute;
     width: 64px;
     height: 64px;
-    margin: 8px;
+    margin: auto;
     border-radius: 50%;
-    background:var(--button2);
+    background:var(--back-grey);
     animation: lds-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
   }
   @keyframes lds-circle {

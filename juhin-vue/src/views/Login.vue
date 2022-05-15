@@ -16,12 +16,15 @@
                 <p>Nie pamiętasz hasła?</p>
               </router-link>
           </div>
-          
+           <!-- <div v-if="isPending" class="lds-circle"><div></div></div> -->
           <button id="login-btn">Zaloguj</button>
           <div v-if="error">
               <div class="error-msg">{{error}}</div>
           </div>
       </form>
+      <div v-if="isPending">
+          <Spinner/>
+      </div>
       
   </div>
 </template>
@@ -33,12 +36,13 @@ import urlHolder from '../composables/urlHolder.js'
 import loginUser from '../composables/loginUser.js'
 import getCurrentUser from '../composables/getCurrentUser.js'
 import { useStore } from 'vuex'
-
+import Spinner from '../components/Spinner.vue'
 
 export default {
     props: [],
     
     emits:['login-event'],
+    components:{Spinner},
     setup(props, context){
         const mainUrl = urlHolder
         const router = useRouter()
@@ -46,8 +50,7 @@ export default {
         const password =ref('')
         const {getUser, user, error:getError} = getCurrentUser(mainUrl)
         const store = useStore()
-        const {login, error} = loginUser(mainUrl)
-        
+        const {login, error, isPending} = loginUser(mainUrl)
         
         const handleSubmit = async () =>
         {
@@ -73,7 +76,7 @@ export default {
             
         } 
         
-        return { handleSubmit, error, email, password}
+        return { handleSubmit, error, email, password, isPending}
     }
 }
 </script>
