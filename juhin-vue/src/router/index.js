@@ -71,6 +71,12 @@ const requiredAuth = (to, from, next) => {
                 case 'Warehouses':
                     if(!user.isSpecialist) {next({name:'AccessDenied'})}else{next()}
                     break;
+                    case 'Main':
+                    console.log("ROUTER")
+                    let isLogged = store.getters.getIsLogged
+                    console.log(isLogged)
+                    if(!isLogged) {next({name:'Login'})}else{next()}
+                    break;
                 default:
                     next()
                     break;

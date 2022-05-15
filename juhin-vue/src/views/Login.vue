@@ -14,6 +14,7 @@
               </router-link>
               <router-link :to="{name: 'ResetPassword'}">
                 <p>Nie pamiętasz hasła?</p>
+      
               </router-link>
           </div>
            <!-- <div v-if="isPending" class="lds-circle"><div></div></div> -->
@@ -76,7 +77,7 @@ export default {
             
         } 
         
-        return { handleSubmit, error, email, password, isPending}
+        return { handleSubmit, error, email, password, isPending, user}
     }
 }
 </script>

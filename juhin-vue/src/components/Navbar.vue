@@ -62,6 +62,7 @@ export default {
                 router.push({name:'Login'})
                 email.value = ''
                 userRolePL.value = ''
+                store.commit('setIsLogged', false)
             })
         }
         onMounted(async ()=>
