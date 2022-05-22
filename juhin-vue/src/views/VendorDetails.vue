@@ -112,9 +112,7 @@
                 <div class="submit">
                     <button>Zapisz</button>
                 </div>
-                <div v-if="user.isAdmin">
-                    <button class="delete-btn" @click="handleDelete">Usuń dostawcę</button>
-                </div>
+               
         </form>
 
         <div id="myModal" class="modal">
@@ -238,18 +236,8 @@ export default {
             }
                 await loadVendor(props.vId)
         }
-     const handleDelete = ()=>{
-            // deleteFlag.value = true
-            var modal = document.getElementById("myModal");
-            modal.style.display = "block" 
+                 
             
-            window.onclick = function(event) {
-            if (event.target == modal) {
-            modal.style.display = "none";
-            // deleteFlag.value = false
-            }
-        }
-     }
      const handleYes = async () =>{
             await deleteVendor(props.vId)
             .finally(function(){ isDeleted.value = true })
@@ -270,7 +258,7 @@ export default {
                 handleAddOrder, 
                 handleSubmit,
                 handleEditVendor,
-                handleDelete,
+                
                 handleYes,
                 handleNo, 
                 editFlag,

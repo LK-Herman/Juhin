@@ -118,7 +118,7 @@
         <div class="item-buttons">
             <button @click="handleBack" ><span class="material-icons">keyboard_backspace</span> Powrót</button>
             <button v-if="user.isSpecialist" class="edit-btn" @click="handleEdit">Edytuj</button>
-            <button v-if="user.isSpecialist" class="delete-btn">Usuń</button>
+            <!-- <button v-if="user.isSpecialist" class="delete-btn">Usuń</button> -->
         </div>
     </div>
 

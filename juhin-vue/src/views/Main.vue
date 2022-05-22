@@ -32,26 +32,11 @@
         </div>
 
        
-    <div class="main-page third-page">
+        <div class="main-page third-page">
 
-        <div>
-            <br>
-            <h3 id="picture2">ARCHITEKTURA LOGICZNA</h3>
-            <br>
-            <div id="picture2">
-                <img id="image2" src="@/assets/images/presentation04.png"/>
-            </div>
-        </div>
-        <div>
-            <br>
-            <h3 id="picture2">ARCHITEKTURA FIZYCZNA</h3>
-            <br>
-            <div id="picture2">
-                <img id="image2" src="@/assets/images/presentation05.png"/>
-            </div>
-        </div>
+        
 
-    </div>
+        </div>
         
     </div>
 </template>
